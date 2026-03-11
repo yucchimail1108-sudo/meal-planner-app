@@ -133,3 +133,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # 画像アップロード用
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
+
+# ログイン後の遷移先を設定
+LOGIN_REDIRECT_URL = "/"
+LOGOUT_REDIRECT_URL = "/"
