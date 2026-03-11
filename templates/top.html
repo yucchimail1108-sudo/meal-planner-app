@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>うちごはんプランナー</h1>
+<p>毎日の献立決めを楽にするアプリです。</p>
+
+<p><a href="{% url 'accounts:signup' %}">新規登録</a></p>
+<p><a href="{% url 'accounts:login' %}">ログイン</a></p>
+{% endblock %}
