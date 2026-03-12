@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth import login, authenticate
+from django.contrib.auth import login, authenticate, logout
 from .forms import SignUpForm,LoginForm
 
 
@@ -35,4 +35,10 @@ def login_view(request):
     return render(request, 'accounts/login.html', {'form': form}) 
 
 def top_view(request):
-    return render(request, 'top.html')      
+    return render(request, 'top.html') 
+
+def logout_view(request):
+    if request.method == 'POST':
+        logout(request)
+        
+    return redirect('top')
