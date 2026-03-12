@@ -5,8 +5,11 @@
 
 <ul>
 {% for recipe in recipes %}
+
 <li>
+<a href="{% url 'recipes:recipe_detail' recipe.id %}">
 {{ recipe.recipe_name }}
+</a>
  ({{ recipe.servings }}人分)
 </li>
 {% endfor %}

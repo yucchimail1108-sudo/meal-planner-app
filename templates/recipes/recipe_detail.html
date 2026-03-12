@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h1>{{ recipe.recipe_name }}</h1>
+
+<p>人数{{ recipe.servings }}人分</p>
+
+<p>作成日{{ recipe.create_at }}</p>
+
+<p><a href="{% url 'recipes:recipe_list' %}">レシピ一覧に戻る</a></p>
+
+{% endblock %}
