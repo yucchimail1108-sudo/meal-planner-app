@@ -3,14 +3,6 @@
 {% block content %}
 <h1>ログイン画面</h1>
 
-{% if form.non_field_errors %}
-    <ul>
-        {% for error in form.non_field_errors %}
-            <li>{{ error }}</li>
-        {% endfor %}
-    </ul>
-{% endif %}
-
 <form method="post">
     {% csrf_token %}
     {{ form.as_p }}
