@@ -58,3 +58,17 @@ def recipe_update_view(request, recipe_id):
         "recipes/recipe_form.html",
         {"form": form}
     )
+    
+# 削除画面
+def recipe_delete_view(request, recipe_id):
+    recipe = get_object_or_404(Recipe, id=recipe_id)
+
+    if request.method == 'POST':
+        recipe.delete()
+        return redirect('recipes:recipe_list')
+           
+    return render(
+        request,
+        "recipes/recipe_confirm_delete.html",
+        {"recipe": recipe}
+    )
