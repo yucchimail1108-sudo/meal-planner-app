@@ -1,7 +1,14 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h1>レシピ一覧</h1>
+
+<h1>マイレシピ一覧</h1>
+
+<p>
+    <a href="{% url 'recipes:recipe_create' %}">
+        レシピを登録する
+    </a>
+</p>
 
 <ul>
 {% for recipe in recipes %}
@@ -10,7 +17,7 @@
 <a href="{% url 'recipes:recipe_detail' recipe.id %}">
 {{ recipe.recipe_name }}
 </a>
- ({{ recipe.servings }}人分)
+ ({{ recipe.servings }}人前)
 </li>
 {% endfor %}
 </ul>

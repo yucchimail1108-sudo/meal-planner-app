@@ -2,11 +2,13 @@
 
 {% block content %}
 
-<h1>{{ recipe.recipe_name }}</h1>
+<h1>マイレシピ登録</h1>
 
-<p>作る量{{ recipe.servings }}人前</p>
-
-<p>作成日{{ recipe.create_at }}</p>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">登録</button>
+</form>
 
 <p>
     <a href="{% url 'recipes:recipe_list' %}">
