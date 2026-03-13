@@ -14,6 +14,8 @@
         <li>
             {{ ingredient.food_item }}　{{ ingredient.amount_text }}
         
+            <a href="{% url 'recipes:ingredient_update' ingredient.id %}">編集</a>
+
             <a href="{% url 'recipes:ingredient_delete' ingredient.id %}">削除</a>
         
         </li>

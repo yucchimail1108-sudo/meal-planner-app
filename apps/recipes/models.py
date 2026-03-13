@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+# レシピモデル
 class Recipe(models.Model):
     user = models.ForeignKey(
         User,
@@ -27,7 +28,8 @@ class Recipe(models.Model):
     class Meta:
         verbose_name = "レシピ"
         verbose_name_plural = "レシピ"
-    
+
+# 食材モデル
 class FoodItem(models.Model):
     
     CATEGORY_CHOICES = [
@@ -50,6 +52,7 @@ class FoodItem(models.Model):
         verbose_name = "食材"
         verbose_name_plural = "食材"
 
+# レシピ材料モデル
 class RecipeIngredient(models.Model):
     
     INGREDIENT_KIND_CHOICES = [
