@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h1>材料追加</h1>
+
+<p>レシピ名：{{ recipe.recipe_name }}</p>
+
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">＋材料を追加</button>
+</form>
+
+<p>
+    <a href="{% url 'recipes:recipe_detail' recipe.id %}">詳細に戻る</a>
+</p>
+
+{% endblock %}

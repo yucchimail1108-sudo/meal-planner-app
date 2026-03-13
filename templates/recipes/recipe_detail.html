@@ -5,8 +5,26 @@
 <h1>{{ recipe.recipe_name }}</h1>
 
 <p>作る量{{ recipe.servings }}人前</p>
+<p>作成日{{ recipe.created_at }}</p>
 
-<p>作成日{{ recipe.create_at }}</p>
+<h2>材料</h2>
+
+<ul>
+    {% for ingredient in recipe.ingredients.all %}
+        <li>
+            {{ ingredient.food_item }}　{{ ingredient.amount_text }}
+        
+            <a href="{% url 'recipes:ingredient_delete' ingredient.id %}">削除</a>
+        
+        </li>
+    {% empty %}
+        <li>材料はまだ登録されていません。</li>
+    {% endfor %}
+</ul>
+
+<p>
+    <a href="{% url 'recipes:ingredient_create' recipe.id %}">＋材料を追加</a>
+</p>
 
 <p>
     <a href="{% url 'recipes:recipe_update' recipe.id %}">編集</a>
