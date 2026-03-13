@@ -11,10 +11,10 @@ class Recipe(models.Model):
     ) 
     recipe_name = models.CharField(
         max_length=100,
-        verbose_name="・レシピ名"
+        verbose_name="レシピ名"
     )
     servings = models.PositiveIntegerField(
-        verbose_name="・作る量"
+        verbose_name="作る量"
     )
     created_at = models.DateTimeField(
         auto_now_add=True,
@@ -40,8 +40,8 @@ class FoodItem(models.Model):
         (7, "その他"),
     ]
     
-    ingredient_name = models.CharField(max_length=30)
-    category = models.IntegerField(choices=CATEGORY_CHOICES)
+    ingredient_name = models.CharField(max_length=30, verbose_name="食材名")
+    category = models.IntegerField(choices=CATEGORY_CHOICES, verbose_name="カテゴリ")
     
     def __str__(self):
         return self.ingredient_name
@@ -83,7 +83,10 @@ class RecipeIngredient(models.Model):
     
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    
+
+    def __str__(self):
+        return f"{self.recipe} - {self.food_item}"
+
     class Meta:
         verbose_name = 'レシピ材料'
         verbose_name_plural = 'レシピ材料'
@@ -94,5 +97,3 @@ class RecipeIngredient(models.Model):
             )
         ]
         
-        def __str__(self):
-            return f"{self.recipe} - {self.food_item}"
