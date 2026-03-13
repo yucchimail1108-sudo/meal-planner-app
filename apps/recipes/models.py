@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 
-# レシピモデル
+# レシピ
 class Recipe(models.Model):
     user = models.ForeignKey(
         User,
@@ -29,7 +29,7 @@ class Recipe(models.Model):
         verbose_name = "レシピ"
         verbose_name_plural = "レシピ"
 
-# 食材モデル
+# 食材
 class FoodItem(models.Model):
     
     CATEGORY_CHOICES = [
@@ -52,7 +52,7 @@ class FoodItem(models.Model):
         verbose_name = "食材"
         verbose_name_plural = "食材"
 
-# レシピ材料モデル
+# レシピ材料
 class RecipeIngredient(models.Model):
     
     INGREDIENT_KIND_CHOICES = [
@@ -100,3 +100,38 @@ class RecipeIngredient(models.Model):
             )
         ]
         
+
+# 作り方
+class RecipeStep(models.Model):
+    recipe = models.ForeignKey(
+        Recipe,
+        on_delete=models.CASCADE,
+        related_name="steps",
+        verbose_name="レシピ"
+    )
+     
+    step_no = models.PositiveIntegerField(
+         verbose_name="手順番号"         
+     )
+     
+    instruction = models.TextField(
+         verbose_name="手順内容" 
+     )
+         
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    
+    class Meta:
+        verbose_name = '作り方'
+        verbose_name_plural = '作り方'
+        constraints = [
+            models.UniqueConstraint(
+                fields=["recipe","step_no"],
+                name="unique_recipe_step_no"
+            )
+        ]
+        ordering = ["step_no"]
+        
+    def __str__(self):
+        return f"{self.recipe} - 手順{self.step_no}"
