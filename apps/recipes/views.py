@@ -7,11 +7,18 @@ from .forms import RecipeForm, RecipeIngredientForm, RecipeStepForm
 @login_required
 def recipe_list_view(request):
     recipes = Recipe.objects.filter(user=request.user)
+    selected_category = request.GET.get("category")
     
+    if selected_category:
+        recipes = recipes.filter(menu_category=selected_category)
+            
     return render(
         request, 
         "recipes/recipe_list.html",
-        {"recipes":recipes}
+        {
+            "recipes":recipes,
+            "selected_category":selected_category,
+        }
     )
 
 # レシピ詳細画面

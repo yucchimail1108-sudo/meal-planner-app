@@ -3,6 +3,19 @@
 {% block content %}
 
 <h1>マイレシピ一覧</h1>
+<p>登録件数：{{ recipes|length }}件</p>
+
+<form method="get">
+    <label for="category"カテゴリで絞り込み</label>
+    <select name="category" id="category">
+        <option value="">すべて</option>
+        <option value="1" {% if selected_category == "1" %}selected{% endif %}>主食</option>
+        <option value="2" {% if selected_category == "2" %}selected{% endif %}>主菜</option>
+        <option value="3" {% if selected_category == "3" %}selected{% endif %}>副菜</option>
+        <option value="4" {% if selected_category == "4" %}selected{% endif %}>汁物</option>
+    </select>
+    <button type="submit">絞り込む</button>
+</form>
 
 <p>
     <a href="{% url 'recipes:recipe_create' %}">レシピを登録する</a>
