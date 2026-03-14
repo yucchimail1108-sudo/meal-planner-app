@@ -4,6 +4,16 @@
 
 <h1>{{ recipe.recipe_name }}</h1>
 
+
+{% if recipe.image %}
+    <p>
+        <img src="{{ recipe.image.url }}" alt="{{ recipe.recipe_name }}" width="250">
+    </p>
+{% else %}
+    <div>NO IMAGE</div>
+{% endif %}
+
+
 <h3>参照URL</h3>
 
 {% if recipe.reference_url %}

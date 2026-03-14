@@ -33,7 +33,7 @@ def recipe_detail_view(request, recipe_id):
 @login_required
 def recipe_create_view(request):
     if request.method == 'POST':
-        form = RecipeForm(request.POST)
+        form = RecipeForm(request.POST, request.FILES)
         if form.is_valid():
             recipe = form.save(commit=False)
             recipe.user = request.user
@@ -58,7 +58,7 @@ def recipe_update_view(request, recipe_id):
     )
 
     if request.method == 'POST':
-        form = RecipeForm(request.POST, instance=recipe)
+        form = RecipeForm(request.POST, request.FILES, instance=recipe)
         if form.is_valid():
             form.save()
             return redirect(

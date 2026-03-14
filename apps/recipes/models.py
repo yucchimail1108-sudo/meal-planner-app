@@ -21,6 +21,13 @@ class Recipe(models.Model):
         verbose_name="作る量"
     )
 
+    image = models.ImageField(
+        upload_to="recipe_images/",
+        blank=True,
+        null=True,
+        verbose_name="画像"
+    )
+
     reference_url = models.URLField(
         blank=True,
         verbose_name="参照URL"
