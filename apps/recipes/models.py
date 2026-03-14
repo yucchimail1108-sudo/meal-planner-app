@@ -170,3 +170,35 @@ class RecipeStep(models.Model):
         
     def __str__(self):
         return f"{self.recipe} - 手順{self.step_no}"
+    
+
+# お気に入り
+class Favorite(models.Model):
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        verbose_name="ユーザー"
+    )
+    
+    recipe = models.ForeignKey(
+        Recipe,
+        on_delete=models.CASCADE,
+        verbose_name="レシピ",
+        related_name="favorite_set"
+    )
+    
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+      
+    class Meta:
+        verbose_name = "お気に入り"
+        verbose_name_plural = "お気に入り"
+        constraints = [
+            models.UniqueConstraint(
+                fields=["user", "recipe"],
+                name="unique_user_recipe_favorite"
+            )
+        ]
+        
+    def __str__(self):
+        return f"{self.user} - {self.recipe}"

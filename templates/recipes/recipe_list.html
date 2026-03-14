@@ -13,6 +13,7 @@
         <option value="2" {% if selected_category == "2" %}selected{% endif %}>主菜</option>
         <option value="3" {% if selected_category == "3" %}selected{% endif %}>副菜</option>
         <option value="4" {% if selected_category == "4" %}selected{% endif %}>汁物</option>
+        <option value="favorite" {% if selected_category == "favorite" %}selected{% endif %}>お気に入り</option>
     </select>
     <button type="submit">絞り込む</button>
 </form>
@@ -25,13 +26,18 @@
 {% for recipe in recipes %}
 <li>
     <a href="{% url 'recipes:recipe_detail' recipe.id %}">
-    {{ recipe.recipe_name }}
+        {{ recipe.recipe_name }}
     </a>
-
-{% if recipe.menu_category %}
-    【{{ recipe.get_menu_category_display }}】
-{% endif %}
+    {% if recipe.menu_category %}
+        【{{ recipe.get_menu_category_display }}】
+    {% endif %}
     ({{ recipe.servings }}人前)
+
+    {% if recipe.id in favorite_recipe_ids %}
+        <a href="{% url 'recipes:favorite_toggle' recipe.id %}">♥</a>
+    {% else %}
+        <a href="{% url 'recipes:favorite_toggle' recipe.id %}">♡</a>
+    {% endif %}
 </li>
 {% endfor %}
 </ul>

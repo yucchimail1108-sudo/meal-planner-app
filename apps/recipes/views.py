@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404,redirect
 from django.contrib.auth.decorators import login_required
-from .models import Recipe, RecipeIngredient, RecipeStep
+from .models import Recipe, RecipeIngredient, RecipeStep, Favorite
 from .forms import RecipeForm, RecipeIngredientForm, RecipeStepForm
 
 # レシピ一覧画面
@@ -8,9 +8,16 @@ from .forms import RecipeForm, RecipeIngredientForm, RecipeStepForm
 def recipe_list_view(request):
     recipes = Recipe.objects.filter(user=request.user)
     selected_category = request.GET.get("category")
+   
+    if selected_category == "favorite":
+        recipes = recipes.filter(favorite_set__user=request.user)
     
-    if selected_category:
-        recipes = recipes.filter(menu_category=selected_category)
+    elif selected_category in ["1", "2", "3", "4"]:
+        recipes = recipes.filter(menu_category=int(selected_category))
+
+    favorite_recipe_ids = set(
+        Favorite.objects.filter(user=request.user).values_list("recipe_id", flat=True)
+    )
             
     return render(
         request, 
@@ -18,6 +25,7 @@ def recipe_list_view(request):
         {
             "recipes":recipes,
             "selected_category":selected_category,
+            "favorite_recipe_ids": favorite_recipe_ids
         }
     )
 
@@ -235,3 +243,27 @@ def step_delete_view(request, step_id):
     step.delete()
 
     return redirect("recipes:recipe_detail", recipe_id=recipe_id)
+
+# お気に入り
+@login_required
+def favorite_toggle_view(request, recipe_id):
+    recipe = get_object_or_404(
+        Recipe,
+        id=recipe_id,
+        user=request.user
+    )
+    
+    favorite = Favorite.objects.filter(
+        user=request.user,
+        recipe=recipe
+    ).first()
+    
+    if favorite:
+        favorite.delete()
+    else:
+        Favorite.objects.create(
+            user=request.user,
+            recipe=recipe
+        )
+
+    return redirect("recipes:recipe_list")
