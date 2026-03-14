@@ -62,7 +62,11 @@
 
 <ol>
     {% for step in recipe.steps.all %}
-        <li>{{ step.instruction }}</li>
+        <li>
+            {{ step.instruction }}
+            <a href="{% url 'recipes:step_update' step.id %}">編集</a>
+            <a href="{% url 'recipes:step_delete' step.id %}">削除</a>
+        </li>
     {% empty %}
         <li>作り方はまだ登録されていません。</li>
     {% endfor %}

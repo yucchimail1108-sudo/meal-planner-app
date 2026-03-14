@@ -114,7 +114,7 @@ def ingredient_create_view(request, recipe_id):
     return render(
         request,
         "recipes/ingredient_form.html",
-        {"form": form,"recipe": recipe,}
+        {"form": form,"recipe": recipe}
     )
 
 # 材料削除
@@ -164,10 +164,10 @@ def ingredient_update_view(request, ingredient_id):
     return render(
         request, 
         "recipes/ingredient_form.html",
-        {"form": form,"recipe": ingredient.recipe,}
+        {"form": form,"recipe": ingredient.recipe}
     )
 
-# 作り方を追加
+# 作り方追加
 @login_required
 def step_create_view(request, recipe_id):
     recipe = get_object_or_404(
@@ -189,5 +189,42 @@ def step_create_view(request, recipe_id):
     return render(
         request,
         "recipes/step_form.html",
-        {"form": form, "recipe": recipe,}
+        {"form": form, "recipe": recipe}
     )
+    
+# 作り方編集
+@login_required
+def step_update_view(request, step_id):
+    step = get_object_or_404(
+        RecipeStep,
+        id=step_id,
+        recipe__user=request.user
+    )
+
+    if request.method == "POST":
+        form = RecipeStepForm(request.POST, instance=step)
+        if form.is_valid():
+            form.save()
+            return redirect("recipes:recipe_detail", recipe_id=step.recipe.id)
+    else:
+        form = RecipeStepForm(instance=step)
+
+    return render(
+        request,
+        "recipes/step_form.html",
+        {"form": form, "recipe": step.recipe}
+    )
+    
+# 作り方削除
+@login_required
+def step_delete_view(request, step_id):
+    step = get_object_or_404(
+        RecipeStep,
+        id=step_id,
+        recipe__user=request.user
+    )
+    
+    recipe_id = step.recipe.id
+    step.delete()
+
+    return redirect("recipes:recipe_detail", recipe_id=recipe_id)

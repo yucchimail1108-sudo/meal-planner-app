@@ -2,7 +2,13 @@
 
 {% block content %}
 
-<h1>＋作り方</h1>
+<h1>
+    {% if form.instance.pk %}
+        作り方編集
+    {% else %}
+        作り方追加
+    {% endif %}
+</h1>
 
 <p>レシピ名：{{ recipe.recipe_name }}</p>
 
