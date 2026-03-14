@@ -6,11 +6,12 @@ class RecipeForm(forms.ModelForm):
     class Meta:
         model = Recipe
         fields = [
-            'image',
             'recipe_name',
+            'menu_category',
             'servings',
-            'reference_url',
+            'image',
             'memo',
+            'reference_url'
             ]
         
 

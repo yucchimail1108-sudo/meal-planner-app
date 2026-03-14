@@ -4,7 +4,7 @@ from .models import Recipe, FoodItem, RecipeIngredient, RecipeStep
 # レシピ管理画面
 @admin.register(Recipe)
 class RecipeAdmin(admin.ModelAdmin):
-    list_display = ("id", "recipe_name", "user", "servings", "created_at")
+    list_display = ("id", "recipe_name", "menu_category","user", "servings", "created_at")
     search_fields = ("recipe_name",)
     create_at = ("created_at",)
 

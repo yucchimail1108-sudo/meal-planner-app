@@ -4,6 +4,13 @@ from django.contrib.auth.models import User
 # レシピ
 class Recipe(models.Model):
     
+    MENU_CATEGORY_CHOICES = [
+        (1, "主食"),
+        (2, "主菜"),
+        (3, "副菜"),
+        (4, "汁物"),
+    ]
+    
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
@@ -17,6 +24,13 @@ class Recipe(models.Model):
         verbose_name="レシピ名"
     )
     
+    menu_category = models.IntegerField(
+        choices=MENU_CATEGORY_CHOICES,
+        verbose_name="カテゴリ",
+        null=True,
+        blank=True
+    )
+    
     servings = models.PositiveIntegerField(
         verbose_name="作る量"
     )
@@ -25,7 +39,7 @@ class Recipe(models.Model):
         upload_to="recipe_images/",
         blank=True,
         null=True,
-        verbose_name="画像"
+        verbose_name="写真"
     )
 
     reference_url = models.URLField(

@@ -18,8 +18,11 @@
 
 <h2>基本情報</h2>
 
+{% if recipe.menu_category %}
+<p>カテゴリ{{ recipe.get_menu_category_display }}</p>
+{% endif %}
+
 <p>作る量{{ recipe.servings }}人前</p>
-<p>作成日{{ recipe.created_at }}</p>
 
 
 <h2>参照URL</h2>

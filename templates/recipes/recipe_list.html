@@ -14,6 +14,10 @@
     <a href="{% url 'recipes:recipe_detail' recipe.id %}">
     {{ recipe.recipe_name }}
     </a>
+
+{% if recipe.menu_category %}
+    【{{ recipe.get_menu_category_display }}】
+{% endif %}
     ({{ recipe.servings }}人前)
 </li>
 {% endfor %}
