@@ -5,33 +5,38 @@
 <h1>{{ recipe.recipe_name }}</h1>
 
 
+<h2>写真</h2>
+
 {% if recipe.image %}
     <p>
         <img src="{{ recipe.image.url }}" alt="{{ recipe.recipe_name }}" width="250">
     </p>
 {% else %}
-    <div>NO IMAGE</div>
+    <p>NO IMAGE</p>
 {% endif %}
 
 
-<h3>参照URL</h3>
-
-{% if recipe.reference_url %}
-<a href="{{ recipe.reference_url }}" target="_blank">
-{{ recipe.reference_url }}
-</a>
-{% endif %}
+<h2>基本情報</h2>
 
 <p>作る量{{ recipe.servings }}人前</p>
 <p>作成日{{ recipe.created_at }}</p>
 
-<h2>材料</h2>
 
+<h2>参照URL</h2>
+
+{% if recipe.reference_url %}
 <p>
-    <a href="{% url 'recipes:ingredient_create' recipe.id %}">
-        ＋材料を追加
+    <a href="{{ recipe.reference_url }}" target="_blank">
+        {{ recipe.reference_url }}
     </a>
 </p>
+{% else %}
+    <p>登録されていません</p>
+{% endif %}
+
+
+
+<h2>材料</h2>
 
 <ul>
     {% for ingredient in recipe.ingredients.all %}
@@ -46,14 +51,14 @@
     {% endfor %}        
 </ul>
 
-
-<h2>作り方</h2>
-
 <p>
-    <a href="{% url 'recipes:step_create' recipe.id %}">
-        ＋作り方
+    <a href="{% url 'recipes:ingredient_create' recipe.id %}">
+        ＋材料を追加
     </a>
 </p>
+
+
+<h2>作り方</h2>
 
 <ol>
     {% for step in recipe.steps.all %}
@@ -62,15 +67,26 @@
         <li>作り方はまだ登録されていません。</li>
     {% endfor %}
 </ol>
-    
+ 
+<p>
+    <a href="{% url 'recipes:step_create' recipe.id %}">
+        ＋作り方
+    </a>
+</p>
+
+
+<h2>メモ</h2>
+
+{% if recipe.memo %}
+    <p>{{ recipe.memo }}</p>
+{% else %}
+    <p>メモは登録されていません。</p>
+{% endif %}
+
+
 <p><a href="{% url 'recipes:recipe_update' recipe.id %}">編集</a></p>
 <p><a href="{% url 'recipes:recipe_delete' recipe.id %}">削除</a></p>
 <p><a href="{% url 'recipes:recipe_list' %}">マイレシピ一覧に戻る</a></p>
 
-<h3>メモ</h3>
-
-{% if recipe.memo %}
-<p>{{ recipe.memo }}</p>
-{% endif %}
 
 {% endblock %}
