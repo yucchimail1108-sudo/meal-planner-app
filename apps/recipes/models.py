@@ -3,20 +3,34 @@ from django.contrib.auth.models import User
 
 # レシピ
 class Recipe(models.Model):
+    
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
         verbose_name="ユーザー",
         null=True,
         blank=True
-    ) 
+    )
+     
     recipe_name = models.CharField(
         max_length=100,
         verbose_name="レシピ名"
     )
+    
     servings = models.PositiveIntegerField(
         verbose_name="作る量"
     )
+
+    reference_url = models.URLField(
+        blank=True,
+        verbose_name="参照URL"
+    )
+        
+    memo = models.TextField(
+        blank=True,
+        verbose_name="メモ"
+    )
+    
     created_at = models.DateTimeField(
         auto_now_add=True,
         verbose_name="作成日"

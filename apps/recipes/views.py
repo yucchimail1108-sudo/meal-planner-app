@@ -167,7 +167,7 @@ def ingredient_update_view(request, ingredient_id):
         {"form": form,"recipe": ingredient.recipe,}
     )
 
-# 作り方追加
+# 作り方を追加
 @login_required
 def step_create_view(request, recipe_id):
     recipe = get_object_or_404(
