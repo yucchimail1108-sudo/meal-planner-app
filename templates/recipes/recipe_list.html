@@ -3,6 +3,7 @@
 {% block content %}
 
 <h1>マイレシピ一覧</h1>
+<p>登録件数：{{ recipes.paginator.count }}件</p>
 
 <form method="get">
     <input
@@ -11,17 +12,13 @@
         placeholder="レシピ名や材料を入力"
         value="{{ request.GET.q }}"
     >
-
     <button type="submit">検索</button>
 </form>
-
-<p>登録件数：{{ recipes|length }}件</p>
 
 <form method="get">
     <input type="hidden" name="q" value="{{ request.GET.q }}">
 
     <label for="category">カテゴリで絞り込み</label>
-
     <select name="category" id="category">
         <option value="">すべて</option>
         <option value="1" {% if selected_category == "1" %}selected{% endif %}>主食</option>
@@ -37,40 +34,49 @@
     <a href="{% url 'recipes:recipe_create' %}">レシピを登録する</a>
 </p>
 
-<ul>
+<ul style="padding-left: 0;">
 {% for recipe in recipes %}
-<li>
-    <a href="{% url 'recipes:recipe_detail' recipe.id %}">
-        {{ recipe.recipe_name }}
-    </a>
-    {% if recipe.menu_category %}
-        【{{ recipe.get_menu_category_display }}】
-    {% endif %}
-    ({{ recipe.servings }}人前)
+<li style="border: 1px solid #ccc; padding: 12px; margin-bottom: 12px; list-style: none;">
 
-    {% if recipe.id in favorite_recipe_ids %}
-        <a href="{% url 'recipes:favorite_toggle' recipe.id %}">♥</a>
-    {% else %}
-        <a href="{% url 'recipes:favorite_toggle' recipe.id %}">♡</a>
+    <p>
+        <a href="{% url 'recipes:recipe_detail' recipe.id %}">
+            {{ recipe.recipe_name }}
+        </a>
+    </p>
+
+    {% if recipe.menu_category %}
+        <p>カテゴリ：{{ recipe.get_menu_category_display }}</p>
     {% endif %}
+
+    <p>{{ recipe.servings }}人前</p>
+
+    <p>
+        {% if recipe.id in favorite_recipe_ids %}
+            <a href="{% url 'recipes:favorite_toggle' recipe.id %}">♥ お気に入り</a>
+        {% else %}
+            <a href="{% url 'recipes:favorite_toggle' recipe.id %}">♡ お気に入り</a>
+        {% endif %}
+    </p>
 </li>
+{% empty %}
+<li style="list-style: none;">レシピがありません。</li>
 {% endfor %}
 </ul>
 
 <div>
-{% if recipes.has_previous %}
-<a href="?page=1&q={{ request.GET.q }}&category={{ selected_category }}">最初</a>
-<a href="?page={{ recipes.previous_page_number }}&q={{ request.GET.q }}&category={{ selected_category }}">前へ</a>
-{% endif %}
+    {% if recipes.has_previous %}
+        <a href="?page=1&q={{ request.GET.q }}&category={{ selected_category }}">最初</a>
+        <a href="?page={{ recipes.previous_page_number }}&q={{ request.GET.q }}&category={{ selected_category }}">前へ</a>
+    {% endif %}
 
-<span>
-    {{ recipes.number }} / {{ recipes.paginator.num_pages }}
-</span>
+    <span>
+        {{ recipes.number }} / {{ recipes.paginator.num_pages }}
+    </span>
 
-{% if recipes.has_next %}
-<a href="?page={{ recipes.next_page_number }}&q={{ request.GET.q }}&category={{ selected_category }}">次へ</a>
-<a href="?page={{ recipes.paginator.num_pages }}&q={{ request.GET.q }}&category={{ selected_category }}">最後</a>
-{% endif %}
+    {% if recipes.has_next %}
+        <a href="?page={{ recipes.next_page_number }}&q={{ request.GET.q }}&category={{ selected_category }}">次へ</a>
+        <a href="?page={{ recipes.paginator.num_pages }}&q={{ request.GET.q }}&category={{ selected_category }}">最後</a>
+    {% endif %}
 </div>
 
 {% endblock %}

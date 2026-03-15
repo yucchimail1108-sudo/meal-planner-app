@@ -1,22 +1,14 @@
 from django.shortcuts import render, get_object_or_404,redirect
 from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator
 from .models import Recipe, RecipeIngredient, RecipeStep, Favorite
 from .forms import RecipeForm, RecipeIngredientForm, RecipeStepForm
-from django.core.paginator import Paginator
-from django.db.models import Q
 
 # レシピ一覧画面
 @login_required
 def recipe_list_view(request):
     recipes = Recipe.objects.filter(user=request.user)
     selected_category = request.GET.get("category")
-    search_query = request.GET.get('q')
-    
-    if search_query:
-        recipes = recipes.filter(
-            Q(recipe_name__icontains=search_query) |
-            Q(ingredients__food_item__ingredient_name__icontains=search_query)
-        ).distinct()
    
     if selected_category == "favorite":
         recipes = recipes.filter(favorite_set__user=request.user)
@@ -25,10 +17,9 @@ def recipe_list_view(request):
         recipes = recipes.filter(menu_category=int(selected_category))
 
     favorite_recipe_ids = set(
-        Favorite.objects.filter(user=request.user)
-        .values_list("recipe_id", flat=True)
+        Favorite.objects.filter(user=request.user).values_list("recipe_id", flat=True)
     )
-    
+         
     paginator = Paginator(recipes, 5)
     page_number = request.GET.get("page")
     recipes = paginator.get_page(page_number)
