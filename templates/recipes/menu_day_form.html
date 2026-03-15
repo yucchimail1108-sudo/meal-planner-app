@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block title %}献立作成 | うちごはんプランナー{% endblock %}
+
+{% block content %}
+<h2>献立作成</h2>
+
+<form method="post">
+    {% csrf_token %}
+     
+    <div class="form-group">
+        {{ form.plan_date.label_tag }}
+        {{ form.plan_date }}
+    </div>
+    
+    <div class="form-group">
+        {{ form.eat_out.label_tag }}
+        {{ form.eat_out }}
+    </div>
+    
+    <div class="form-group">
+        {{ form.deli.label_tag }}
+        {{ form.deli }}
+    </div>
+
+    <button type="submit" class="save-button">保存</button>
+</form>
+{% endblock %}

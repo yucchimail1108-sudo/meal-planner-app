@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block title %}献立詳細 | うちごはんプランナー{% endblock %}
+
+{% block content %}
+<h2>{{ menu_day.plan_date }}の献立</h2>
+
+<p>外食：{% if menu_day.eat_out %}あり{% else %}なし{% endif %}</p>
+<p>惣菜：{% if menu_day.deli %}あり{% else %}なし{% endif %}</p>
+
+<h3>主食</h3>
+<p>
+    {% if slots.staple and slots.staple.recipe %}
+        {{ slots.staple.recipe.recipe_name }}
+    {% else %}
+        未登録
+    {% endif %}
+</p>
+
+<h3>主菜</h3>
+<p>
+    {% if slots.main and slots.main.recipe %}
+        {{ slots.main.recipe.recipe_name }}
+    {% else %}
+        未登録
+    {% endif %}
+</p>
+
+<h3>副菜</h3>
+<p>
+    {% if slots.side and slots.side.recipe %}
+        {{ slots.side.recipe.recipe_name }}
+    {% else %}
+        未登録
+    {% endif %}
+</p>
+
+<h3>汁物</h3>
+<p>
+    {% if slots.soup and slots.soup.recipe %}
+        {{ slots.soup.recipe.recipe_name }}
+    {% else %}
+        未登録
+    {% endif %}
+</p>
+{% endblock %}

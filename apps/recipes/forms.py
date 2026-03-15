@@ -1,7 +1,7 @@
 from django import forms
-from .models import Recipe, RecipeIngredient, RecipeStep
+from .models import Recipe, RecipeIngredient, RecipeStep, MenuDay
 
-
+# レシピ
 class RecipeForm(forms.ModelForm):
     class Meta:
         model = Recipe
@@ -14,7 +14,7 @@ class RecipeForm(forms.ModelForm):
             'reference_url'
             ]
         
-
+# レシピ材料
 class RecipeIngredientForm(forms.ModelForm):
     class Meta:
         model = RecipeIngredient
@@ -43,8 +43,17 @@ class RecipeIngredientForm(forms.ModelForm):
 
         return cleaned_data    
 
-    
+# 作り方    
 class RecipeStepForm(forms.ModelForm):
     class Meta:
         model = RecipeStep
         fields = ["step_no", "instruction"]
+
+# 献立
+class MenuDayForm(forms.ModelForm):
+    class Meta:
+        model = MenuDay
+        fields = ["plan_date", "eat_out", "deli"]
+        widgets = {
+            "plan_date": forms.DateInput(attrs={"type": "date"}),
+        }

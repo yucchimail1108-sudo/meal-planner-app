@@ -5,6 +5,8 @@ app_name = 'recipes'
 
 urlpatterns = [
     path("", views.recipe_list_view, name="recipe_list"),
+    path("menu/", views.menu_day_create_view, name="menu_create"),
+    path("menu/<str:plan_date>/", views.menu_day_detail_view, name="menu_detail"),
     path("create/", views.recipe_create_view, name="recipe_create"),
     path("<int:recipe_id>/favorite/", views.favorite_toggle_view, name="favorite_toggle"),
     path("<int:recipe_id>/ingredient/add/", views.ingredient_create_view, name="ingredient_create"),

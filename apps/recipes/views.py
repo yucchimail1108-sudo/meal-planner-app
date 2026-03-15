@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404,redirect
 from django.contrib.auth.decorators import login_required
-from .models import Recipe, RecipeIngredient, RecipeStep, Favorite
-from .forms import RecipeForm, RecipeIngredientForm, RecipeStepForm
+from .models import Recipe, RecipeIngredient, RecipeStep, Favorite, MenuDay, MenuSlot
+from .forms import RecipeForm, RecipeIngredientForm, RecipeStepForm, MenuDayForm
 from django.core.paginator import Paginator
 from django.db.models import Q
 
@@ -287,3 +287,64 @@ def favorite_toggle_view(request, recipe_id):
         )
 
     return redirect("recipes:recipe_list")
+
+# 献立作成
+@login_required
+def menu_day_create_view(request):
+    if request.method == "POST":
+        form = MenuDayForm(request.POST)
+        if form.is_valid():
+            menu_day,created = MenuDay.objects.get_or_create(
+                user=request.user,
+                plan_date=form.cleaned_data["plan_date"],
+                defaults={
+                    "eat_out":form.cleaned_data["eat_out"],
+                    "deli":form.cleaned_data["deli"],
+                    "is_cooked": False,                   
+                }
+            )
+    
+            if not created:
+                menu_day.eat_out = form.cleaned_data["eat_out"]
+                menu_day.deli = form.cleaned_data["deli"]
+                menu_day.save()
+            
+            for meal_type in ["staple", "main", "side", "soup"]:
+                MenuSlot.objects.get_or_create(
+                    menu_day=menu_day,
+                    meal_type=meal_type
+                )
+                
+            return redirect(
+                "recipes:menu_detail",
+                plan_date=menu_day.plan_date
+            )
+        
+    else:
+        form = MenuDayForm()
+        
+    return render(
+        request,
+        "recipes/menu_day_form.html",
+        {"form": form}
+    )
+
+# 献立詳細
+@login_required
+def menu_day_detail_view(request, plan_date):
+    menu_day = get_object_or_404(
+        MenuDay,
+        user=request.user,
+        plan_date=plan_date
+    )
+    
+    slots = {slot.meal_type: slot for slot in menu_day.slots.all()}
+                   
+    return render(
+        request,
+        "recipes/menu_day_detail.html",
+        {
+            "menu_day": menu_day,
+            "slots": slots,
+        }
+    )
