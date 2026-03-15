@@ -202,3 +202,94 @@ class Favorite(models.Model):
         
     def __str__(self):
         return f"{self.user} - {self.recipe}"
+        
+
+# 献立（日）
+class MenuDay(models.Model):
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        verbose_name="ユーザー"
+    )
+    
+    plan_date = models.DateField(
+        verbose_name="献立日",
+    )
+    
+    eat_out = models.BooleanField(
+        default=False,
+        verbose_name="外食",
+    )
+    
+    deli = models.BooleanField(
+        default=False,
+        verbose_name="惣菜",
+    )
+    
+    is_cooked = models.BooleanField(
+        default=False,
+        verbose_name="つくった",
+    )
+    
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+      
+    class Meta:
+        verbose_name = "献立"
+        verbose_name_plural = "献立"
+        constraints = [
+            models.UniqueConstraint(
+                fields=["user", "plan_date"],
+                name="unique_user_plan_date"
+            )
+        ]
+        
+    def __str__(self):
+        return f"{self.user} - {self.plan_date}"
+        
+
+# 献立枠
+class MenuSlot(models.Model):
+    MEAL_TYPE_CHOICES = [
+        ("staple", "主食"),
+        ("main", "主菜"),
+        ("side", "副菜"),
+        ("soup", "汁物"),
+    ]
+    
+    menu_day = models.ForeignKey(
+        MenuDay,
+        on_delete=models.CASCADE,
+        related_name="slots",
+        verbose_name="献立"
+    )
+    
+    meal_type = models.CharField(
+        max_length=10,
+        choices=MEAL_TYPE_CHOICES,
+        verbose_name="カテゴリ",
+    )
+    
+    recipe = models.ForeignKey(
+        Recipe,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        verbose_name="レシピ",
+    )
+    
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+      
+    class Meta:
+        verbose_name = "献立枠"
+        verbose_name_plural = "献立枠"
+        constraints = [
+            models.UniqueConstraint(
+                fields=["menu_day", "meal_type"],
+                name="unique_menu_day_meal_type"
+            )
+        ]
+        
+    def __str__(self):
+        return f"{self.menu_day.plan_date} - {self.get_meal_type_display()}"

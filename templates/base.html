@@ -2,29 +2,42 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <title>うちごはんプランナー</title>
+    <title>{% block title %}うちごはんプランナー{% endblock %}</title>
 </head>
 <body>
-    <header>
-        <h1><a href="{% url 'top' %}">うちごはんプランナー</a></h1>
+    <header class="site-header">
+        <h1 class="site-title">
+            <a href="{% url 'top' %}">うちごはんプランナー</a>
+        </h1>
 
-        <nav>
+        <nav class="main-nav">
             {% if user.is_authenticated %}
-                <a href="{% url 'home' %}">ホーム</a>
+                <a href="{% url 'home' %}" class="nav-link">ホーム</a>
 
-                <form action="{% url 'accounts:logout' %}" method="POST" style="display:inline;">
+                <form action="{% url 'accounts:logout' %}" method="POST" style="display:inline;" class="logout-form">
                     {% csrf_token %}
-                    <button type="submit">ログアウト</button>
+                    <button type="submit" class="logout-button">ログアウト</button>
                 </form>
             {% else %}
-                <a href="{% url 'accounts:signup' %}">新規登録</a>
-                <a href="{% url 'accounts:login' %}">ログイン</a>
+                <a href="{% url 'accounts:signup' %}" class="nav-link">新規登録</a>
+                <a href="{% url 'accounts:login' %}" class="nav-link">ログイン</a>
             {% endif %}
         </nav>
+
         <hr>
     </header>
     
-    {% block content %}
-    {% endblock %}
+    {% if messages %}
+        <ul class="message-list">
+            {% for message in messages %}
+            <li class="message-item">{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+    
+    <main class="main-content">
+        {% block content %}
+        {% endblock %}
+    </main>
 </body>
 </html>
