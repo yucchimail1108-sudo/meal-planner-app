@@ -20,7 +20,7 @@
 <form method="get">
     <input type="hidden" name="q" value="{{ request.GET.q }}">
 
-    <label for="category"カテゴリで絞り込み</label>
+    <label for="category">カテゴリで絞り込み</label>
 
     <select name="category" id="category">
         <option value="">すべて</option>
@@ -59,8 +59,8 @@
 
 <div>
 {% if recipes.has_previous %}
-<a ref="?page=1&q={{ request.GET.q }}&category={{ selected_category }}">最初</a>
-<a ref="?page={{ recipes.previous_page_number }}&q={{ request.GET.q }}&category={{ selected_category }}">前へ</a>
+<a href="?page=1&q={{ request.GET.q }}&category={{ selected_category }}">最初</a>
+<a href="?page={{ recipes.previous_page_number }}&q={{ request.GET.q }}&category={{ selected_category }}">前へ</a>
 {% endif %}
 
 <span>
@@ -68,8 +68,8 @@
 </span>
 
 {% if recipes.has_next %}
-<a ref="?page={{ recipes.next_page_number }}&q={{ request.GET.q }}&category={{ selected_category }}">次へ</a>
-<a ref="?page={{ recipes.paginator.num_pages }}&q={{ request.GET.q }}&category={{ selected_category }}">最後</a>
+<a href="?page={{ recipes.next_page_number }}&q={{ request.GET.q }}&category={{ selected_category }}">次へ</a>
+<a href="?page={{ recipes.paginator.num_pages }}&q={{ request.GET.q }}&category={{ selected_category }}">最後</a>
 {% endif %}
 </div>
 
