@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block title %}献立カレンダー | うちごはんプランナー{% endblock %}
+
+{% block content %}
+<h2>{{ year }}年{{ month }}月の献立カレンダー</h2>
+
+<ul>
+    {% for item in day_list %}
+        <li>
+            {{ month }}月{{ item.day }}日
+            {% if item.menu_day %}
+                - <a href="{% url 'recipes:menu_detail' plan_date=item.menu_day.plan_date %}">献立あり (詳細へ)</a>
+            {% else %}
+                - 献立なし
+            {% endif %}
+        </li>
+    {% endfor %}
+</ul>
+{% endblock %}

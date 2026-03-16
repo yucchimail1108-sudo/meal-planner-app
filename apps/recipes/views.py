@@ -1,9 +1,14 @@
+import calendar
+from datetime import date
+
 from django.shortcuts import render, get_object_or_404,redirect
 from django.contrib.auth.decorators import login_required
 from .models import Recipe, RecipeIngredient, RecipeStep, Favorite, MenuDay, MenuSlot
 from .forms import RecipeForm, RecipeIngredientForm, RecipeStepForm, MenuDayForm
 from django.core.paginator import Paginator
 from django.db.models import Q
+
+
 
 # レシピ一覧画面
 @login_required
@@ -348,3 +353,44 @@ def menu_day_detail_view(request, plan_date):
             "slots": slots,
         }
     )
+
+# 献立カレンダー
+@login_required
+def menu_calendar_view(request):
+    
+    today = date.today()
+    
+    year = int(request.GET.get("year", today.year))
+    month = int(request.GET.get("month", today.month))
+
+    _, last_day = calendar.monthrange(year, month)
+    
+    menu_days = MenuDay.objects.filter(
+        user=request.user,
+        plan_date__year=year,
+        plan_date__month=month
+    )
+    
+    menu_day_dict = {
+        menu_day.plan_date.day: menu_day
+        for menu_day in menu_days
+    }
+    
+    day_list = []
+    for day in range(1, last_day + 1):
+        day_list.append({
+            "day":day,
+            "menu_day": menu_day_dict.get(day)
+        })
+        
+    context = {
+        "year" : year,
+        "month" : month,
+        "day_list" : day_list,
+    }
+           
+    return render(
+        request,
+        "recipes/menu_calendar.html",
+        context
+        )
