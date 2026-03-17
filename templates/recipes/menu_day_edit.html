@@ -3,64 +3,73 @@
 {% block title %}献立編集 | うちごはんプランナー{% endblock %}
 
 {% block content %}
-<h2>{{ menu_day.plan_date }}の献立編集</h2>
+<div class="menu-edit-container">
 
-<p>
-    <a href="{% url 'recipes:menu_detail' plan_date=menu_day.plan_date %}" class="back-button">献立詳細へ戻る</a>
-</p>
+    <h2>{{ menu_day.plan_date }}の献立編集</h2>
 
-<form method="POST">
-    {% csrf_token %}
+    <p>
+        <a href="{% url 'recipes:menu_detail' plan_date=menu_day.plan_date %}" class="back-button">献立詳細へ戻る</a>
+    </p>
 
-     {% if form.errors %}
-        <div class="error-box">
-            {{ form.errors }}
+    <form method="POST">
+        {% csrf_token %}
+
+        {% if form.errors %}
+            <div class="error-box">
+                {{ form.errors }}
+            </div>
+        {% endif %}
+
+        <div class="menu-info">
+            <label>献立日</label>
+            <p>{{ menu_day.plan_date }}</p>
+        
+            <label>外食</label>
+            {{ form.eat_out }}
+
+            <label>惣菜</label>
+            {{ form.deli }}
         </div>
-    {% endif %}
 
-    <div class="form-group">
-        <label>献立日</label>
-        <p>{{ menu_day.plan_date }}</p>
-    </div>
-
-    <div class="form-group">
-        {{ form.eat_out.label_tag }}
-        {{ form.eat_out }}
-    </div>
-
-    <div class="form-group">
-        {{ form.deli.label_tag }}
-        {{ form.deli }}
-    </div>
-
-    <hr>
-
-    {% for slot in slots %}
-        <div class="slot-card">
-            <h3 class="slot-title">
-                {% if slot.meal_type == "staple" %}主食
-                {% elif slot.meal_type == "main" %}主菜
-                {% elif slot.meal_type == "side" %}副菜
-                {% elif slot.meal_type == "soup" %}汁物
-                {% endif %}
-            </h3>
-            <p class="slot-recipe-label">現在のレシピ</p>
-
-            <p class="slot-recipe-name">
-                {% if slot.recipe %}
-                    {{ slot.recipe.recipe_name }}
-                {% else %}
-                    未登録
-                {% endif %}
-            </p>
-
-            <a href="{% url 'recipes:menu_slot_update' slot_id=slot.id %}" class="search-button">探す</a>
-        </div>
         <hr>
-    {% endfor %}
 
-    <button type="submit" class="save-button">献立保存</button>
-    <a href="{% url 'recipes:menu_detail' plan_date=menu_day.plan_date %}" class="back-button">戻る</a>
-</form>
+        <div class="slot-list">
+            {% for slot in slots %}
+                <div class="slot-card">
+        
+                    <h3 class="slot-title">
+                        {% if slot.meal_type == "staple" %}主食
+                        {% elif slot.meal_type == "main" %}主菜
+                        {% elif slot.meal_type == "side" %}副菜
+                        {% elif slot.meal_type == "soup" %}汁物
+                        {% endif %}
+                    </h3>
+
+                    <p class="label">現在のレシピ</p>
+
+                    <p class="recipe-name">
+                        {% if slot.recipe %}
+                            {{ slot.recipe.recipe_name }}
+                        {% else %}
+                            レシピが設定されていません
+                        {% endif %}
+                    </p>
+
+                     <a href="{% url 'recipes:menu_slot_update' slot_id=slot.id %}" class="search-button">
+                        探す
+                    </a>
+
+                </div>
+            {% endfor %}
+        </div>
+
+        <button type="submit" class="save-button">献立保存</button>
+        
+        <a href="{% url 'recipes:menu_detail' plan_date=menu_day.plan_date %}" class="back-button">
+            戻る
+        </a>
+        
+    </form>
+</div>
 
 {% endblock %}
