@@ -1,0 +1,180 @@
+body {
+    font-family: sans-serif;
+    margin: 0;
+    padding: 0 16px 40px;
+    background-color: #f8f8f8;
+}
+
+.site-header {
+    background-color: #ffffff;
+    padding: 16px;
+    border-bottom: 1px solid #ddd;
+    margin-bottom: 16px;
+}
+
+.site-title a {
+    text-decoration: none;
+    color: #333;
+}
+
+.main-nav {
+    margin-top: 12px;
+}
+
+/* =========================
+   ボタン共通スタイル（全ボタンの土台）
+========================= */
+.nav-link,
+.logout-button,
+.back-button,
+.save-button,
+.search-button,
+.select-button,
+.edit-button {
+    display: inline-block;
+    margin: 4px 6px 4px 0;
+    padding: 8px 12px;
+    text-decoration: none;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+/* =========================
+   保存ボタン（青）
+========================= */
+.save-button {
+    background-color: #2196f3;
+    border-color: #1976d2;
+    color: #ffffff;
+}
+
+/* =========================
+   戻るボタン（白地＋青文字）
+========================= */
+.back-button {
+    background-color: #ffffff;
+    border-color: #2196f3;
+    color: #2196f3;
+}
+
+/* =========================
+   レシピ選択ボタン（オレンジ）
+========================= */
+.select-button,
+.search-button {
+    background-color: #ffb74d;
+    border-color: #f57c00;
+    color: #ffffff;
+}
+
+/* =========================
+   編集ボタン（青）
+========================= */
+.edit-button {
+    background-color: #2196f3;
+    border-color: #1976d2;
+    color: #ffffff;
+}
+
+/* =========================
+   ログアウトボタン（薄赤）
+========================= */
+.logout-button {
+    background-color: #ffcdd2;
+    border-color: #e57373;
+    color: #b71c1c;
+}
+
+/* ====================================
+   ホバー時（少し濃くする）マウス乗せた時
+======================================= */
+.save-button:hover,
+.edit-button:hover {
+    background-color: #1976d2;
+}
+
+.select-button:hover,
+.search-button:hover {
+    background-color: #f57c00;
+}
+
+.back-button:hover {
+    background-color: #e3f2fd;
+}
+
+
+.main-content {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.menu-edit-container {
+    background-color: #fff;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+}
+
+.menu-info {
+    margin-bottom: 20px;
+}
+
+.slot-list {
+    display: grid;
+    gap: 16px;
+}
+
+.slot-card {
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 16px;
+    background-color: #fafafa;
+}
+
+.slot-title {
+    margin-top: 0;
+}
+
+.slot-recipe-label {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 4px;
+}
+
+.slot-recipe-name {
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 12px;
+}
+
+.message-list {
+    list-style: none;
+    padding: 0;
+    max-width: 800px;
+    margin: 0 auto 16px;
+}
+
+.message-item {
+    background-color: #e8f5e9;
+    border: 1px solid #b7dfb9;
+    padding: 10px 12px;
+    border-radius: 6px;
+}
+
+.error-box {
+    background-color: #ffeaea;
+    border: 1px solid #ffb3b3;
+    padding: 10px 12px;
+    border-radius: 6px;
+    margin-bottom: 16px;
+}
+
+/* 
+保存系 → 黄
+戻る系 → グレー
+選ぶ / 探す系 → 青
+編集系 → 緑
+ログアウト → 薄赤 
+*/ 
