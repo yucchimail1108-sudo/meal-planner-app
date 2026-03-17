@@ -354,6 +354,37 @@ def menu_day_detail_view(request, plan_date):
         }
     )
 
+# 献立編集
+@login_required
+def menu_day_update_view(request, plan_date):
+    menu_day = get_object_or_404(
+        MenuDay,
+        user=request.user,
+        plan_date=plan_date
+    )
+    
+    if request.method == "POST":
+        form = MenuDayForm(request.POST, instance=menu_day)
+        if form.is_valid():
+            form.save()
+            return redirect(
+                "recipes:menu_detail",
+                plan_date=menu_day.plan_date
+        )
+        
+    else:
+        form = MenuDayForm(instance=menu_day)
+        
+    return render(
+        request,
+        "recipes/menu_day_edit.html",
+        {
+            "form": form,
+            "menu_day":menu_day,
+            "slots": menu_day.slots.all(),
+        }
+    )
+
 # 献立カレンダー
 @login_required
 def menu_calendar_view(request):
@@ -394,3 +425,44 @@ def menu_calendar_view(request):
         "recipes/menu_calendar.html",
         context
         )
+
+# 献立レシピ設定
+@login_required
+def menu_slot_update_view(request, slot_id):
+    
+    slot = get_object_or_404(
+        MenuSlot,
+        id=slot_id,
+        menu_day__user=request.user
+    )
+    
+    recipes = Recipe.objects.filter(user=request.user)
+    
+    if request.method == "POST":
+        
+        recipe_id = request.POST.get("recipe_id")
+        
+        if recipe_id:
+            slot.recipe = get_object_or_404(
+                Recipe,
+                id=recipe_id,
+                user=request.user
+            )
+        else:
+            slot.recipe = None
+
+        slot.save()
+        
+        return redirect(
+            "recipes:menu_update",
+            plan_date=slot.menu_day.plan_date
+        )
+
+    return render(
+        request,
+        "recipes/menu_slot_form.html",
+        {
+            "slot": slot,
+            "recipes": recipes,
+        }
+    )

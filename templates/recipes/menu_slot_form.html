@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h2>{{ slot.menu_day.plan_date }}の献立</h2>
+
+<h3>
+{% if slot.meal_type == "staple" %}主食
+{% elif slot.meal_type == "main" %}主菜
+{% elif slot.meal_type == "side" %}副菜
+{% elif slot.meal_type == "soup" %}汁物
+{% endif %}
+のレシピ設定
+
+</h3>
+
+<form method="post">
+    {% csrf_token %}
+    <select name="recipe_id">
+        
+        <option value="">未設定</option>
+
+        {% for recipe in recipes %}
+        <option value="{{ recipe.id }}"
+        {% if slot.recipe and slot.recipe.id == recipe.id %}
+        selected
+        {% endif %}
+        >
+
+        {{ recipe.recipe_name }}    
+        </option>
+        {% endfor %}
+
+    </select>
+
+    <button type="submit" class="save-button">保存</button>
+
+</form>
+
+<br>
+
+<a href="{% url 'recipes:menu_detail' plan_date=slot.menu_day.plan_date %}">
+戻る
+</a>
+
+{% endblock %}

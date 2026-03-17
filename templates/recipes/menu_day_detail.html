@@ -5,6 +5,10 @@
 {% block content %}
 <h2>{{ menu_day.plan_date }}の献立</h2>
 
+<a href="{% url 'recipes:menu_update' plan_date=menu_day.plan_date %}" class="edit-button">
+献立を編集する
+</a>
+
 <p>外食：{% if menu_day.eat_out %}あり{% else %}なし{% endif %}</p>
 <p>惣菜：{% if menu_day.deli %}あり{% else %}なし{% endif %}</p>
 
@@ -16,6 +20,11 @@
         未登録
     {% endif %}
 </p>
+
+{% if slots.staple %}
+<a href="{% url 'recipes:menu_slot_update' slot_id=slots.staple.id %}" class="search-button">探す</a>
+{% endif %}
+
 
 <h3>主菜</h3>
 <p>
