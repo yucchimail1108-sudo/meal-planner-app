@@ -321,12 +321,18 @@ def menu_day_create_view(request):
                 )
                 
             return redirect(
-                "recipes:menu_detail",
+                "recipes:menu_update",
                 plan_date=menu_day.plan_date
             )
+    
+    #「作成する」を押したとき、その日付が最初から入るようにする    
+    else: 
+        initial = {}
+        plan_date = request.GET.get("plan_date")
+        if plan_date:
+            initial["plan_date"] = plan_date
         
-    else:
-        form = MenuDayForm()
+        form = MenuDayForm(initial=initial)
         
     return render(
         request,
@@ -409,15 +415,38 @@ def menu_calendar_view(request):
     
     day_list = []
     for day in range(1, last_day + 1):
+        full_date = f"{year}-{month:02d}-{day:02d}"
+                
         day_list.append({
             "day":day,
+            "full_date": full_date,
             "menu_day": menu_day_dict.get(day)
         })
+    
+    # 「前月」「次月」の年月を作る処理
+    if month == 1:
+        prev_year = year - 1
+        prev_month = 12
+    else:
+        prev_year = year
+        prev_month = month - 1
+    
+    if month == 12:
+        next_year = year + 1
+        next_month = 1
+    else:
+        next_year = year
+        next_month = month + 1
+        
         
     context = {
         "year" : year,
         "month" : month,
         "day_list" : day_list,
+        "prev_year" : prev_year,
+        "prev_month" : prev_month,
+        "next_year" : next_year,
+        "next_month" : next_month,
     }
            
     return render(

@@ -5,6 +5,11 @@
 {% block content %}
 <h2>{{ year }}年{{ month }}月の献立カレンダー</h2>
 
+<div class="calendar-nav">
+    <a href="{% url 'recipes:menu_calendar' %}?year={{ prev_year }}&month={{ prev_month }}" class="back-button">前月</a>
+    <a href="{% url 'recipes:menu_calendar' %}?year={{ next_year }}&month={{ next_month }}" class="save-button">次月</a>
+</div>
+
 <ul>
     {% for item in day_list %}
         <li>
@@ -13,6 +18,7 @@
                 - <a href="{% url 'recipes:menu_detail' plan_date=item.menu_day.plan_date %}">献立あり (詳細へ)</a>
             {% else %}
                 - 献立なし
+                <a href="{% url 'recipes:menu_create' %}?plan_date={{ item.full_date }}" class="select-button">作成する</a>
             {% endif %}
         </li>
     {% endfor %}
