@@ -12,6 +12,7 @@
 
         <nav class="main-nav">
             {% if user.is_authenticated %}
+                <p>ログインユーザー: {{ user.username }}（ID: {{ user.id }}）</p>
                 <a href="{% url 'home' %}" class="nav-link">ホーム</a>
 
                 <form action="{% url 'accounts:logout' %}" method="POST" style="display:inline;" class="logout-form">

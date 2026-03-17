@@ -5,12 +5,22 @@
 {% block content %}
 <h2>{{ menu_day.plan_date }}の献立編集</h2>
 
+<p>
+    <a href="{% url 'recipes:menu_detail' plan_date=menu_day.plan_date %}" class="back-button">献立詳細へ戻る</a>
+</p>
+
 <form method="POST">
     {% csrf_token %}
 
+     {% if form.errors %}
+        <div class="error-box">
+            {{ form.errors }}
+        </div>
+    {% endif %}
+
     <div class="form-group">
-        {{ form.plan_date.label_tag }}
-        {{ form.plan_date }}
+        <label>献立日</label>
+        <p>{{ menu_day.plan_date }}</p>
     </div>
 
     <div class="form-group">
@@ -27,15 +37,16 @@
 
     {% for slot in slots %}
         <div class="slot-card">
-            <h3>
+            <h3 class="slot-title">
                 {% if slot.meal_type == "staple" %}主食
                 {% elif slot.meal_type == "main" %}主菜
                 {% elif slot.meal_type == "side" %}副菜
                 {% elif slot.meal_type == "soup" %}汁物
                 {% endif %}
             </h3>
+            <p class="slot-recipe-label">現在のレシピ</p>
 
-            <p>
+            <p class="slot-recipe-name">
                 {% if slot.recipe %}
                     {{ slot.recipe.recipe_name }}
                 {% else %}

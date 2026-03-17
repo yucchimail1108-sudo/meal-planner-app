@@ -7,7 +7,7 @@ from .models import Recipe, RecipeIngredient, RecipeStep, Favorite, MenuDay, Men
 from .forms import RecipeForm, RecipeIngredientForm, RecipeStepForm, MenuDayForm
 from django.core.paginator import Paginator
 from django.db.models import Q
-
+from django.contrib import messages
 
 
 # レシピ一覧画面
@@ -370,16 +370,25 @@ def menu_day_update_view(request, plan_date):
     )
     
     if request.method == "POST":
-        form = MenuDayForm(request.POST, instance=menu_day)
+        post_data = request.POST.copy()
+        post_data["plan_date"] = menu_day.plan_date.strftime("%Y-%m-%d")
+        
+        form = MenuDayForm(post_data, instance=menu_day)
+        
         if form.is_valid():
             form.save()
+            messages.success(request, "献立を保存しました")
             return redirect(
-                "recipes:menu_detail",
+                "recipes:menu_update",
                 plan_date=menu_day.plan_date
-        )
-        
+            )
+            
     else:
-        form = MenuDayForm(instance=menu_day)
+        form = MenuDayForm(initial={
+            'plan_date': menu_day.plan_date,
+            'eat_out': menu_day.eat_out,
+            'deli': menu_day.deli,
+        })
         
     return render(
         request,
