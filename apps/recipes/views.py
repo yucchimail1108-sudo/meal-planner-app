@@ -624,7 +624,11 @@ def shopping_list_view(request):
                 )
                 added_count += 1
         
-        messages.success(request, f"{added_count}件の食材を買い物リストに追加しました。")
+        if added_count == 0:
+            messages.info(request, "追加対象の食材はありませんでした（すでに買い物リストにあるか、おうち食材にあります）。")
+        else:
+            messages.success(request, f"{added_count}件の食材を買い物リストに追加しました。")
+
         return redirect("recipes:shopping_list")
 
 
@@ -654,3 +658,20 @@ def shopping_list_delete_view(request, item_id):
         return redirect("recipes:shopping_list")
 
     return redirect("recipes:shopping_list")
+
+
+# おうち食材一覧画面
+@login_required
+def home_food_list_view(request):
+    # ログインユーザーのおうち食材を取得
+    home_food_items = HomeFoodItem.objects.filter(
+        user=request.user
+    ).select_related("food_item").order_by("food_item__ingredient_name")
+
+    return render(
+        request,
+        "recipes/home_food_list.html",
+        {
+            "home_food_items": home_food_items,
+        }
+    )

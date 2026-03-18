@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="home-food-page">
+    <h1>おうち食材一覧</h1>
+
+    <div class="page-actions">
+        <a href="{% url 'recipes:shopping_list' %}" class="back-button">買い物リストへ戻る</a>
+    </div>
+
+    {% if home_food_items %}
+        <ul class="home-food-list">
+            {% for item in home_food_items %}
+                <li class="home-food-item">
+                    {{ item.food_item.ingredient_name }}
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>おうち食材はまだありません。</p>
+    {% endif %}
+</div>
+{% endblock %}
