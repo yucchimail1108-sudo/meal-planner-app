@@ -566,6 +566,46 @@ def shopping_list_view(request):
                 shopping_item.save()
 
             return redirect("recipes:shopping_list")
+ 
+  # 抽出処理（GETで日付が来た場合）
+    start_date = request.GET.get("start_date")
+    end_date = request.GET.get("end_date")
+
+    if start_date and end_date:
+        # 指定期間の献立を取得
+        menu_days = MenuDay.objects.filter(
+            user=request.user,
+            plan_date__range=[start_date, end_date]
+        )
+
+        print("=== menu_days ===")
+        print(menu_days)
+
+        # 献立枠を取得
+        menu_slots = MenuSlot.objects.filter(
+            menu_day__in=menu_days
+        ).select_related("recipe")
+
+        print("=== menu_slots ===")
+        print(menu_slots)
+
+        # レシピID一覧（None除外）
+        recipe_ids = [
+            slot.recipe.id for slot in menu_slots if slot.recipe
+        ]
+
+        print("=== recipe_ids ===")
+        print(recipe_ids)
+
+        # レシピ食材取得
+        ingredients = RecipeIngredient.objects.filter(
+            recipe_id__in=recipe_ids
+        ).select_related("food_item")
+
+        print("=== ingredients ===")
+        for i in ingredients:
+            print(i.food_item.ingredient_name)
+
 
     return render(
         request,
