@@ -525,7 +525,6 @@ def shopping_list_view(request):
         # 購入済み処理
         if action == "mark_as_purchased":
             checked_ids = request.POST.getlist("checked_items")
-            print("checked_ids =", checked_ids)
 
             for item_id in checked_ids:
                 item = get_object_or_404(
@@ -598,22 +597,33 @@ def shopping_list_view(request):
             ingredient.food_item.id for ingredient in ingredients
         })
 
-        # まだ買い物リストに無い食材だけ追加
+        # そのユーザーのおうち食材ID一覧を取得
+        home_food_item_ids = set(
+            HomeFoodItem.objects.filter(
+                user=request.user
+            ).values_list("food_item_id", flat=True)
+        )
+        # まだ買い物リストに無く、かつおうち食材にも無い食材だけ追加
         added_count = 0
 
         for food_item_id in food_item_ids:
+            
+            # おうち食材にあるなら追加しない
+            if food_item_id in home_food_item_ids:
+                continue
+
             exists = ShoppingListItem.objects.filter(
                 user=request.user,
                 food_item_id=food_item_id
             ).exists()
-
+            
             if not exists:
                 ShoppingListItem.objects.create(
                     user=request.user,
                     food_item_id=food_item_id
                 )
                 added_count += 1
-
+        
         messages.success(request, f"{added_count}件の食材を買い物リストに追加しました。")
         return redirect("recipes:shopping_list")
 
