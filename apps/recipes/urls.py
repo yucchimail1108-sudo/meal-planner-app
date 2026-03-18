@@ -21,4 +21,5 @@ urlpatterns = [
     path("ingredient/<int:ingredient_id>/edit/", views.ingredient_update_view, name="ingredient_update"),
     path("step/<int:step_id>/edit/", views.step_update_view, name="step_update"),
     path("step/<int:step_id>/delete/", views.step_delete_view, name="step_delete"),
+    path("shopping-list/", views.shopping_list_view, name="shopping_list"),
 ]
