@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.conf import settings
 
 # レシピ
 class Recipe(models.Model):
@@ -293,3 +294,34 @@ class MenuSlot(models.Model):
         
     def __str__(self):
         return f"{self.menu_day.plan_date} - {self.get_meal_type_display()}"
+    
+    
+# 買い物リスト１件分を保存するためのモデル
+class ShoppingListItem(models.Model):
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        verbose_name="ユーザー"
+    )
+    
+    food_item = models.ForeignKey(
+        FoodItem,
+        on_delete=models.CASCADE,
+        verbose_name="食材"
+    )
+    
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+      
+    class Meta:
+        verbose_name = "買い物リスト"
+        verbose_name_plural = "買い物リスト"
+        constraints = [
+            models.UniqueConstraint(
+                fields=["user", "food_item"],
+                name="shopping_list_item_per_user"
+            )
+        ]
+        
+    def __str__(self):
+        return f"{self.user} - {self.food_item.name}"

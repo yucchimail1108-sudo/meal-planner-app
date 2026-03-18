@@ -1,12 +1,12 @@
 from django.contrib import admin
-from .models import Recipe, FoodItem, RecipeIngredient, RecipeStep, Favorite
+from .models import Recipe, FoodItem, RecipeIngredient, RecipeStep, Favorite, MenuDay, MenuSlot, ShoppingListItem
 
 # レシピ管理画面
 @admin.register(Recipe)
 class RecipeAdmin(admin.ModelAdmin):
     list_display = ("id", "recipe_name", "menu_category","user", "servings", "created_at")
     search_fields = ("recipe_name",)
-    create_at = ("created_at",)
+    date_hierarchy = "created_at"
 
 # 食材管理画面
 @admin.register(FoodItem)
@@ -35,3 +35,20 @@ class FavoriteAdmin(admin.ModelAdmin):
     list_display = ("id", "user", "recipe", "created_at")
     search_fields = ("user__username", "recipe__recipe_name")
     list_filter = ("created_at",)
+    
+# 献立（日）管理画面
+@admin.register(MenuDay)
+class MenuDayAdmin(admin.ModelAdmin):
+    list_display = ("id", "user", "plan_date", "eat_out", "deli", "is_cooked", "created_at")
+    search_fields = ("user__username",)
+    list_filter = ("plan_date", "eat_out", "deli", "is_cooked", "created_at")
+
+# 献立（枠）管理画面
+@admin.register(MenuSlot)
+class MenuSlotAdmin(admin.ModelAdmin):
+    list_display = ("id", "menu_day", "meal_type", "recipe", "created_at")
+    search_fields = ("menu_day__plan_date", "recipe__recipe_name")
+    list_filter = ("meal_type", "created_at")
+    
+# 買い物リスト画面
+admin.site.register(ShoppingListItem)
