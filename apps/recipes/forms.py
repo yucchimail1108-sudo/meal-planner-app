@@ -63,3 +63,14 @@ class ShoppingListItemForm(forms.ModelForm):
     class Meta:
         model = ShoppingListItem
         fields = ["food_item"]
+        
+# 買い物リスト抽出期間入力用フォーム
+class ShoppingListExtractForm(forms.Form):
+    start_date = forms.DateField(
+        label="開始日",
+        widget=forms.DateInput(attrs={"type": "date"})
+    )
+    end_date = forms.DateField(
+        label="終了日",
+        widget=forms.DateInput(attrs={"type": "date"})
+    )

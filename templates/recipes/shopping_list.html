@@ -8,6 +8,20 @@
         <a href="{% url 'recipes:menu_calendar' %}" class="back-button">戻る</a>
     </div>
 
+    <h2>献立の対象期間選択</h2>
+
+    <form method="get">
+        <div>
+            {{ extract_form.start_date.label_tag }}
+            {{ extract_form.start_date }}
+        </div>
+        <div>
+            {{ extract_form.end_date.label_tag }}
+            {{ extract_form.end_date }}
+        </div>
+        <button type="submit" class="search-button">抽出</button>
+    </form>
+
     <h2>食材を追加</h2>
     <form method="post">
         {% csrf_token %}
