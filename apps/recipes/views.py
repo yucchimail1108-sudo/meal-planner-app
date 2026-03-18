@@ -675,3 +675,22 @@ def home_food_list_view(request):
             "home_food_items": home_food_items,
         }
     )
+    
+    
+# おうち食材1件を削除する画面処理
+@login_required
+def home_food_delete_view(request, item_id):
+    # ログインユーザーのおうち食材1件を取得
+    home_food_item = get_object_or_404(
+        HomeFoodItem,
+        id=item_id,
+        user=request.user
+    )
+
+    # POST送信のときだけ削除する
+    if request.method == "POST":
+        home_food_item.delete()
+        messages.success(request, "おうち食材から削除しました。")
+        return redirect("recipes:home_food_list")
+
+    return redirect("recipes:home_food_list")

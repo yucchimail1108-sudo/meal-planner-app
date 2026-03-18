@@ -12,7 +12,12 @@
         <ul class="home-food-list">
             {% for item in home_food_items %}
                 <li class="home-food-item">
-                    {{ item.food_item.ingredient_name }}
+                    <span>{{ item.food_item.ingredient_name }}</span>
+
+                    <form method="post" action="{% url 'recipes:home_food_delete' item.id %}">
+                        {% csrf_token %}
+                        <button type="submit" class="back-button">削除</button>
+                    </form>
                 </li>
             {% endfor %}
         </ul>
