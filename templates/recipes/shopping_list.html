@@ -9,7 +9,7 @@
     <form method="post">
         {% csrf_token %}
         {{ form.food_item }}
-        <button type="submit" class="save-button">追加</button>
+        <button type="submit" class="save-button">＋追加</button>
     </form>
 
     <div class="page-actions">
@@ -19,9 +19,14 @@
     {% if shopping_items %}
         <ul class="shopping-list">
             {% for item in shopping_items %}
-                <li class="shopping-list-item">
-                    {{ item.food_item.ingredient_name }}
-                </li>
+        <li class="shopping-list-item">
+            <span>{{ item.food_item.ingredient_name }}</span>
+
+            <form method="post" action="{% url 'recipes:shopping_list_delete' item.id %}">
+                {% csrf_token %}
+                <button type="submit" class="back-button">削除</button>
+            </form>
+        </li>
             {% endfor %}
         </ul>
     {% else %}

@@ -541,3 +541,20 @@ def shopping_list_view(request):
             "form": form,
         }
     )
+    
+# 買い物リスト1件を削除する画面処理
+@login_required
+def shopping_list_delete_view(request, item_id):
+    # ログインユーザーの買い物リスト1件を取得
+    shopping_item = get_object_or_404(
+        ShoppingListItem,
+        id=item_id,
+        user=request.user
+    )
+
+    # POST送信のときだけ削除する
+    if request.method == "POST":
+        shopping_item.delete()
+        return redirect("recipes:shopping_list")
+
+    return redirect("recipes:shopping_list")

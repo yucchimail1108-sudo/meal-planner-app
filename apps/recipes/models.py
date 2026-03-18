@@ -324,4 +324,4 @@ class ShoppingListItem(models.Model):
         ]
         
     def __str__(self):
-        return f"{self.user} - {self.food_item.name}"
+        return f"{self.user} - {self.food_item.ingredient_name}"
