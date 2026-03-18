@@ -325,3 +325,35 @@ class ShoppingListItem(models.Model):
         
     def __str__(self):
         return f"{self.user} - {self.food_item.ingredient_name}"
+    
+    
+# ユーザーごとのおうち食材を保存するためのモデル
+class HomeFoodItem(models.Model):
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        verbose_name="ユーザー"
+    )
+
+    food_item = models.ForeignKey(
+        FoodItem,
+        on_delete=models.CASCADE,
+        verbose_name="食材"
+    )
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = "おうち食材"
+        verbose_name_plural = "おうち食材"
+        constraints = [
+            models.UniqueConstraint(
+                fields=["user", "food_item"],
+                name="unique_home_food_item_per_user"
+            )
+        ]
+
+    # 管理画面などで1件の表示名をわかりやすくするための文字列
+    def __str__(self):
+        return f"{self.user} - {self.food_item.ingredient_name}"
