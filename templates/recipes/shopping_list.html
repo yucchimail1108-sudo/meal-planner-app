@@ -4,6 +4,14 @@
 <div class="shopping-list-page">
     <h1>買い物リスト</h1>
 
+    <h2>食材を追加</h2>
+
+    <form method="post">
+        {% csrf_token %}
+        {{ form.food_item }}
+        <button type="submit" class="save-button">追加</button>
+    </form>
+
     <div class="page-actions">
         <a href="{% url 'recipes:menu_calendar' %}" class="back-button">戻る</a>
     </div>

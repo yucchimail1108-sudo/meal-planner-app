@@ -4,7 +4,7 @@ from datetime import date
 from django.shortcuts import render, get_object_or_404,redirect
 from django.contrib.auth.decorators import login_required
 from .models import Recipe, RecipeIngredient, RecipeStep, Favorite, MenuDay, MenuSlot, ShoppingListItem
-from .forms import RecipeForm, RecipeIngredientForm, RecipeStepForm, MenuDayForm
+from .forms import RecipeForm, RecipeIngredientForm, RecipeStepForm, MenuDayForm, ShoppingListItemForm
 from django.core.paginator import Paginator
 from django.db.models import Q
 from django.contrib import messages
@@ -505,18 +505,39 @@ def menu_slot_update_view(request, slot_id):
         }
     )
 
-# 買い物リスト一覧画面
+# 買い物リスト一覧＆追加画面
 @login_required
 def shopping_list_view(request):
-    # ログインユーザーの買い物リストを取得
+    # 買い物リスト取得
     shopping_items = ShoppingListItem.objects.filter(
         user=request.user
     ).select_related("food_item")
+
+    # フォーム処理
+    if request.method == "POST":
+        form = ShoppingListItemForm(request.POST)
+        if form.is_valid():
+            shopping_item = form.save(commit=False)
+            shopping_item.user = request.user
+
+            # 重複チェック（安全対策）
+            exists = ShoppingListItem.objects.filter(
+                user=request.user,
+                food_item=shopping_item.food_item
+            ).exists()
+
+            if not exists:
+                shopping_item.save()
+
+            return redirect("recipes:shopping_list")
+    else:
+        form = ShoppingListItemForm()
 
     return render(
         request,
         "recipes/shopping_list.html",
         {
-            "shopping_items": shopping_items
+            "shopping_items": shopping_items,
+            "form": form,
         }
     )
