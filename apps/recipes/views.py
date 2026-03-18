@@ -3,7 +3,7 @@ from datetime import date
 
 from django.shortcuts import render, get_object_or_404,redirect
 from django.contrib.auth.decorators import login_required
-from .models import Recipe, RecipeIngredient, RecipeStep, Favorite, MenuDay, MenuSlot, ShoppingListItem
+from .models import Recipe, RecipeIngredient, RecipeStep, Favorite, MenuDay, MenuSlot, ShoppingListItem, HomeFoodItem
 from .forms import RecipeForm, RecipeIngredientForm, RecipeStepForm, MenuDayForm, ShoppingListItemForm
 from django.core.paginator import Paginator
 from django.db.models import Q
@@ -505,22 +505,49 @@ def menu_slot_update_view(request, slot_id):
         }
     )
 
-# 買い物リスト一覧＆追加画面
+# 買い物リスト一覧＆追加＆購入済み処理
 @login_required
 def shopping_list_view(request):
-    # 買い物リスト取得
     shopping_items = ShoppingListItem.objects.filter(
         user=request.user
     ).select_related("food_item")
 
-    # フォーム処理
     if request.method == "POST":
+
+        # チェックされたIDを取得
+        checked_ids = request.POST.getlist("checked_items")
+
+        # 購入済み処理
+        if checked_ids:
+            for item_id in checked_ids:
+                item = ShoppingListItem.objects.get(
+                    id=item_id,
+                    user=request.user
+                )
+
+                # おうち食材に追加（重複防止）
+                exists = HomeFoodItem.objects.filter(
+                    user=request.user,
+                    food_item=item.food_item
+                ).exists()
+
+                if not exists:
+                    HomeFoodItem.objects.create(
+                        user=request.user,
+                        food_item=item.food_item
+                    )
+
+                # 買い物リストから削除
+                item.delete()
+
+            return redirect("recipes:shopping_list")
+
+        # 追加処理（今までの処理）
         form = ShoppingListItemForm(request.POST)
         if form.is_valid():
             shopping_item = form.save(commit=False)
             shopping_item.user = request.user
 
-            # 重複チェック（安全対策）
             exists = ShoppingListItem.objects.filter(
                 user=request.user,
                 food_item=shopping_item.food_item
@@ -530,6 +557,7 @@ def shopping_list_view(request):
                 shopping_item.save()
 
             return redirect("recipes:shopping_list")
+
     else:
         form = ShoppingListItemForm()
 

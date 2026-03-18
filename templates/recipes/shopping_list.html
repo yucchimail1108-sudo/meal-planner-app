@@ -17,18 +17,28 @@
     </div>
 
     {% if shopping_items %}
+    <form method="post">
+        {% csrf_token %}
+
         <ul class="shopping-list">
             {% for item in shopping_items %}
-        <li class="shopping-list-item">
-            <span>{{ item.food_item.ingredient_name }}</span>
+            <li class="shopping-list-item">
+                <label>
+                    <input type="checkbox" name="checked_items" value="{{ item.id }}">
+                    {{ item.food_item.ingredient_name }}
+                </label>
 
-            <form method="post" action="{% url 'recipes:shopping_list_delete' item.id %}">
-                {% csrf_token %}
-                <button type="submit" class="back-button">削除</button>
-            </form>
-        </li>
-            {% endfor %}
-        </ul>
+                <form method="post" action="{% url 'recipes:shopping_list_delete' item.id %}">
+                    {% csrf_token %}
+                    <button type="submit" class="back-button">削除</button>
+                </form>
+            </li>
+        {% endfor %}
+    </ul>
+    
+    <button type="submit" class="save-button">購入済みにする</button>
+
+</form>    
     {% else %}
         <p>買い物リストはまだありません。</p>
     {% endif %}
