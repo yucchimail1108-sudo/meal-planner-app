@@ -567,7 +567,7 @@ def shopping_list_view(request):
 
             return redirect("recipes:shopping_list")
  
-  # 抽出処理（GETで日付が来た場合）
+ # 抽出処理（GETで日付が来た場合）
     start_date = request.GET.get("start_date")
     end_date = request.GET.get("end_date")
 
@@ -578,33 +578,44 @@ def shopping_list_view(request):
             plan_date__range=[start_date, end_date]
         )
 
-        print("=== menu_days ===")
-        print(menu_days)
-
         # 献立枠を取得
         menu_slots = MenuSlot.objects.filter(
             menu_day__in=menu_days
         ).select_related("recipe")
 
-        print("=== menu_slots ===")
-        print(menu_slots)
-
-        # レシピID一覧（None除外）
-        recipe_ids = [
+        # レシピID一覧（None除外・重複除外）
+        recipe_ids = list({
             slot.recipe.id for slot in menu_slots if slot.recipe
-        ]
-
-        print("=== recipe_ids ===")
-        print(recipe_ids)
+        })
 
         # レシピ食材取得
         ingredients = RecipeIngredient.objects.filter(
             recipe_id__in=recipe_ids
         ).select_related("food_item")
 
-        print("=== ingredients ===")
-        for i in ingredients:
-            print(i.food_item.ingredient_name)
+        # 食材IDの重複を除外
+        food_item_ids = list({
+            ingredient.food_item.id for ingredient in ingredients
+        })
+
+        # まだ買い物リストに無い食材だけ追加
+        added_count = 0
+
+        for food_item_id in food_item_ids:
+            exists = ShoppingListItem.objects.filter(
+                user=request.user,
+                food_item_id=food_item_id
+            ).exists()
+
+            if not exists:
+                ShoppingListItem.objects.create(
+                    user=request.user,
+                    food_item_id=food_item_id
+                )
+                added_count += 1
+
+        messages.success(request, f"{added_count}件の食材を買い物リストに追加しました。")
+        return redirect("recipes:shopping_list")
 
 
     return render(
