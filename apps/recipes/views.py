@@ -511,16 +511,21 @@ def shopping_list_view(request):
     shopping_items = ShoppingListItem.objects.filter(
         user=request.user
     ).select_related("food_item")
-
+    
+    # 買い物リスト追加フォーム
+    form = ShoppingListItemForm(request.POST or None)
+    
     if request.method == "POST":
-
-        # チェックされたIDを取得
-        checked_ids = request.POST.getlist("checked_items")
+        action = request.POST.get("action")
 
         # 購入済み処理
-        if checked_ids:
+        if action == "mark_as_purchased":
+            checked_ids = request.POST.getlist("checked_items")
+            print("checked_ids =", checked_ids)
+
             for item_id in checked_ids:
-                item = ShoppingListItem.objects.get(
+                item = get_object_or_404(
+                    ShoppingListItem,
                     id=item_id,
                     user=request.user
                 )
@@ -539,10 +544,10 @@ def shopping_list_view(request):
 
                 # 買い物リストから削除
                 item.delete()
-
+            messages.success(request, "購入済みの食材は、おうち食材へ追加しました。")
             return redirect("recipes:shopping_list")
 
-        # 追加処理（今までの処理）
+        # 追加処理
         form = ShoppingListItemForm(request.POST)
         if form.is_valid():
             shopping_item = form.save(commit=False)
@@ -557,9 +562,6 @@ def shopping_list_view(request):
                 shopping_item.save()
 
             return redirect("recipes:shopping_list")
-
-    else:
-        form = ShoppingListItemForm()
 
     return render(
         request,

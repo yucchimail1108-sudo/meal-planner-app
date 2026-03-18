@@ -4,41 +4,50 @@
 <div class="shopping-list-page">
     <h1>買い物リスト</h1>
 
-    <h2>食材を追加</h2>
-
-    <form method="post">
-        {% csrf_token %}
-        {{ form.food_item }}
-        <button type="submit" class="save-button">＋追加</button>
-    </form>
-
     <div class="page-actions">
         <a href="{% url 'recipes:menu_calendar' %}" class="back-button">戻る</a>
     </div>
 
-    {% if shopping_items %}
+    <h2>食材を追加</h2>
     <form method="post">
         {% csrf_token %}
+        {{ form.food_item }}
+        <button type="submit" class="save-button">追加</button>
+    </form>
 
-        <ul class="shopping-list">
-            {% for item in shopping_items %}
-            <li class="shopping-list-item">
-                <label>
-                    <input type="checkbox" name="checked_items" value="{{ item.id }}">
-                    {{ item.food_item.ingredient_name }}
-                </label>
+    {% if shopping_items %}
+        <h2>買い物予定</h2>
 
-                <form method="post" action="{% url 'recipes:shopping_list_delete' item.id %}">
-                    {% csrf_token %}
-                    <button type="submit" class="back-button">削除</button>
-                </form>
-            </li>
-        {% endfor %}
-    </ul>
-    
-    <button type="submit" class="save-button">購入済みにする</button>
+        <form method="post">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="mark_as_purchased">
 
-</form>    
+            <ul class="shopping-list">
+                {% for item in shopping_items %}
+                    <li class="shopping-list-item">
+                        <div class="shopping-item-left">
+                            <label>
+                                <input type="checkbox" name="checked_items" value="{{ item.id }}">
+                                {{ item.food_item.ingredient_name }}
+                            </label>
+                        </div>
+
+                        <div class="shopping-item-right">
+                            <button
+                                type="submit"
+                                formaction="{% url 'recipes:shopping_list_delete' item.id %}"
+                                formmethod="post"
+                                class="back-button"
+                            >
+                                削除
+                            </button>
+                        </div>
+                    </li>
+                {% endfor %}
+            </ul>
+
+            <button type="submit" class="save-button">購入済みにする</button>
+        </form>
     {% else %}
         <p>買い物リストはまだありません。</p>
     {% endif %}
