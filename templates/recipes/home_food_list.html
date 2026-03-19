@@ -32,6 +32,27 @@
         </form>
     </div>
 
+    <!-- カテゴリ絞り込み -->
+    <div class="content-card section-block">
+        <h2 class="section-title">カテゴリで絞り込み</h2>
+
+        <form method="get">
+            <select name="category">
+                <option value="">すべて</option>
+                <option value="1" {% if selected_category == "1" %}selected{% endif %}>青果</option>
+                <option value="2" {% if selected_category == "2" %}selected{% endif %}>魚/肉</option>
+                <option value="3" {% if selected_category == "3" %}selected{% endif %}>常温</option>
+                <option value="4" {% if selected_category == "4" %}selected{% endif %}>冷蔵</option>
+                <option value="5" {% if selected_category == "5" %}selected{% endif %}>主食</option>
+                <option value="6" {% if selected_category == "6" %}selected{% endif %}>冷凍</option>
+                <option value="7" {% if selected_category == "7" %}selected{% endif %}>その他</option>
+            </select>
+
+            <button type="submit">絞り込む</button>
+        </form>
+    </div>
+
+    <!-- 一覧 -->
         {% if home_food_items %}
             {% regroup home_food_items by food_item.get_category_display as grouped_home_foods %}
 
