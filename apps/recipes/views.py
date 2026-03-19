@@ -684,11 +684,18 @@ def home_food_list_view(request):
             return redirect("recipes:home_food_list")
     else:
         form = HomeFoodItemForm()
+    
+    selected_category = request.GET.get("category")
 
     # ログインユーザーのおうち食材を取得
     home_food_items = HomeFoodItem.objects.filter(
         user=request.user
     ).select_related("food_item").order_by("food_item__ingredient_name")
+
+    if selected_category:
+        home_food_items = home_food_items.filter(
+            food_item__category=int(selected_category)
+        )
 
     return render(
         request,
@@ -696,6 +703,7 @@ def home_food_list_view(request):
         {
             "home_food_items": home_food_items,
             "form": form,
+            "selected_category": selected_category,
         }
     )
     
