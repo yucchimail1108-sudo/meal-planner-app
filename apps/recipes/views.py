@@ -4,7 +4,7 @@ from datetime import date
 from django.shortcuts import render, get_object_or_404,redirect
 from django.contrib.auth.decorators import login_required
 from .models import Recipe, RecipeIngredient, RecipeStep, Favorite, MenuDay, MenuSlot, ShoppingListItem, HomeFoodItem
-from .forms import RecipeForm, RecipeIngredientForm, RecipeStepForm, MenuDayForm, ShoppingListItemForm, ShoppingListExtractForm
+from .forms import RecipeForm, RecipeIngredientForm, RecipeStepForm, MenuDayForm, ShoppingListItemForm, ShoppingListExtractForm, HomeFoodItemForm
 from django.core.paginator import Paginator
 from django.db.models import Q
 from django.contrib import messages
@@ -663,7 +663,19 @@ def shopping_list_delete_view(request, item_id):
 # おうち食材一覧画面
 @login_required
 def home_food_list_view(request):
-    # ログインユーザーのおうち食材を取得
+    # 追加処理
+    if request.method == "POST":
+        form = HomeFoodItemForm(request.POST)
+        if form.is_valid():
+            home_food = form.save(commit=False)
+            home_food.user = request.user
+            home_food.save()
+            messages.success(request, "おうち食材に追加しました。")
+            return redirect("recipes:home_food_list")
+    else:
+        form = HomeFoodItemForm()
+
+    # 一覧取得
     home_food_items = HomeFoodItem.objects.filter(
         user=request.user
     ).select_related("food_item").order_by("food_item__ingredient_name")
@@ -673,6 +685,7 @@ def home_food_list_view(request):
         "recipes/home_food_list.html",
         {
             "home_food_items": home_food_items,
+            "form": form,
         }
     )
     
