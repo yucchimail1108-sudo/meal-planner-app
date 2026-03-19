@@ -17,6 +17,7 @@
 
         <form method="post" class="form-block">
             {% csrf_token %}
+            <input type="hidden" name="action" value="add_existing_food">
 
             <div class="form-row">
                 <div class="form-group">
@@ -31,6 +32,35 @@
             </div>
         </form>
     </div>
+
+    <!-- 新しい食材を作成して追加するフォーム -->
+    <div class="content-card section-block">
+        <h2 class="section-title">新しい食材を追加</h2>
+        <p class="section-text">
+            食材マスタにない食材は、こちらから追加できます
+        </p>
+
+        <form method="post" class="form-block">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="add_new_food">
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="{{ create_form.ingredient_name.id_for_label }}">食材名</label>
+                    {{ create_form.ingredient_name }}
+                </div>
+                <div class="form-group">
+                    <label for="{{ create_form.category.id_for_label }}">カテゴリ</label>
+                    {{ create_form.category }}
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="save-button">新規追加</button>
+            </div>
+        </form>
+    </div>
+
 
     <!-- カテゴリ絞り込み -->
     <div class="content-card section-block">
@@ -53,6 +83,9 @@
     </div>
 
     <!-- 一覧 -->
+    <div class="content-card section-block">
+        <h2 class="section-title">おうち食材一覧</h2>
+        
         {% if home_food_items %}
             {% regroup home_food_items by food_item.get_category_display as grouped_home_foods %}
 

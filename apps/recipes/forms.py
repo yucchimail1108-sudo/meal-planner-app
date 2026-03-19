@@ -1,5 +1,5 @@
 from django import forms
-from .models import Recipe, RecipeIngredient, RecipeStep, MenuDay, ShoppingListItem, HomeFoodItem
+from .models import Recipe, RecipeIngredient, RecipeStep, MenuDay, ShoppingListItem, HomeFoodItem, FoodItem
 
 # レシピ
 class RecipeForm(forms.ModelForm):
@@ -75,8 +75,15 @@ class ShoppingListExtractForm(forms.Form):
         widget=forms.DateInput(attrs={"type": "date"})
     )
 
-# おうち食材
+# おうち食材追加フォーム
 class HomeFoodItemForm(forms.ModelForm):
     class Meta:
         model = HomeFoodItem
         fields = ["food_item"]
+        
+        
+# 食材マスタへの新規食材追加フォーム
+class FoodItemCreateForm(forms.ModelForm):
+    class Meta:
+        model = FoodItem
+        fields = ["ingredient_name", "category"]

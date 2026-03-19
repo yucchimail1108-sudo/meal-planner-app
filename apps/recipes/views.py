@@ -3,8 +3,8 @@ from datetime import date
 
 from django.shortcuts import render, get_object_or_404,redirect
 from django.contrib.auth.decorators import login_required
-from .models import Recipe, RecipeIngredient, RecipeStep, Favorite, MenuDay, MenuSlot, ShoppingListItem, HomeFoodItem
-from .forms import RecipeForm, RecipeIngredientForm, RecipeStepForm, MenuDayForm, ShoppingListItemForm, ShoppingListExtractForm, HomeFoodItemForm
+from .models import Recipe, RecipeIngredient, RecipeStep, Favorite, MenuDay, MenuSlot, ShoppingListItem, HomeFoodItem, FoodItem
+from .forms import RecipeForm, RecipeIngredientForm, RecipeStepForm, MenuDayForm, ShoppingListItemForm, ShoppingListExtractForm, HomeFoodItemForm, FoodItemCreateForm
 from django.core.paginator import Paginator
 from django.db.models import Q
 from django.contrib import messages
@@ -663,34 +663,79 @@ def shopping_list_delete_view(request, item_id):
 # おうち食材一覧画面
 @login_required
 def home_food_list_view(request):
-    # 追加処理
+    # おうち食材の追加処理
     if request.method == "POST":
-        form = HomeFoodItemForm(request.POST)
-        if form.is_valid():
-            home_food = form.save(commit=False)
-            home_food.user = request.user
+        action = request.POST.get("action")
 
-            exists = HomeFoodItem.objects.filter(
-                user=request.user,
-                food_item=home_food.food_item
-            ).exists()
+        # 既存食材を選んで追加する処理
+        if action == "add_existing_food":
+            form = HomeFoodItemForm(request.POST)
+            create_form = FoodItemCreateForm()
 
-            if not exists:
-                home_food.save()
-                messages.success(request, "おうち食材に追加しました。")
-            else:
-                messages.info(request, "この食材はすでに登録されています。")
-            
-            return redirect("recipes:home_food_list")
+            if form.is_valid():
+                home_food = form.save(commit=False)
+                home_food.user = request.user
+
+                exists = HomeFoodItem.objects.filter(
+                    user=request.user,
+                    food_item=home_food.food_item
+                ).exists()
+
+                if not exists:
+                    home_food.save()
+                    messages.success(request, "おうち食材に追加しました。")
+                else:
+                    messages.info(request, "この食材はすでに登録されています。")
+
+                return redirect("recipes:home_food_list")
+
+        # 新規食材を作成して追加する処理
+        elif action == "add_new_food":
+            create_form = FoodItemCreateForm(request.POST)
+            form = HomeFoodItemForm()
+
+            if create_form.is_valid():
+                ingredient_name = create_form.cleaned_data["ingredient_name"]
+                category = create_form.cleaned_data["category"]
+
+                food_item, created = FoodItem.objects.get_or_create(
+                    ingredient_name=ingredient_name,
+                    defaults={"category": category}
+                )
+
+                exists = HomeFoodItem.objects.filter(
+                    user=request.user,
+                    food_item=food_item
+                ).exists()
+
+                if not exists:
+                    HomeFoodItem.objects.create(
+                        user=request.user,
+                        food_item=food_item
+                    )
+                    messages.success(request, "新しい食材を追加し、おうち食材にも登録しました。")
+                else:
+                    messages.info(request, "この食材はすでにおうち食材に登録されています。")
+
+                return redirect("recipes:home_food_list")
+
+        else:
+            form = HomeFoodItemForm()
+            create_form = FoodItemCreateForm()
+
     else:
         form = HomeFoodItemForm()
-    
+        create_form = FoodItemCreateForm()
+
     selected_category = request.GET.get("category")
 
     # ログインユーザーのおうち食材を取得
     home_food_items = HomeFoodItem.objects.filter(
         user=request.user
-    ).select_related("food_item").order_by("food_item__ingredient_name")
+    ).select_related("food_item").order_by(
+        "food_item__category",
+        "food_item__ingredient_name"
+    )
 
     if selected_category:
         home_food_items = home_food_items.filter(
@@ -703,6 +748,7 @@ def home_food_list_view(request):
         {
             "home_food_items": home_food_items,
             "form": form,
+            "create_form": create_form,
             "selected_category": selected_category,
         }
     )
