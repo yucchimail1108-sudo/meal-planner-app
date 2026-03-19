@@ -8,13 +8,29 @@
         <h1 class="page-title">おうちにある食材</h1>
     </div>
 
-    <!-- 一覧エリア -->
+    <!-- おうち食材を追加するフォーム -->
     <div class="content-card section-block">
-        <div class="form-actions">
-            <a href="{% url 'recipes:shopping_list' %}" class="back-button">買い物リストへ戻る</a>
-        </div>
+        <h2 class="section-title">おうち食材に追加</h2>
+        <p class="section-text">
+            食材を選んで、おうち食材一覧に追加します
+        </p>
 
-        <h2 class="section-title">おうちにある食材</h2>
+        <form method="post" class="form-block">
+            {% csrf_token %}
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="{{ form.food_item.id_for_label }}">食材名</label>
+                    {{ form.food_item }}
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="save-button">追加</button>
+                <a href="{% url 'recipes:shopping_list' %}" class="back-button">買い物リストへ戻る</a>
+            </div>
+        </form>
+    </div>
 
         {% if home_food_items %}
             {% regroup home_food_items by food_item.get_category_display as grouped_home_foods %}
