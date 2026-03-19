@@ -537,7 +537,7 @@ def shopping_list_view(request):
                 exists = HomeFoodItem.objects.filter(
                     user=request.user,
                     food_item=item.food_item
-                ).exists()
+                ).exists()             
 
                 if not exists:
                     HomeFoodItem.objects.create(
@@ -669,13 +669,23 @@ def home_food_list_view(request):
         if form.is_valid():
             home_food = form.save(commit=False)
             home_food.user = request.user
-            home_food.save()
-            messages.success(request, "おうち食材に追加しました。")
+
+            exists = HomeFoodItem.objects.filter(
+                user=request.user,
+                food_item=home_food.food_item
+            ).exists()
+
+            if not exists:
+                home_food.save()
+                messages.success(request, "おうち食材に追加しました。")
+            else:
+                messages.info(request, "この食材はすでに登録されています。")
+            
             return redirect("recipes:home_food_list")
     else:
         form = HomeFoodItemForm()
 
-    # 一覧取得
+    # ログインユーザーのおうち食材を取得
     home_food_items = HomeFoodItem.objects.filter(
         user=request.user
     ).select_related("food_item").order_by("food_item__ingredient_name")
