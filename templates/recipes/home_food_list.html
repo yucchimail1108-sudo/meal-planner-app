@@ -1,28 +1,50 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="home-food-page">
-    <h1>おうち食材一覧</h1>
+<div class="page-container home-food-page">
 
-    <div class="page-actions">
-        <a href="{% url 'recipes:shopping_list' %}" class="back-button">買い物リストへ戻る</a>
+    <!-- おうち食材画面のタイトル行 -->
+    <div class="page-header">
+        <h1 class="page-title">おうちにある食材</h1>
     </div>
 
-    {% if home_food_items %}
-        <ul class="home-food-list">
-            {% for item in home_food_items %}
-                <li class="home-food-item">
-                    <span>{{ item.food_item.ingredient_name }}</span>
+    <!-- 一覧エリア -->
+    <div class="content-card section-block">
+        <div class="form-actions">
+            <a href="{% url 'recipes:shopping_list' %}" class="back-button">買い物リストへ戻る</a>
+        </div>
 
-                    <form method="post" action="{% url 'recipes:home_food_delete' item.id %}">
-                        {% csrf_token %}
-                        <button type="submit" class="back-button">削除</button>
-                    </form>
-                </li>
+        <h2 class="section-title">おうちにある食材</h2>
+
+        {% if home_food_items %}
+            {% regroup home_food_items by food_item.get_category_display as grouped_home_foods %}
+
+            {% for category_group in grouped_home_foods %}
+                <div class="category-block">
+                    <h3 class="category-title">{{ category_group.grouper }}</h3>
+
+                    <ul class="item-list">
+                        {% for item in category_group.list %}
+                            <li class="item-row">
+                                <span class="item-name">{{ item.food_item.ingredient_name }}</span>
+
+                                <div class="item-row-actions">
+                                    <form method="post" action="{% url 'recipes:home_food_delete' item.id %}">
+                                        {% csrf_token %}
+                                        <button type="submit" class="back-button">削除</button>
+                                    </form>
+                                </div>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
             {% endfor %}
-        </ul>
-    {% else %}
-        <p>おうち食材はまだありません。</p>
-    {% endif %}
+        {% else %}
+            <div class="empty-box">
+                <p>おうちに食材がありません。</p>
+            </div>
+        {% endif %}
+    </div>
+
 </div>
 {% endblock %}

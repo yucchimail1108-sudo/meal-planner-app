@@ -1,70 +1,113 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="shopping-list-page">
-    <h1>買い物リスト</h1>
+<div class="page-container shopping-page">
 
-    <div class="page-actions">
-        <a href="{% url 'recipes:menu_calendar' %}" class="back-button">戻る</a>
-        <a href="{% url 'recipes:home_food_list' %}" class="select-button">おうち食材を見る</a>
+    <!-- 買い物リスト画面のタイトル行 -->
+    <div class="page-header">
+        <h1 class="page-title">≪買い物リスト≫</h1>
+        <div class="page-header-actions">
+            <a href="#manual-add-form" class="save-button">＋ 追加</a>
+        </div>
     </div>
 
-    <h2>献立の対象期間選択</h2>
+    <!-- 献立の対象期間から食材を抽出するエリア -->
+    <div class="content-card section-block">
+        <h2 class="section-title">献立の対象期間選択</h2>
+        <p class="section-text">
+            対象期間の献立で使用する食材を抽出します（おうち食材にあるものは除く）
+        </p>
 
-    <form method="get">
-        <div>
-            {{ extract_form.start_date.label_tag }}
-            {{ extract_form.start_date }}
-        </div>
-        <div>
-            {{ extract_form.end_date.label_tag }}
-            {{ extract_form.end_date }}
-        </div>
-        <button type="submit" class="search-button">抽出</button>
-    </form>
+        <form method="get" class="form-block">
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="{{ extract_form.start_date.id_for_label }}">開始日</label>
+                    {{ extract_form.start_date }}
+                </div>
+                <div class="form-group">
+                    <label for="{{ extract_form.end_date.id_for_label }}">終了日</label>
+                    {{ extract_form.end_date }}
+                </div>
+            </div>
 
-    <h2>食材を追加</h2>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.food_item }}
-        <button type="submit" class="save-button">追加</button>
-    </form>
-
-    {% if shopping_items %}
-        <h2>買い物予定</h2>
-
-        <form method="post">
-            {% csrf_token %}
-            <input type="hidden" name="action" value="mark_as_purchased">
-
-            <ul class="shopping-list">
-                {% for item in shopping_items %}
-                    <li class="shopping-list-item">
-                        <div class="shopping-item-left">
-                            <label>
-                                <input type="checkbox" name="checked_items" value="{{ item.id }}">
-                                {{ item.food_item.ingredient_name }}
-                            </label>
-                        </div>
-
-                        <div class="shopping-item-right">
-                            <button
-                                type="submit"
-                                formaction="{% url 'recipes:shopping_list_delete' item.id %}"
-                                formmethod="post"
-                                class="back-button"
-                            >
-                                削除
-                            </button>
-                        </div>
-                    </li>
-                {% endfor %}
-            </ul>
-
-            <button type="submit" class="save-button">購入済みにする</button>
+            <div class="form-actions">
+                <button type="submit" class="search-button">抽出</button>
+            </div>
         </form>
-    {% else %}
-        <p>買い物リストはまだありません。</p>
-    {% endif %}
+    </div>
+
+    <!-- 食材を手動追加するエリア -->
+    <div id="manual-add-form" class="content-card section-block">
+        <h2 class="section-title">食材を手動で追加</h2>
+
+        <form method="post" class="form-block">
+            {% csrf_token %}
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="{{ form.food_item.id_for_label }}">食材名</label>
+                    {{ form.food_item }}
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="save-button">追加</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- 購入済み処理専用フォーム -->
+    <form method="post" id="purchase-form">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="mark_as_purchased">
+    </form>
+
+    <!-- 買い物リスト一覧表示エリア -->
+    <div class="content-card section-block">
+        <h2 class="section-title">買うもの一覧</h2>
+
+        {% if shopping_items %}
+            {% regroup shopping_items by food_item.get_category_display as grouped_items %}
+
+            {% for category_group in grouped_items %}
+                <div class="category-block">
+                    <h3 class="category-title">{{ category_group.grouper }}</h3>
+
+                    <ul class="item-list">
+                        {% for item in category_group.list %}
+                            <li class="item-row">
+                                <label class="item-check-label">
+                                    <input
+                                        type="checkbox"
+                                        name="checked_items"
+                                        value="{{ item.id }}"
+                                        form="purchase-form"
+                                    >
+                                    <span class="item-name">{{ item.food_item.ingredient_name }}</span>
+                                </label>
+
+                                <div class="item-row-actions">
+                                    <form method="post" action="{% url 'recipes:shopping_list_delete' item.id %}">
+                                        {% csrf_token %}
+                                        <button type="submit" class="back-button">削除</button>
+                                    </form>
+                                </div>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endfor %}
+
+            <div class="form-actions bottom-actions">
+                <button type="submit" class="save-button" form="purchase-form">購入済み</button>
+                <a href="{% url 'recipes:home_food_list' %}" class="select-button">おうち食材を見る</a>
+            </div>
+        {% else %}
+            <div class="empty-box">
+                <p>買い物リストはまだありません。</p>
+            </div>
+        {% endif %}
+    </div>
+
 </div>
 {% endblock %}
