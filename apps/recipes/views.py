@@ -728,6 +728,8 @@ def home_food_list_view(request):
         create_form = FoodItemCreateForm()
 
     selected_category = request.GET.get("category")
+    
+    search_query = request.GET.get("q", "").strip()
 
     # ログインユーザーのおうち食材を取得
     home_food_items = HomeFoodItem.objects.filter(
@@ -737,6 +739,11 @@ def home_food_list_view(request):
         "food_item__ingredient_name"
     )
 
+    if search_query:
+        home_food_items = home_food_items.filter(
+            food_item__ingredient_name__icontains=search_query
+        )
+    
     if selected_category:
         home_food_items = home_food_items.filter(
             food_item__category=int(selected_category)
@@ -750,6 +757,7 @@ def home_food_list_view(request):
             "form": form,
             "create_form": create_form,
             "selected_category": selected_category,
+            "search_query": search_query,
         }
     )
     
