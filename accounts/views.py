@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
-from .forms import SignUpForm, LoginForm, NicknameChangeForm
+from .forms import SignUpForm, LoginForm, NicknameChangeForm, EmailChangeForm
 from django.contrib import messages
 
 
@@ -70,7 +70,7 @@ def nickname_change_view(request):
     else:
         form = NicknameChangeForm(
             initial={
-                "first_name": request.user.first_name
+                "new_first_name": request.user.first_name
             }
         )
 
@@ -80,5 +80,32 @@ def nickname_change_view(request):
         {
             "form": form,
             "current_nickname": request.user.first_name,          
+        }
+    )
+    
+# メールアドレス変更画面
+@login_required
+def email_change_view(request):
+    if request.method == "POST":
+        form = EmailChangeForm(request.POST)
+
+        if form.is_valid():
+            new_email = form.cleaned_data["new_email"]
+
+            request.user.email = new_email
+            request.user.username = new_email  # ログイン用も更新
+            request.user.save()
+
+            messages.success(request, "メールアドレスを変更しました。")
+            return redirect("accounts:mypage")
+    else:
+        form = EmailChangeForm()
+
+    return render(
+        request,
+        "accounts/email_change.html",
+        {
+            "form": form,
+            "current_email": request.user.email,
         }
     )

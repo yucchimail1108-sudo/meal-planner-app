@@ -54,3 +54,18 @@ class NicknameChangeForm(forms.Form):
         max_length=64,
         label="新しいニックネーム"
     )
+    
+# メールアドレス変更フォーム
+class EmailChangeForm(forms.Form):
+    new_email = forms.EmailField(
+        label="新しいメールアドレス",
+        required=True
+    )
+
+    def clean_new_email(self):
+        new_email = self.cleaned_data["new_email"]
+
+        if User.objects.filter(email=new_email).exists():
+            raise forms.ValidationError("このメールアドレスはすでに登録されています。")
+
+        return new_email
