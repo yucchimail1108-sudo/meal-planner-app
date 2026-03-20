@@ -1,6 +1,8 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate, logout
-from .forms import SignUpForm,LoginForm
+from django.contrib.auth.decorators import login_required
+from .forms import SignUpForm, LoginForm, NicknameChangeForm
+from django.contrib import messages
 
 
 def signup_view(request):
@@ -42,3 +44,41 @@ def logout_view(request):
         logout(request)
         
     return redirect('top')
+
+# マイページ画面
+@login_required
+def mypage_view(request):
+    context = {}
+
+    return render(
+        request,
+        "accounts/mypage.html",
+        context
+    )
+    
+# ニックネーム変更画面
+@login_required
+def nickname_change_view(request):
+    if request.method == "POST":
+        form = NicknameChangeForm(request.POST)
+
+        if form.is_valid():
+            request.user.first_name = form.cleaned_data["new_first_name"]
+            request.user.save()
+            messages.success(request, "ニックネームを変更しました。")
+            return redirect("accounts:mypage")
+    else:
+        form = NicknameChangeForm(
+            initial={
+                "first_name": request.user.first_name
+            }
+        )
+
+    return render(
+        request,
+        "accounts/nickname_change.html",
+        {
+            "form": form,
+            "current_nickname": request.user.first_name,          
+        }
+    )

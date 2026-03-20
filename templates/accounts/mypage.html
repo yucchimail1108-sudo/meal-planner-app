@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="page-container mypage-page">
+
+    <div class="page-header">
+        <h1 class="page-title">マイページ</h1>
+    </div>
+
+    <div class="content-card section-block">
+        <h2 class="section-title">アカウント情報</h2>
+
+        <p class="section-text">
+            ニックネーム：{{ request.user.first_name }}
+        </p>
+
+        <div class="form-actions">
+            <a href="{% url 'accounts:nickname_change' %}" class="save-button">ニックネーム変更</a>
+            <a href="#" class="save-button">メールアドレス変更</a>
+            <a href="#" class="save-button">パスワード変更</a>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

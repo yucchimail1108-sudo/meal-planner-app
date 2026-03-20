@@ -47,3 +47,10 @@ class LoginForm(forms.Form):
         widget=forms.PasswordInput,
         required=True
     )
+    
+# ニックネーム変更フォーム
+class NicknameChangeForm(forms.Form):
+    new_first_name = forms.CharField(
+        max_length=64,
+        label="新しいニックネーム"
+    )
