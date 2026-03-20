@@ -69,3 +69,44 @@ class EmailChangeForm(forms.Form):
             raise forms.ValidationError("このメールアドレスはすでに登録されています。")
 
         return new_email
+    
+    
+# パスワード変更フォーム
+class PasswordChangeForm(forms.Form):
+    current_password = forms.CharField(
+        label="現在のパスワード",
+        widget=forms.PasswordInput,
+        required=True
+    )
+    new_password1 = forms.CharField(
+        label="新しいパスワード",
+        widget=forms.PasswordInput,
+        required=True
+    )
+    new_password2 = forms.CharField(
+        label="新しいパスワード（確認）",
+        widget=forms.PasswordInput,
+        required=True
+    )
+
+    def __init__(self, user, *args, **kwargs):
+        self.user = user
+        super().__init__(*args, **kwargs)
+
+    def clean_current_password(self):
+        current_password = self.cleaned_data["current_password"]
+
+        if not self.user.check_password(current_password):
+            raise forms.ValidationError("現在のパスワードが正しくありません。")
+
+        return current_password
+
+    def clean(self):
+        cleaned_data = super().clean()
+        pw1 = cleaned_data.get("new_password1")
+        pw2 = cleaned_data.get("new_password2")
+
+        if pw1 and pw2 and pw1 != pw2:
+            raise forms.ValidationError("新しいパスワードが一致しません。")
+
+        return cleaned_data

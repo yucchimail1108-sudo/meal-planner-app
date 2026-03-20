@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
-from .forms import SignUpForm, LoginForm, NicknameChangeForm, EmailChangeForm
+from .forms import SignUpForm, LoginForm, NicknameChangeForm, EmailChangeForm, PasswordChangeForm
 from django.contrib import messages
 
 
@@ -108,4 +108,26 @@ def email_change_view(request):
             "form": form,
             "current_email": request.user.email,
         }
+    )
+    
+# パスワード変更画面
+@login_required
+def password_change_view(request):
+    if request.method == "POST":
+        form = PasswordChangeForm(request.user, request.POST)
+
+        if form.is_valid():
+            new_password = form.cleaned_data["new_password1"]
+            request.user.set_password(new_password)
+            request.user.save()
+
+            messages.success(request, "パスワードを変更しました。")
+            return redirect("accounts:login")
+    else:
+        form = PasswordChangeForm(request.user)
+
+    return render(
+        request,
+        "accounts/password_change.html",
+        {"form": form}
     )
