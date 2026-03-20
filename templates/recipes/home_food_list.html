@@ -9,7 +9,7 @@
     </div>
 
     <!-- おうち食材を追加する際の検索 -->
-    <form method="get">
+    <form method="get" class="search-form">
         <input
             type="text"
             name="q"
@@ -28,8 +28,8 @@
             <option value="7" {% if selected_category == "7" %}selected{% endif %}>その他</option>
         </select>
 
-        <button type="submit">検索</button>
-        <a href="{% url 'recipes:home_food_list' %}">リセット</a>
+        <button type="submit" class="save-button">検索</button>
+        <a href="{% url 'recipes:home_food_list' %}" class="back-button">リセット</a>
     </form>
 
     <!-- おうち食材を追加するフォーム -->

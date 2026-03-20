@@ -178,3 +178,29 @@ body {
 編集系 → 緑
 ログアウト → 薄赤 
 */ 
+
+/* 検索フォーム */
+.search-form {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.search-form input,
+.search-form select {
+    padding: 6px 10px;
+    font-size: 14px;
+}
+
+.search-form button {
+    padding: 6px 12px;
+}
+
+.search-form a {
+    font-size: 14px;
+}
+
+.search-form input[type="text"] {
+    width: 180px;
+}
