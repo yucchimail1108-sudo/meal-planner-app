@@ -104,7 +104,7 @@
                                 <div class="item-row-actions">
                                     <form method="post" action="{% url 'recipes:home_food_delete' item.id %}">
                                         {% csrf_token %}
-                                        <button type="submit" class="back-button">削除</button>
+                                        <button type="submit" class="list-delete-button">削除</button>
                                     </form>
                                 </div>
                             </li>
