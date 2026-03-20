@@ -112,12 +112,17 @@
                     </ul>
                 </div>
             {% endfor %}
+
         {% else %}
             <div class="empty-box">
-                <p>おうちに食材がありません。</p>
+                {% if search_query or selected_category %}
+                    <p>該当する食材がありません</p>
+                {% else %}
+                    <p>おうちに食材がありません</p>
+                {% endif %}
             </div>
         {% endif %}
     </div>
 
 </div>
-{% endblock %}
+{% endblock %}                       
