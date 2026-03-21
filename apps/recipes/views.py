@@ -428,44 +428,36 @@ def menu_calendar_view(request):
         for day_date in week:
             menu_day = menu_day_dict.get(day_date)
 
-            # 献立表示（主菜・主食・副菜・汁物）
-            staple_recipe_name = None
-            main_recipe_name = None
-            side_recipe_name = None
-            soup_recipe_name = None
-            
-            if menu_day:
+            meal_items = []
+
+            if menu_day: # 献立表示（２品まで表示）
                 slot_dict = {
                     slot.meal_type: slot
                     for slot in menu_day.slots.all()
                 }
 
-                staple_slot = slot_dict.get("staple")
-                main_slot = slot_dict.get("main")
-                side_slot = slot_dict.get("side")
-                soup_slot = slot_dict.get("soup")
+                meal_labels = {
+                    "staple": "主食",
+                    "main": "主菜",
+                    "side": "副菜",
+                    "soup": "汁物",
+                }
 
-                if staple_slot and staple_slot.recipe:
-                    staple_recipe_name = staple_slot.recipe.recipe_name
+                for meal_type in ["staple", "main", "side", "soup"]:
+                    slot = slot_dict.get(meal_type)
+                    if slot and slot.recipe:
+                        meal_items.append(
+                            f"{meal_labels[meal_type]}：{slot.recipe.recipe_name}"
+                        )
 
-                if main_slot and main_slot.recipe:
-                    main_recipe_name = main_slot.recipe.recipe_name
-
-                if side_slot and side_slot.recipe:
-                    side_recipe_name = side_slot.recipe.recipe_name
-
-                if soup_slot and soup_slot.recipe:
-                    soup_recipe_name = soup_slot.recipe.recipe_name
- 
             week_data.append({
-                    "date": day_date,
-                    "day": day_date.day,
-                    "is_current_month": (day_date.month == month),
-                    "menu_day": menu_day,
-                    "staple_recipe_name": staple_recipe_name,
-                    "main_recipe_name": main_recipe_name,
-                    "side_recipe_name": side_recipe_name,
-                    "soup_recipe_name": soup_recipe_name,
+                "date": day_date,
+                "day": day_date.day,
+                "is_current_month": (day_date.month == month),
+                "menu_day": menu_day,
+                "meal_items": meal_items,
+                "has_more_meals": len(meal_items) > 2,
+                "display_meal_items": meal_items[:2],
             })
         calendar_weeks.append(week_data)
 
