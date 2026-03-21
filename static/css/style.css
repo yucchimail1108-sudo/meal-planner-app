@@ -338,3 +338,42 @@ body {
     line-height: 1.4;
     word-break: break-word;
 }
+
+/* ホーム画面 */
+.home-menu-section {
+    margin-top: 24px;
+}
+
+.home-menu-date {
+    font-weight: bold;
+    margin-bottom: 16px;
+}
+
+.home-menu-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.home-menu-card {
+    border: 1px solid #cccccc;
+    border-radius: 8px;
+    padding: 12px;
+    background-color: #ffffff;
+}
+
+.home-menu-label {
+    font-size: 14px;
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+.home-menu-value {
+    margin: 0;
+    word-break: break-word;
+}
+
+.home-menu-flags {
+    margin-bottom: 16px;
+}

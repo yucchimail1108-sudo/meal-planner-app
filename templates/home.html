@@ -1,14 +1,75 @@
 {% extends "base.html" %}
 
+{% block title %}ホーム | うちごはんプランナー{% endblock %}
+
 {% block content %}
-<h1>ホーム画面</h1>
+<h1>ホーム</h1>
 <p>こんにちは！{{ user.first_name }}さん</p>
 <p>献立をつくりましょう！</p>
 
-<ul>
-    <li>マイレシピ</li>
-    <li>おうち食材</li>
-    <li>献立</li>
-    <li>買い物リスト</li>
-</ul>
+<section class="home-menu-section">
+    <p class="home-menu-date">{{ today|date:"Y年n月j日" }} の献立</p>
+
+    {% if menu_day %}
+        <div class="home-menu-grid">
+            <div class="home-menu-card">
+                <p class="home-menu-label">主食</p>
+                <p class="home-menu-value">
+                    {% if staple_slot and staple_slot.recipe %}
+                        {{ staple_slot.recipe.recipe_name }}
+                    {% else %}
+                        未設定
+                    {% endif %}
+                </p>
+            </div>
+
+            <div class="home-menu-card">
+                <p class="home-menu-label">主菜</p>
+                <p class="home-menu-value">
+                    {% if main_slot and main_slot.recipe %}
+                        {{ main_slot.recipe.recipe_name }}
+                    {% else %}
+                        未設定
+                    {% endif %}
+                </p>
+            </div>
+
+            <div class="home-menu-card">
+                <p class="home-menu-label">副菜</p>
+                <p class="home-menu-value">
+                    {% if side_slot and side_slot.recipe %}
+                        {{ side_slot.recipe.recipe_name }}
+                    {% else %}
+                        未設定
+                    {% endif %}
+                </p>
+            </div>
+
+            <div class="home-menu-card">
+                <p class="home-menu-label">汁物</p>
+                <p class="home-menu-value">
+                    {% if soup_slot and soup_slot.recipe %}
+                        {{ soup_slot.recipe.recipe_name }}
+                    {% else %}
+                        未設定
+                    {% endif %}
+                </p>
+            </div>
+        </div>
+
+        <div class="home-menu-flags">
+            <p>外食：{% if menu_day.eat_out %}あり{% else %}なし{% endif %}</p>
+            <p>惣菜：{% if menu_day.deli %}あり{% else %}なし{% endif %}</p>
+        </div>
+
+        <p>
+            <a href="{% url 'recipes:menu_update' plan_date=menu_day.plan_date %}" class="save-button">今日の献立を編集する</a>
+        </p>
+    {% else %}
+        <p>今日はまだ献立が登録されていません。</p>
+        <p>
+            <a href="{% url 'recipes:menu_create' %}?plan_date={{ today|date:'Y-m-d' }}" class="select-button">今日の献立を作成する</a>
+        </p>
+    {% endif %}
+</section>
 {% endblock %}

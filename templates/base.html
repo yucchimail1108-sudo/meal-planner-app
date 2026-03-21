@@ -44,7 +44,7 @@
 
    {% if user.is_authenticated %}
     <nav class="bottom-nav">
-        <a href="{% url 'top' %}" class="bottom-nav__item">ホーム</a>
+        <a href="{% url 'home' %}" class="bottom-nav__item">ホーム</a>
         <a href="{% url 'recipes:recipe_list' %}" class="bottom-nav__item">マイレシピ</a>
         <a href="{% url 'recipes:home_food_list' %}" class="bottom-nav__item">おうち食材</a>
         <a href="{% url 'recipes:menu_calendar' %}" class="bottom-nav__item">献立</a>
