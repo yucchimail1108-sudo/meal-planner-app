@@ -497,34 +497,22 @@ def menu_calendar_view(request):
 # 献立レシピ設定
 @login_required
 def menu_slot_update_view(request, slot_id):
-    
-    slot = get_object_or_404(
-        MenuSlot,
-        id=slot_id,
-        menu_day__user=request.user
-    )
-    
-    recipes = Recipe.objects.filter(user=request.user)
-    
-    if request.method == "POST":
-        
-        recipe_id = request.POST.get("recipe_id")
-        
-        if recipe_id:
-            slot.recipe = get_object_or_404(
-                Recipe,
-                id=recipe_id,
-                user=request.user
-            )
-        else:
-            slot.recipe = None
+    slot = get_object_or_404(MenuSlot, id=slot_id, menu_day__user=request.user)
 
-        slot.save()
-        
-        return redirect(
-            "recipes:menu_update",
-            plan_date=slot.menu_day.plan_date
-        )
+    recipes = Recipe.objects.filter(user=request.user)
+
+    if request.method == "POST":
+        recipe_id = request.POST.get("recipe_id")
+
+        # --- セッションに保存 ---
+        temp_menu = request.session.get("temp_menu", {})
+
+        temp_menu[str(slot_id)] = recipe_id
+
+        request.session["temp_menu"] = temp_menu
+
+        messages.success(request, "レシピを選択しました")
+        return redirect("home")
 
     return render(
         request,

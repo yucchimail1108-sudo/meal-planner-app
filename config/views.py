@@ -4,7 +4,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 
-from apps.recipes.models import MenuDay, MenuSlot
+from apps.recipes.models import MenuDay, MenuSlot, Recipe
 
 
 # ポートフォリオ画面
@@ -18,10 +18,29 @@ def home_view(request):
     today = date.today()
 
     if request.method == "POST":
+        delete_slot_id = request.POST.get("delete_slot_id")
+
+        if delete_slot_id:
+            slot = MenuSlot.objects.filter(
+                id=delete_slot_id,
+                menu_day__user=request.user
+            ).first()
+
+            if slot:
+                slot.recipe = None
+                slot.save()
+
+                temp_menu = request.session.get("temp_menu", {})
+                temp_menu.pop(str(slot.id), None)
+                request.session["temp_menu"] = temp_menu
+
+                messages.success(request, "献立からレシピを削除しました")
+
+            return redirect("home")
+
         eat_out = "eat_out" in request.POST
         deli = "deli" in request.POST
 
-        # 同時チェック禁止
         if eat_out and deli:
             messages.error(request, "外食と惣菜は同時に選択できません")
             return redirect("home")
@@ -36,30 +55,45 @@ def home_view(request):
             }
         )
 
-        # スロット生成
         for meal_type in ["staple", "main", "side", "soup"]:
             MenuSlot.objects.get_or_create(
                 menu_day=menu_day,
                 meal_type=meal_type
             )
 
-        # レシピが入っているかチェック
-        slots = menu_day.slots.all()
-        has_recipe = any(slot.recipe for slot in slots)
+        slots = list(menu_day.slots.all())
 
-        if (eat_out or deli) and has_recipe:
+        temp_menu = request.session.get("temp_menu", {})
+
+        has_saved_recipe = any(slot.recipe for slot in slots)
+        has_temp_recipe = any(temp_menu.get(str(slot.id)) for slot in slots)
+
+        if (eat_out or deli) and (has_saved_recipe or has_temp_recipe):
             messages.error(
                 request,
                 "外食または惣菜を選択する場合は献立をすべて削除してください"
             )
             return redirect("home")
 
-        # 保存
         menu_day.eat_out = eat_out
         menu_day.deli = deli
         menu_day.save()
 
-        messages.success(request, "外食または惣菜の設定を保存しました")
+        if not eat_out and not deli:
+            for slot in slots:
+                temp_recipe_id = temp_menu.get(str(slot.id))
+
+                if temp_recipe_id:
+                    recipe = Recipe.objects.filter(
+                        id=temp_recipe_id,
+                        user=request.user
+                    ).first()
+                    slot.recipe = recipe
+                    slot.save()
+
+        request.session["temp_menu"] = {}
+
+        messages.success(request, "献立を保存しました")
         return redirect("home")
 
     menu_day = MenuDay.objects.filter(
@@ -75,6 +109,28 @@ def home_view(request):
             for slot in menu_day.slots.all()
         }
 
+    temp_menu = request.session.get("temp_menu", {})
+
+    temp_recipe_map = {}
+
+    for slot_name in ["staple", "main", "side", "soup"]:
+        slot = slot_dict.get(slot_name)
+
+        if not slot:
+            temp_recipe_map[slot_name] = None
+            continue
+
+        temp_recipe_id = temp_menu.get(str(slot.id))
+
+        if temp_recipe_id:
+            temp_recipe_map[slot_name] = Recipe.objects.filter(
+                id=temp_recipe_id,
+                user=request.user
+            ).first()
+        else:
+            temp_recipe_map[slot_name] = None
+
+
     context = {
         "today": today,
         "menu_day": menu_day,
@@ -82,6 +138,10 @@ def home_view(request):
         "main_slot": slot_dict.get("main"),
         "side_slot": slot_dict.get("side"),
         "soup_slot": slot_dict.get("soup"),
+        "temp_staple_recipe": temp_recipe_map.get("staple"),
+        "temp_main_recipe": temp_recipe_map.get("main"),
+        "temp_side_recipe": temp_recipe_map.get("side"),
+        "temp_soup_recipe": temp_recipe_map.get("soup"),
     }
 
     return render(request, "home.html", context)
