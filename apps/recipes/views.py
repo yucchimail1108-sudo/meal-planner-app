@@ -403,66 +403,71 @@ def menu_day_update_view(request, plan_date):
 # 献立カレンダー
 @login_required
 def menu_calendar_view(request):
-    
     today = date.today()
-    
+
     year = int(request.GET.get("year", today.year))
     month = int(request.GET.get("month", today.month))
 
-    _, last_day = calendar.monthrange(year, month)
-    
+    cal = calendar.Calendar(firstweekday=6)
+    month_dates = cal.monthdatescalendar(year, month)
+
     menu_days = MenuDay.objects.filter(
         user=request.user,
         plan_date__year=year,
         plan_date__month=month
     )
-    
+
     menu_day_dict = {
-        menu_day.plan_date.day: menu_day
+        menu_day.plan_date: menu_day
         for menu_day in menu_days
     }
-    
-    day_list = []
-    for day in range(1, last_day + 1):
-        full_date = f"{year}-{month:02d}-{day:02d}"
-                
-        day_list.append({
-            "day":day,
-            "full_date": full_date,
-            "menu_day": menu_day_dict.get(day)
-        })
-    
-    # 「前月」「次月」の年月を作る処理
+
+    calendar_weeks = []
+    for week in month_dates:
+        week_data = []
+        for day_date in week:
+            menu_day = menu_day_dict.get(day_date)
+
+            week_data.append({
+                "date": day_date,
+                "day": day_date.day,
+                "is_current_month": (day_date.month == month),
+                "menu_day": menu_day,
+            })
+        calendar_weeks.append(week_data)
+
+    # 前月
     if month == 1:
         prev_year = year - 1
         prev_month = 12
     else:
         prev_year = year
         prev_month = month - 1
-    
+
+    # 次月
     if month == 12:
         next_year = year + 1
         next_month = 1
     else:
         next_year = year
         next_month = month + 1
-        
-        
+
     context = {
-        "year" : year,
-        "month" : month,
-        "day_list" : day_list,
-        "prev_year" : prev_year,
-        "prev_month" : prev_month,
-        "next_year" : next_year,
-        "next_month" : next_month,
+        "year": year,
+        "month": month,
+        "calendar_weeks": calendar_weeks,
+        "prev_year": prev_year,
+        "prev_month": prev_month,
+        "next_year": next_year,
+        "next_month": next_month,
+        "today": today,
     }
-           
+
     return render(
         request,
         "recipes/menu_calendar.html",
         context
-        )
+    )
 
 # 献立レシピ設定
 @login_required
