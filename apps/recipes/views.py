@@ -415,7 +415,7 @@ def menu_calendar_view(request):
         user=request.user,
         plan_date__year=year,
         plan_date__month=month
-    )
+    ).prefetch_related("slots__recipe")
 
     menu_day_dict = {
         menu_day.plan_date: menu_day
@@ -428,11 +428,44 @@ def menu_calendar_view(request):
         for day_date in week:
             menu_day = menu_day_dict.get(day_date)
 
+            # 献立表示（主菜・主食・副菜・汁物）
+            staple_recipe_name = None
+            main_recipe_name = None
+            side_recipe_name = None
+            soup_recipe_name = None
+            
+            if menu_day:
+                slot_dict = {
+                    slot.meal_type: slot
+                    for slot in menu_day.slots.all()
+                }
+
+                staple_slot = slot_dict.get("staple")
+                main_slot = slot_dict.get("main")
+                side_slot = slot_dict.get("side")
+                soup_slot = slot_dict.get("soup")
+
+                if staple_slot and staple_slot.recipe:
+                    staple_recipe_name = staple_slot.recipe.recipe_name
+
+                if main_slot and main_slot.recipe:
+                    main_recipe_name = main_slot.recipe.recipe_name
+
+                if side_slot and side_slot.recipe:
+                    side_recipe_name = side_slot.recipe.recipe_name
+
+                if soup_slot and soup_slot.recipe:
+                    soup_recipe_name = soup_slot.recipe.recipe_name
+ 
             week_data.append({
-                "date": day_date,
-                "day": day_date.day,
-                "is_current_month": (day_date.month == month),
-                "menu_day": menu_day,
+                    "date": day_date,
+                    "day": day_date.day,
+                    "is_current_month": (day_date.month == month),
+                    "menu_day": menu_day,
+                    "staple_recipe_name": staple_recipe_name,
+                    "main_recipe_name": main_recipe_name,
+                    "side_recipe_name": side_recipe_name,
+                    "soup_recipe_name": soup_recipe_name,
             })
         calendar_weeks.append(week_data)
 

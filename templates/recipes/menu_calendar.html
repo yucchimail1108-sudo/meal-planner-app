@@ -39,6 +39,22 @@
                                 </a>
                             </div>
 
+                            {% if item.staple_recipe_name %}
+                                <div class="calendar-meal-item">主食：{{ item.staple_recipe_name }}</div>
+                            {% endif %}
+
+                            {% if item.main_recipe_name %}
+                                <div class="calendar-meal-item">主菜：{{ item.main_recipe_name }}</div>
+                            {% endif %}
+
+                            {% if item.side_recipe_name %}
+                                <div class="calendar-meal-item">副菜：{{ item.side_recipe_name }}</div>
+                            {% endif %}
+
+                            {% if item.soup_recipe_name %}
+                                <div class="calendar-meal-item">汁物：{{ item.soup_recipe_name }}</div>
+                            {% endif %}
+                            
                             {% if item.menu_day.eat_out %}
                                 <div class="calendar-label">外食</div>
                             {% endif %}
