@@ -535,6 +535,23 @@ def menu_slot_update_view(request, slot_id):
         }
     )
 
+# 献立レシピ削除
+@login_required
+def menu_slot_delete_view(request, slot_id):
+    slot = get_object_or_404(
+        MenuSlot,
+        id=slot_id,
+        menu_day__user=request.user
+    )
+
+    if request.method == "POST":
+        slot.recipe = None
+        slot.save()
+        messages.success(request, "献立からレシピを削除しました。")
+        return redirect("home")
+
+    return redirect("home")
+
 # 買い物リスト一覧＆追加＆購入済み処理
 @login_required
 def shopping_list_view(request):

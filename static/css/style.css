@@ -377,3 +377,23 @@ body {
 .home-menu-flags {
     margin-bottom: 16px;
 }
+
+/* ホーム画面の献立画像 */
+.home-menu-image-box {
+    height: 100px;
+    border: 1px solid #cccccc;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 12px;
+    color: #777777;
+    background-color: #f8f8f8;
+    font-size: 14px;
+}
+
+/* 探すボタン */
+.home-menu-card .select-button {
+    display: inline-block;
+    margin-top: 8px;
+}
