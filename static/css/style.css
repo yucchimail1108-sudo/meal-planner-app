@@ -249,3 +249,30 @@ body {
     gap: 10px;
     flex-wrap: wrap;
 }
+
+
+/* ナビげーションバーを画面下に固定する */
+.main-content {
+    padding-bottom: 80px;
+}
+
+.bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: #ffffff;
+    border-top: 1px solid #cccccc;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    height: 60px;
+    box-sizing: border-box;
+    z-index: 1000;
+}
+
+.bottom-nav__item {
+    text-decoration: none;
+    color: #333333;
+    font-size: 14px;
+}
