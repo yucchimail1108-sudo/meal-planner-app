@@ -397,3 +397,28 @@ body {
     display: inline-block;
     margin-top: 8px;
 }
+
+/* ホーム画面の献立保存ボタン */
+.home-save-area {
+    margin-top: 24px;
+    text-align: center;
+}
+
+/* ホームの案内文を少し目立たせる */
+.home-menu-notice {
+    margin-bottom: 12px;
+    font-weight: bold;
+    color: #666666;
+}
+
+/* ホームのカード全体を少し薄く */
+.home-menu-grid-disabled {
+    opacity: 0.7;
+}
+
+/* 外食/惣菜の「選択不可」を地味に表示 */
+.home-menu-disabled-text {
+    margin-top: 8px;
+    color: #777777;
+    font-size: 14px;
+}

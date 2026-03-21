@@ -547,7 +547,7 @@ def menu_slot_delete_view(request, slot_id):
     if request.method == "POST":
         slot.recipe = None
         slot.save()
-        messages.success(request, "献立からレシピを削除しました。")
+        messages.success(request, "献立からレシピを削除しました")
         return redirect("home")
 
     return redirect("home")
@@ -594,7 +594,7 @@ def shopping_list_view(request):
 
                 # 買い物リストから削除
                 item.delete()
-            messages.success(request, "購入済みの食材は、おうち食材へ追加しました。")
+            messages.success(request, "購入済みの食材は、おうち食材へ追加しました")
             return redirect("recipes:shopping_list")
 
         # 追加処理
@@ -730,9 +730,9 @@ def home_food_list_view(request):
 
                 if not exists:
                     home_food.save()
-                    messages.success(request, "おうち食材に追加しました。")
+                    messages.success(request, "おうち食材に追加しました")
                 else:
-                    messages.info(request, "この食材はすでに登録されています。")
+                    messages.info(request, "この食材はすでに登録されています")
 
                 return redirect("recipes:home_food_list")
 
@@ -822,7 +822,7 @@ def home_food_delete_view(request, item_id):
     # POST送信のときだけ削除する
     if request.method == "POST":
         home_food_item.delete()
-        messages.success(request, "おうち食材から削除しました。")
+        messages.success(request, "おうち食材から削除しました")
         return redirect("recipes:home_food_list")
 
     return redirect("recipes:home_food_list")

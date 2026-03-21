@@ -11,8 +11,12 @@
     <p class="home-menu-date">{{ today|date:"Y年n月j日" }} の献立</p>
 
     {% if menu_day %}
-    <div class="home-menu-grid">
-        <div class="home-menu-card">
+    {% if menu_day and menu_day.eat_out %}
+        <p class="home-menu-notice">今日は外食の日です　献立は選択しません</p>
+    {% elif menu_day and menu_day.deli %}
+        <p class="home-menu-notice">今日は惣菜の日です　献立は選択しません</p>
+    {% endif %}
+    <div class="home-menu-grid {% if menu_day and menu_day.eat_out or menu_day and menu_day.deli %}home-menu-grid-disabled{% endif %}">        <div class="home-menu-card">
             <p class="home-menu-label">主食</p>
 
             <div class="home-menu-image-box">NO IMAGE</div>
@@ -26,15 +30,19 @@
             </p>
 
             {% if staple_slot %}
-                {% if staple_slot.recipe %}
-                    <form method="post" action="{% url 'recipes:menu_slot_delete' slot_id=staple_slot.id %}">
-                        {% csrf_token %}
-                        <button type="submit" class="delete-button">削除</button>
-                    </form>
+                {% if menu_day and not menu_day.eat_out and not menu_day.deli %}
+                    {% if staple_slot.recipe %}
+                        <form method="post" action="{% url 'recipes:menu_slot_delete' slot_id=staple_slot.id %}">
+                            {% csrf_token %}
+                            <button type="submit" class="delete-button">削除</button>
+                        </form>
+                    {% else %}
+                        <p>
+                            <a href="{% url 'recipes:menu_slot_update' slot_id=staple_slot.id %}" class="select-button">探す</a>
+                        </p>
+                    {% endif %}
                 {% else %}
-                    <p>
-                        <a href="{% url 'recipes:menu_slot_update' slot_id=staple_slot.id %}" class="select-button">探す</a>
-                    </p>
+                    <p class="home-menu-disabled-text">選択不可</p>
                 {% endif %}
             {% endif %}
         </div>
@@ -53,15 +61,19 @@
             </p>
 
             {% if main_slot %}
-                {% if main_slot.recipe %}
-                    <form method="post" action="{% url 'recipes:menu_slot_delete' slot_id=main_slot.id %}">
-                        {% csrf_token %}
-                        <button type="submit" class="delete-button">削除</button>
-                    </form>
+                {% if menu_day and not menu_day.eat_out and not menu_day.deli %}
+                    {% if main_slot.recipe %}
+                        <form method="post" action="{% url 'recipes:menu_slot_delete' slot_id=main_slot.id %}">
+                            {% csrf_token %}
+                            <button type="submit" class="delete-button">削除</button>
+                        </form>
+                    {% else %}
+                        <p>
+                            <a href="{% url 'recipes:menu_slot_update' slot_id=main_slot.id %}" class="select-button">探す</a>
+                        </p>
+                    {% endif %}
                 {% else %}
-                    <p>
-                        <a href="{% url 'recipes:menu_slot_update' slot_id=main_slot.id %}" class="select-button">探す</a>
-                    </p>
+                    <p class="home-menu-disabled-text">選択不可</p>
                 {% endif %}
             {% endif %}
         </div>
@@ -80,15 +92,19 @@
             </p>
 
             {% if side_slot %}
-                {% if side_slot.recipe %}
-                    <form method="post" action="{% url 'recipes:menu_slot_delete' slot_id=side_slot.id %}">
-                        {% csrf_token %}
-                        <button type="submit" class="delete-button">削除</button>
-                    </form>
+                {% if menu_day and not menu_day.eat_out and not menu_day.deli %}
+                    {% if side_slot.recipe %}
+                        <form method="post" action="{% url 'recipes:menu_slot_delete' slot_id=side_slot.id %}">
+                            {% csrf_token %}
+                            <button type="submit" class="delete-button">削除</button>
+                        </form>
+                    {% else %}
+                        <p>
+                            <a href="{% url 'recipes:menu_slot_update' slot_id=side_slot.id %}" class="select-button">探す</a>
+                        </p>
+                    {% endif %}
                 {% else %}
-                    <p>
-                        <a href="{% url 'recipes:menu_slot_update' slot_id=side_slot.id %}" class="select-button">探す</a>
-                    </p>
+                    <p class="home-menu-disabled-text">選択不可</p>
                 {% endif %}
             {% endif %}
         </div>
@@ -107,15 +123,19 @@
             </p>
 
             {% if soup_slot %}
-                {% if soup_slot.recipe %}
-                    <form method="post" action="{% url 'recipes:menu_slot_delete' slot_id=soup_slot.id %}">
-                        {% csrf_token %}
-                        <button type="submit" class="delete-button">削除</button>
-                    </form>
+                {% if menu_day and not menu_day.eat_out and not menu_day.deli %}
+                    {% if soup_slot.recipe %}
+                        <form method="post" action="{% url 'recipes:menu_slot_delete' slot_id=soup_slot.id %}">
+                            {% csrf_token %}
+                            <button type="submit" class="delete-button">削除</button>
+                        </form>
+                    {% else %}
+                        <p>
+                            <a href="{% url 'recipes:menu_slot_update' slot_id=soup_slot.id %}" class="select-button">探す</a>
+                        </p>
+                    {% endif %}
                 {% else %}
-                    <p>
-                        <a href="{% url 'recipes:menu_slot_update' slot_id=soup_slot.id %}" class="select-button">探す</a>
-                    </p>
+                    <p class="home-menu-disabled-text">選択不可</p>
                 {% endif %}
             {% endif %}
         </div>
@@ -136,14 +156,17 @@
 
             <button type="submit" class="save-button">保存</button>
         </form>
-        <p>
-            <a href="{% url 'recipes:menu_update' plan_date=menu_day.plan_date %}" class="save-button">今日の献立を編集する</a>
-        </p>
-    {% else %}
+
+        {% else %}
         <p>今日はまだ献立が登録されていません。</p>
         <p>
             <a href="{% url 'recipes:menu_create' %}?plan_date={{ today|date:'Y-m-d' }}" class="select-button">今日の献立を作成する</a>
         </p>
     {% endif %}
+
+    <div class="home-save-area">
+        <button class="save-button" disabled>献立保存</button>
+    </div>
+    
 </section>
 {% endblock %}
