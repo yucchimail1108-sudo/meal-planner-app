@@ -449,3 +449,11 @@ body {
     color: #666;
     border-radius: 8px;
 }
+
+/* 献立削除ボタン */
+.delete-button {
+    background-color: #e74c3c;
+    color: white;
+    padding: 8px 12px;
+    border-radius: 8px;
+}

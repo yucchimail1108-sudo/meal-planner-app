@@ -11,8 +11,14 @@
 </div>
 
 <a href="{% url 'recipes:menu_update' plan_date=menu_day.plan_date %}" class="edit-button">
-献立を編集する
+献立編集
 </a>
+
+{% if can_delete_menu %}
+<a href="{% url 'recipes:menu_delete' plan_date=menu_day.plan_date %}" class="delete-button">
+献立削除
+</a>
+{% endif %}
 
 <p>外食：{% if menu_day.eat_out %}あり{% else %}なし{% endif %}</p>
 <p>惣菜：{% if menu_day.deli %}あり{% else %}なし{% endif %}</p>

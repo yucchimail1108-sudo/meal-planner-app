@@ -10,6 +10,7 @@ urlpatterns = [
     path("menu/slot/<int:slot_id>/edit/", views.menu_slot_update_view, name="menu_slot_update"),
     path("menu/slot/<int:slot_id>/delete/", views.menu_slot_delete_view, name="menu_slot_delete"),
     path("menu/<str:plan_date>/edit/", views.menu_day_update_view, name="menu_update"),
+    path("menu/<str:plan_date>/delete/", views.menu_day_delete_view, name="menu_delete"),
     path("menu/<str:plan_date>/", views.menu_day_detail_view, name="menu_detail"),
     path("create/", views.recipe_create_view, name="recipe_create"),
     path("<int:recipe_id>/favorite/", views.favorite_toggle_view, name="favorite_toggle"),

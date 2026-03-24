@@ -341,7 +341,6 @@ def menu_day_create_view(request):
     )
 
 # 献立詳細
-# 献立詳細
 @login_required
 def menu_day_detail_view(request, plan_date):
     target_date = datetime.strptime(plan_date, "%Y-%m-%d").date()
@@ -353,6 +352,10 @@ def menu_day_detail_view(request, plan_date):
     )
 
     slots = {slot.meal_type: slot for slot in menu_day.slots.all()}
+    
+    has_any_recipe = any(slot.recipe for slot in menu_day.slots.all())
+    can_delete_menu = has_any_recipe or menu_day.eat_out or menu_day.deli
+
 
     prev_date = target_date - timedelta(days=1)
     next_date = target_date + timedelta(days=1)
@@ -365,6 +368,7 @@ def menu_day_detail_view(request, plan_date):
             "slots": slots,
             "prev_date": prev_date,
             "next_date": next_date,
+            "can_delete_menu": can_delete_menu,
         }
     )
 
@@ -407,6 +411,29 @@ def menu_day_update_view(request, plan_date):
             "slots": menu_day.slots.all(),
         }
     )
+
+# 献立削除
+@login_required
+def menu_day_delete_view(request, plan_date):
+    target_date = datetime.strptime(plan_date, "%Y-%m-%d").date()
+
+    menu_day = get_object_or_404(
+        MenuDay,
+        user=request.user,
+        plan_date=target_date
+    )
+
+    if request.method == "POST":
+        menu_day.delete()
+        messages.success(request, "献立を削除しました")
+        return redirect("recipes:menu_calendar")
+
+    return render(
+        request,
+        "recipes/menu_day_confirm_delete.html",
+        {"menu_day": menu_day}
+    )
+
 
 # 献立カレンダー
 @login_required

@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>{{ menu_day.plan_date }}の献立を削除しますか？</h2>
+
+<form method="post">
+    {% csrf_token %}
+    <button type="submit" class="delete-button">削除する</button>
+</form>
+
+<a href="{% url 'recipes:menu_detail' plan_date=menu_day.plan_date %}" class="back-button">
+戻る
+</a>
+{% endblock %}
