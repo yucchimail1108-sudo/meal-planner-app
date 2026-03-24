@@ -23,65 +23,78 @@
 <p>外食：{% if menu_day.eat_out %}あり{% else %}なし{% endif %}</p>
 <p>惣菜：{% if menu_day.deli %}あり{% else %}なし{% endif %}</p>
 
-<h3>主食</h3>
+<div class="menu-detail-grid">
+    <div class="menu-detail-card">
+        <h3>主食</h3>
 
-{% if slots.staple and slots.staple.recipe %}
-    {% if slots.staple.recipe.image %}
-        <img src="{{ slots.staple.recipe.image.url }}" class="menu-image">
-    {% else %}
-        <div class="no-image">NO IMAGE</div>
-    {% endif %}
-    <p>{{ slots.staple.recipe.recipe_name }}</p>
-{% else %}
-    <div class="no-image">NO IMAGE</div>
-    <p>未登録</p>
-{% endif %}
+        {% if slots.staple and slots.staple.recipe %}
+        <a href="{% url 'recipes:recipe_detail' slots.staple.recipe.id %}">
+            {% if slots.staple.recipe.image %}
+                <img src="{{ slots.staple.recipe.image.url }}" class="menu-detail-image">
+            {% else %}
+                <div class="menu-detail-no-image">NO IMAGE</div>
+            {% endif %}
+            <p class="menu-detail-recipe-name">{{ slots.staple.recipe.recipe_name }}</p>
+        </a>
+        {% else %}
+            <div class="menu-detail-no-image">NO IMAGE</div>
+            <p class="menu-detail-empty-text">未登録</p>
+        {% endif %}
+    </div>
 
-{% if slots.staple %}
-<a href="{% url 'recipes:menu_slot_update' slot_id=slots.staple.id %}" class="search-button">探す</a>
-{% endif %}
+    <div class="menu-detail-card">
+        <h3>主菜</h3>
 
+        {% if slots.main and slots.main.recipe %}
+        <a href="{% url 'recipes:recipe_detail' slots.staple.recipe.id %}">   
+            {% if slots.main.recipe.image %}
+                <img src="{{ slots.main.recipe.image.url }}" alt="{{ slots.main.recipe.recipe_name }}" class="menu-detail-image">
+            {% else %}
+                <div class="menu-detail-no-image">NO IMAGE</div>
+            {% endif %}
+            <p class="menu-detail-recipe-name">{{ slots.main.recipe.recipe_name }}</p>
+        </a>
+        {% else %}
+        <div class="menu-detail-no-image">NO IMAGE</div>
+        <p class="menu-detail-empty-text">未登録</p>
+        {% endif %}
+    </div>
 
-<h3>主菜</h3>
+    <div class="menu-detail-card">
+        <h3>副菜</h3>
 
-{% if slots.main and slots.main.recipe %}
-    {% if slots.main.recipe.image %}
-        <img src="{{ slots.main.recipe.image.url }}" class="menu-image">
-    {% else %}
-        <div class="no-image">NO IMAGE</div>
-    {% endif %}
-    <p>{{ slots.main.recipe.recipe_name }}</p>
-{% else %}
-    <div class="no-image">NO IMAGE</div>
-    <p>未登録</p>
-{% endif %}
+        {% if slots.side and slots.side.recipe %}
+        <a href="{% url 'recipes:recipe_detail' slots.staple.recipe.id %}">
+            {% if slots.side.recipe.image %}
+                <img src="{{ slots.side.recipe.image.url }}" alt="{{ slots.side.recipe.recipe_name }}" class="menu-detail-image">
+            {% else %}
+                <div class="menu-detail-no-image">NO IMAGE</div>
+            {% endif %}
+            <p class="menu-detail-recipe-name">{{ slots.side.recipe.recipe_name }}</p>
+        </a>
+        {% else %}
+        <div class="menu-detail-no-image">NO IMAGE</div>
+        <p class="menu-detail-empty-text">未登録</p>
+        {% endif %}
+    </div>
 
-<h3>主菜</h3>
+    <div class="menu-detail-card">
+        <h3>汁物</h3>
 
-{% if slots.main and slots.main.recipe %}
-    {% if slots.main.recipe.image %}
-        <img src="{{ slots.main.recipe.image.url }}" class="menu-image">
-    {% else %}
-        <div class="no-image">NO IMAGE</div>
-    {% endif %}
-    <p>{{ slots.main.recipe.recipe_name }}</p>
-{% else %}
-    <div class="no-image">NO IMAGE</div>
-    <p>未登録</p>
-{% endif %}
-
-<h3>汁物</h3>
-
-{% if slots.soup and slots.soup.recipe %}
-    {% if slots.soup.recipe.image %}
-        <img src="{{ slots.soup.recipe.image.url }}" class="menu-image">
-    {% else %}
-        <div class="no-image">NO IMAGE</div>
-    {% endif %}
-    <p>{{ slots.soup.recipe.recipe_name }}</p>
-{% else %}
-    <div class="no-image">NO IMAGE</div>
-    <p>未登録</p>
-{% endif %}
+        {% if slots.soup and slots.soup.recipe %}
+        <a href="{% url 'recipes:recipe_detail' slots.staple.recipe.id %}">
+            {% if slots.soup.recipe.image %}
+                <img src="{{ slots.soup.recipe.image.url }}" alt="{{ slots.soup.recipe.recipe_name }}" class="menu-detail-image">
+            {% else %}
+                <div class="menu-detail-no-image">NO IMAGE</div>
+            {% endif %}
+            <p class="menu-detail-recipe-name">{{ slots.soup.recipe.recipe_name }}</p>
+        </a>
+        {% else %}
+        <div class="menu-detail-no-image">NO IMAGE</div>
+        <p class="menu-detail-empty-text">未登録</p>
+        {% endif %}
+    </div>
+</div>
 
 {% endblock %}

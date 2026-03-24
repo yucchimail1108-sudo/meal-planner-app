@@ -457,3 +457,60 @@ body {
     padding: 8px 12px;
     border-radius: 8px;
 }
+
+/* 献立詳細画面を４枠２列、画像表示（NO IMAGE） */
+.menu-detail-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-top: 20px;
+}
+
+.menu-detail-card {
+    border: 1px solid #cccccc;
+    border-radius: 8px;
+    padding: 12px;
+    background-color: #ffffff;
+}
+
+.menu-detail-image {
+    width: 100%;
+    max-width: 180px;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 8px;
+    display: block;
+    margin-bottom: 8px;
+}
+
+.menu-detail-no-image {
+    width: 100%;
+    max-width: 180px;
+    height: 120px;
+    background-color: #dddddd;
+    color: #666666;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    margin-bottom: 8px;
+    font-size: 12px;
+}
+
+.menu-detail-recipe-name {
+    margin: 0;
+    font-weight: bold;
+    word-break: break-word;
+}
+
+.menu-detail-empty-text {
+    margin: 0;
+    color: #666666;
+}
+
+/* 献立詳細の見た目崩れ対策 */
+.menu-detail-card a {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+}
