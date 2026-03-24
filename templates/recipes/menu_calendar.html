@@ -29,16 +29,18 @@
             {% for item in week %}
             <td class="{% if not item.is_current_month %}other-month{% endif %}">
                 <div class="calendar-cell">
-                    <div class="calendar-day">{{ item.day }}</div>
+                    <div class="calendar-day">
+                        {% if item.is_current_month and item.menu_day %}
+                            <a href="{% url 'recipes:menu_detail' plan_date=item.menu_day.plan_date|date:'Y-m-d' %}" class="calendar-day-link">
+                                {{ item.day }}
+                            </a>
+                        {% else %}
+                            {{ item.day }}
+                        {% endif %}
+                    </div>
 
                     {% if item.is_current_month %}
                         {% if item.menu_day %}
-                            <div class="calendar-status">
-                                <a href="{% url 'recipes:menu_update' plan_date=item.menu_day.plan_date %}">
-                                    詳細へ
-                                </a>
-                            </div>
-
                             {% for meal_item in item.display_meal_items %}
                                 <div class="calendar-meal-item">{{ meal_item }}</div>
                             {% endfor %}
