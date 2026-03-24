@@ -73,12 +73,9 @@ def get_menu_day_with_slots(user, plan_date):
 
     return menu_day
 
-
+# レシピ在りの場合、外食・惣菜を同時に保存できない
 def validate_menu_day(menu_day):
-    """
-    献立の排他チェック
-    レシピが入っている場合は、外食・惣菜を同時に保存できない
-    """
+    
     slots = menu_day.slots.all()
     has_recipe = any(slot.recipe for slot in slots)
 
@@ -86,3 +83,11 @@ def validate_menu_day(menu_day):
         return False
 
     return True
+
+# カレンダー上で表示対象の献立か判定する
+def has_visible_menu(menu_day):
+
+    slots = menu_day.slots.all()
+    has_recipe = any(slot.recipe for slot in slots)
+
+    return has_recipe or menu_day.eat_out or menu_day.deli

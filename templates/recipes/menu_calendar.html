@@ -31,7 +31,7 @@
                 <div class="calendar-cell">
                     <div class="calendar-day">
                         {% if item.is_current_month and item.has_visible_menu %}
-                            <a href="{% url 'recipes:menu_detail' plan_date=item.menu_day.plan_date|date:'Y-m-d' %}" class="calendar-day-link">
+                            <a href="{% url 'recipes:menu_detail' plan_date=item.date|date:'Y-m-d' %}" class="calendar-day-link">
                                 {{ item.day }}
                             </a>
                         {% else %}

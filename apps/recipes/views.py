@@ -12,6 +12,7 @@ from .services import (
     get_or_create_menu_day_with_slots,
     get_menu_day_with_slots,
     validate_menu_day,
+    has_visible_menu,
 )
 
 # レシピ一覧画面
@@ -498,25 +499,20 @@ def build_calendar_meal_items(menu_day):
 def build_calendar_day_data(day_date, month, menu_day):
     meal_items = build_calendar_meal_items(menu_day)
 
-    has_visible_menu = False
+    visible = False
     if menu_day:
-        has_visible_menu = (
-            len(meal_items) > 0
-            or menu_day.eat_out
-            or menu_day.deli
-        )
+        visible = has_visible_menu(menu_day)
 
     return {
         "date": day_date,
         "day": day_date.day,
         "is_current_month": (day_date.month == month),
         "menu_day": menu_day,
-        "has_visible_menu": has_visible_menu,
+        "has_visible_menu": visible,
         "meal_items": meal_items,
         "has_more_meals": len(meal_items) > 2,
         "display_meal_items": meal_items[:2],
     }
-
 
 # 献立カレンダー
 @login_required
