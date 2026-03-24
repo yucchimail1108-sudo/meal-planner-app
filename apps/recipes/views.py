@@ -8,8 +8,11 @@ from .forms import RecipeForm, RecipeIngredientForm, RecipeStepForm, MenuDayForm
 from django.core.paginator import Paginator
 from django.db.models import Q
 from django.contrib import messages
-from .services import get_or_create_menu_day_with_slots
-
+from .services import (
+    get_or_create_menu_day_with_slots,
+    get_menu_day_with_slots,
+    validate_menu_day,
+)
 
 # レシピ一覧画面
 @login_required
@@ -346,15 +349,18 @@ def menu_day_create_view(request):
 def menu_day_detail_view(request, plan_date):
     plan_date = datetime.strptime(plan_date, "%Y-%m-%d").date()
 
-    menu_day = get_or_create_menu_day_with_slots(request.user, plan_date)
+    menu_day = get_menu_day_with_slots(request.user, plan_date)
 
-    slot_dict = {
-        slot.meal_type: slot
-        for slot in menu_day.slots.all()
-    }
+    slot_dict = {}
 
-    has_any_recipe = any(slot.recipe for slot in menu_day.slots.all())
-    can_delete_menu = has_any_recipe or menu_day.eat_out or menu_day.deli
+    if menu_day:
+        slot_dict = {
+            slot.meal_type: slot
+            for slot in menu_day.slots.all()
+        }
+
+    has_any_recipe = any(slot.recipe for slot in slot_dict.values())
+    can_delete_menu = False
 
     prev_date = plan_date - timedelta(days=1)
     next_date = plan_date + timedelta(days=1)
@@ -365,49 +371,69 @@ def menu_day_detail_view(request, plan_date):
         "prev_date": prev_date,
         "next_date": next_date,
         "can_delete_menu": can_delete_menu,
+        "target_date": plan_date,
     }
 
     return render(request, "recipes/menu_day_detail.html", context)
+
 # 献立編集
 @login_required
 def menu_day_update_view(request, plan_date):
-    menu_day = get_object_or_404(
-        MenuDay,
-        user=request.user,
-        plan_date=plan_date
-    )
-    
+    target_date = datetime.strptime(plan_date, "%Y-%m-%d").date()
+    menu_day = get_or_create_menu_day_with_slots(request.user, target_date)
+
     if request.method == "POST":
         post_data = request.POST.copy()
         post_data["plan_date"] = menu_day.plan_date.strftime("%Y-%m-%d")
-        
+
         form = MenuDayForm(post_data, instance=menu_day)
-        
+
         if form.is_valid():
-            form.save()
+            updated_menu_day = form.save(commit=False)
+
+            # 同時チェック禁止
+            if updated_menu_day.eat_out and updated_menu_day.deli:
+                messages.error(request, "外食と惣菜は同時に選択できません")
+                return redirect(
+                    "recipes:menu_update",
+                    plan_date=menu_day.plan_date
+                )
+
+            # レシピあり + 外食/惣菜 の排他チェック
+            if not validate_menu_day(updated_menu_day):
+                messages.error(
+                    request,
+                    "外食または惣菜を選択する場合は献立をすべて削除してください"
+                )
+                return redirect(
+                    "recipes:menu_update",
+                    plan_date=menu_day.plan_date
+                )
+
+            updated_menu_day.save()
             messages.success(request, "献立を保存しました")
             return redirect(
                 "recipes:menu_update",
                 plan_date=menu_day.plan_date
             )
-            
+
     else:
         form = MenuDayForm(initial={
-            'plan_date': menu_day.plan_date,
-            'eat_out': menu_day.eat_out,
-            'deli': menu_day.deli,
+            "plan_date": menu_day.plan_date,
+            "eat_out": menu_day.eat_out,
+            "deli": menu_day.deli,
         })
-        
+
     return render(
         request,
         "recipes/menu_day_edit.html",
         {
             "form": form,
-            "menu_day":menu_day,
+            "menu_day": menu_day,
             "slots": menu_day.slots.all(),
         }
     )
-
+    
 # 献立削除
 @login_required
 def menu_day_delete_view(request, plan_date):
@@ -429,6 +455,56 @@ def menu_day_delete_view(request, plan_date):
         "recipes/menu_day_confirm_delete.html",
         {"menu_day": menu_day}
     )
+
+# その日の献立から 表示用の料理名リストを作る関数
+def build_calendar_meal_items(menu_day):
+    meal_items = []
+
+    if not menu_day:
+        return meal_items
+
+    slot_dict = {
+        slot.meal_type: slot
+        for slot in menu_day.slots.all()
+    }
+
+    meal_labels = {
+        "staple": "主食",
+        "main": "主菜",
+        "side": "副菜",
+        "soup": "汁物",
+    }
+
+    for meal_type in ["staple", "main", "side", "soup"]:
+        slot = slot_dict.get(meal_type)
+        if slot and slot.recipe:
+            meal_items.append(
+                f"{meal_labels[meal_type]}：{slot.recipe.recipe_name}"
+            )
+
+    return meal_items
+
+def build_calendar_day_data(day_date, month, menu_day):
+    meal_items = build_calendar_meal_items(menu_day)
+
+    has_visible_menu = False
+    if menu_day:
+        has_visible_menu = (
+            len(meal_items) > 0
+            or menu_day.eat_out
+            or menu_day.deli
+        )
+
+    return {
+        "date": day_date,
+        "day": day_date.day,
+        "is_current_month": (day_date.month == month),
+        "menu_day": menu_day,
+        "has_visible_menu": has_visible_menu,
+        "meal_items": meal_items,
+        "has_more_meals": len(meal_items) > 2,
+        "display_meal_items": meal_items[:2],
+    }
 
 
 # 献立カレンダー
@@ -456,40 +532,18 @@ def menu_calendar_view(request):
     calendar_weeks = []
     for week in month_dates:
         week_data = []
+
         for day_date in week:
             menu_day = menu_day_dict.get(day_date)
 
-            meal_items = []
+            week_data.append(
+                build_calendar_day_data(
+                    day_date=day_date,
+                    month=month,
+                    menu_day=menu_day,
+                )
+            )
 
-            if menu_day: # 献立表示（２品まで表示）
-                slot_dict = {
-                    slot.meal_type: slot
-                    for slot in menu_day.slots.all()
-                }
-
-                meal_labels = {
-                    "staple": "主食",
-                    "main": "主菜",
-                    "side": "副菜",
-                    "soup": "汁物",
-                }
-
-                for meal_type in ["staple", "main", "side", "soup"]:
-                    slot = slot_dict.get(meal_type)
-                    if slot and slot.recipe:
-                        meal_items.append(
-                            f"{meal_labels[meal_type]}：{slot.recipe.recipe_name}"
-                        )
-
-            week_data.append({
-                "date": day_date,
-                "day": day_date.day,
-                "is_current_month": (day_date.month == month),
-                "menu_day": menu_day,
-                "meal_items": meal_items,
-                "has_more_meals": len(meal_items) > 2,
-                "display_meal_items": meal_items[:2],
-            })
         calendar_weeks.append(week_data)
 
     # 前月

@@ -36,3 +36,53 @@ def get_or_create_menu_day_with_slots(user, plan_date):
     )
 
     return menu_day
+
+
+def get_menu_day_with_slots(user, plan_date):
+    """
+    指定ユーザー・指定日付の献立を取得する
+    存在しない場合は None を返す
+    存在する場合は 4枠の MenuSlot をそろえて返す
+    """
+    menu_day = (
+        MenuDay.objects
+        .filter(user=user, plan_date=plan_date)
+        .prefetch_related("slots__recipe")
+        .first()
+    )
+
+    if not menu_day:
+        return None
+
+    existing_meal_types = set(
+        menu_day.slots.values_list("meal_type", flat=True)
+    )
+
+    for meal_type in MEAL_TYPES:
+        if meal_type not in existing_meal_types:
+            MenuSlot.objects.create(
+                menu_day=menu_day,
+                meal_type=meal_type,
+            )
+
+    menu_day = (
+        MenuDay.objects
+        .prefetch_related("slots__recipe")
+        .get(id=menu_day.id)
+    )
+
+    return menu_day
+
+
+def validate_menu_day(menu_day):
+    """
+    献立の排他チェック
+    レシピが入っている場合は、外食・惣菜を同時に保存できない
+    """
+    slots = menu_day.slots.all()
+    has_recipe = any(slot.recipe for slot in slots)
+
+    if (menu_day.eat_out or menu_day.deli) and has_recipe:
+        return False
+
+    return True
