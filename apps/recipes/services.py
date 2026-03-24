@@ -6,11 +6,16 @@ MEAL_TYPES = ["staple", "main", "side", "soup"]
 def get_or_create_menu_day_with_slots(user, plan_date):
     """
     指定ユーザー・指定日付の献立を取得する
-    なければ MenuDay を作成し、4枠の MenuSlot も揃える
+    なければ MenuDay を作成し 4枠の MenuSlot もそろえる
     """
     menu_day, _ = MenuDay.objects.get_or_create(
         user=user,
         plan_date=plan_date,
+        defaults={
+            "eat_out": False,
+            "deli": False,
+            "is_cooked": False,
+        }
     )
 
     existing_meal_types = set(
@@ -26,7 +31,6 @@ def get_or_create_menu_day_with_slots(user, plan_date):
 
     menu_day = (
         MenuDay.objects
-        .select_related("user")
         .prefetch_related("slots__recipe")
         .get(id=menu_day.id)
     )
