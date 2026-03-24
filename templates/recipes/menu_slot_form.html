@@ -15,6 +15,9 @@
 </h3>
 
 <form method="post">
+<input type="hidden" name="source" value="{{ source }}">
+<input type="hidden" name="plan_date" value="{{ plan_date }}">
+    
     {% csrf_token %}
     <select name="recipe_id">
         

@@ -5,7 +5,7 @@
 {% block content %}
 <div class="menu-edit-container">
 
-    <h2>{{ menu_day.plan_date }}の献立保存</h2>
+    <h2>{{ menu_day.plan_date }}の献立</h2>
 
     <p>
         <a href="{% url 'recipes:menu_detail' plan_date=menu_day.plan_date %}" class="back-button">献立詳細へ戻る</a>
@@ -55,7 +55,7 @@
                         {% endif %}
                     </p>
 
-                     <a href="{% url 'recipes:menu_slot_update' slot_id=slot.id %}" class="search-button">
+                     <a href="{% url 'recipes:menu_slot_update' slot_id=slot.id %}?source=menu_update&plan_date={{ menu_day.plan_date|date:'Y-m-d' } class="search-button">
                         探す
                     </a>
 

@@ -1,5 +1,5 @@
 import calendar
-from datetime import date
+from datetime import date, datetime, timedelta
 
 from django.shortcuts import render, get_object_or_404,redirect
 from django.contrib.auth.decorators import login_required
@@ -341,22 +341,30 @@ def menu_day_create_view(request):
     )
 
 # 献立詳細
+# 献立詳細
 @login_required
 def menu_day_detail_view(request, plan_date):
+    target_date = datetime.strptime(plan_date, "%Y-%m-%d").date()
+
     menu_day = get_object_or_404(
         MenuDay,
         user=request.user,
-        plan_date=plan_date
+        plan_date=target_date
     )
-    
+
     slots = {slot.meal_type: slot for slot in menu_day.slots.all()}
-                   
+
+    prev_date = target_date - timedelta(days=1)
+    next_date = target_date + timedelta(days=1)
+
     return render(
         request,
         "recipes/menu_day_detail.html",
         {
             "menu_day": menu_day,
             "slots": slots,
+            "prev_date": prev_date,
+            "next_date": next_date,
         }
     )
 
@@ -497,22 +505,48 @@ def menu_calendar_view(request):
 # 献立レシピ設定
 @login_required
 def menu_slot_update_view(request, slot_id):
-    slot = get_object_or_404(MenuSlot, id=slot_id, menu_day__user=request.user)
+    slot = get_object_or_404(
+        MenuSlot,
+        id=slot_id,
+        menu_day__user=request.user
+    )
 
     recipes = Recipe.objects.filter(user=request.user)
 
     if request.method == "POST":
         recipe_id = request.POST.get("recipe_id")
+        source = request.POST.get("source")
+        plan_date = request.POST.get("plan_date")
 
-        # --- セッションに保存 ---
+        # 献立保存画面から来た場合は その日のslotへ直接保存
+        if source == "menu_update":
+            if recipe_id:
+                slot.recipe = get_object_or_404(
+                    Recipe,
+                    id=recipe_id,
+                    user=request.user
+                )
+            else:
+                slot.recipe = None
+
+            slot.save()
+
+            messages.success(request, "レシピを設定しました")
+            return redirect(
+                "recipes:menu_update",
+                plan_date=slot.menu_day.plan_date
+            )
+
+        # ホーム画面から来た場合は 仮保存
         temp_menu = request.session.get("temp_menu", {})
-
-        temp_menu[str(slot_id)] = recipe_id
-
+        temp_menu[str(slot.id)] = recipe_id
         request.session["temp_menu"] = temp_menu
 
         messages.success(request, "レシピを選択しました")
         return redirect("home")
+
+    source = request.GET.get("source", "")
+    plan_date = request.GET.get("plan_date", "")
 
     return render(
         request,
@@ -520,6 +554,8 @@ def menu_slot_update_view(request, slot_id):
         {
             "slot": slot,
             "recipes": recipes,
+            "source": source,
+            "plan_date": plan_date,
         }
     )
 
