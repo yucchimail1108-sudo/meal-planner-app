@@ -46,7 +46,7 @@
         <h3>主菜</h3>
 
         {% if slots.main and slots.main.recipe %}
-        <a href="{% url 'recipes:recipe_detail' slots.staple.recipe.id %}">   
+        <a href="{% url 'recipes:recipe_detail' slots.main.recipe.id %}">   
             {% if slots.main.recipe.image %}
                 <img src="{{ slots.main.recipe.image.url }}" alt="{{ slots.main.recipe.recipe_name }}" class="menu-detail-image">
             {% else %}
@@ -64,7 +64,7 @@
         <h3>副菜</h3>
 
         {% if slots.side and slots.side.recipe %}
-        <a href="{% url 'recipes:recipe_detail' slots.staple.recipe.id %}">
+        <a href="{% url 'recipes:recipe_detail' slots.side.recipe.id %}">
             {% if slots.side.recipe.image %}
                 <img src="{{ slots.side.recipe.image.url }}" alt="{{ slots.side.recipe.recipe_name }}" class="menu-detail-image">
             {% else %}
@@ -82,7 +82,7 @@
         <h3>汁物</h3>
 
         {% if slots.soup and slots.soup.recipe %}
-        <a href="{% url 'recipes:recipe_detail' slots.staple.recipe.id %}">
+        <a href="{% url 'recipes:recipe_detail' slots.soup.recipe.id %}">
             {% if slots.soup.recipe.image %}
                 <img src="{{ slots.soup.recipe.image.url }}" alt="{{ slots.soup.recipe.recipe_name }}" class="menu-detail-image">
             {% else %}

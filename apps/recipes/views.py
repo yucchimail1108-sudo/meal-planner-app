@@ -8,6 +8,7 @@ from .forms import RecipeForm, RecipeIngredientForm, RecipeStepForm, MenuDayForm
 from django.core.paginator import Paginator
 from django.db.models import Q
 from django.contrib import messages
+from .services import get_or_create_menu_day_with_slots
 
 
 # レシピ一覧画面
@@ -343,35 +344,30 @@ def menu_day_create_view(request):
 # 献立詳細
 @login_required
 def menu_day_detail_view(request, plan_date):
-    target_date = datetime.strptime(plan_date, "%Y-%m-%d").date()
+    plan_date = datetime.strptime(plan_date, "%Y-%m-%d").date()
 
-    menu_day = get_object_or_404(
-        MenuDay,
-        user=request.user,
-        plan_date=target_date
-    )
+    menu_day = get_or_create_menu_day_with_slots(request.user, plan_date)
 
-    slots = {slot.meal_type: slot for slot in menu_day.slots.all()}
-    
+    slot_dict = {
+        slot.meal_type: slot
+        for slot in menu_day.slots.all()
+    }
+
     has_any_recipe = any(slot.recipe for slot in menu_day.slots.all())
     can_delete_menu = has_any_recipe or menu_day.eat_out or menu_day.deli
 
+    prev_date = plan_date - timedelta(days=1)
+    next_date = plan_date + timedelta(days=1)
 
-    prev_date = target_date - timedelta(days=1)
-    next_date = target_date + timedelta(days=1)
+    context = {
+        "menu_day": menu_day,
+        "slots": slot_dict,
+        "prev_date": prev_date,
+        "next_date": next_date,
+        "can_delete_menu": can_delete_menu,
+    }
 
-    return render(
-        request,
-        "recipes/menu_day_detail.html",
-        {
-            "menu_day": menu_day,
-            "slots": slots,
-            "prev_date": prev_date,
-            "next_date": next_date,
-            "can_delete_menu": can_delete_menu,
-        }
-    )
-
+    return render(request, "recipes/menu_day_detail.html", context)
 # 献立編集
 @login_required
 def menu_day_update_view(request, plan_date):

@@ -5,7 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 
 from apps.recipes.models import MenuDay, MenuSlot, Recipe
-
+from apps.recipes.services import get_or_create_menu_day_with_slots
 
 # ポートフォリオ画面
 def top_view(request):
@@ -45,21 +45,7 @@ def home_view(request):
             messages.error(request, "外食と惣菜は同時に選択できません")
             return redirect("home")
 
-        menu_day, created = MenuDay.objects.get_or_create(
-            user=request.user,
-            plan_date=today,
-            defaults={
-                "eat_out": False,
-                "deli": False,
-                "is_cooked": False,
-            }
-        )
-
-        for meal_type in ["staple", "main", "side", "soup"]:
-            MenuSlot.objects.get_or_create(
-                menu_day=menu_day,
-                meal_type=meal_type
-            )
+        menu_day = get_or_create_menu_day_with_slots(request.user, today)
 
         slots = list(menu_day.slots.all())
 
@@ -96,10 +82,7 @@ def home_view(request):
         messages.success(request, "献立を保存しました")
         return redirect("home")
 
-    menu_day = MenuDay.objects.filter(
-        user=request.user,
-        plan_date=today
-    ).prefetch_related("slots__recipe").first()
+    menu_day = get_or_create_menu_day_with_slots(request.user, today)
 
     slot_dict = {}
 
