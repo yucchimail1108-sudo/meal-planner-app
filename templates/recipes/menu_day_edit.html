@@ -55,7 +55,7 @@
                         {% endif %}
                     </p>
 
-                     <a href="{% url 'recipes:menu_slot_update' slot_id=slot.id %}?source=menu_update&plan_date={{ menu_day.plan_date|date:'Y-m-d' } class="search-button">
+                    <a href="{% url 'recipes:menu_slot_update' slot.id %}?source=menu_update&plan_date={{ menu_day.plan_date|date:'Y-m-d' }}" class="select-button">
                         探す
                     </a>
 

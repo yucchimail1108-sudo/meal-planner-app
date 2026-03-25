@@ -11,46 +11,57 @@
     <button type="submit" class="save-button">検索</button>
 </form>
 
-<h3>
-{% if slot.meal_type == "staple" %}主食
-{% elif slot.meal_type == "main" %}主菜
-{% elif slot.meal_type == "side" %}副菜
-{% elif slot.meal_type == "soup" %}汁物
+{% if slot.recipe %}
+    <p>現在選択中：{{ slot.recipe.recipe_name }}</p>
+{% else %}
+    <p>現在選択中：なし</p>
 {% endif %}
-のレシピ設定
 
+<h3>
+    {% if slot.meal_type == "staple" %}主食
+    {% elif slot.meal_type == "main" %}主菜
+    {% elif slot.meal_type == "side" %}副菜
+    {% elif slot.meal_type == "soup" %}汁物
+    {% endif %}
+    のレシピ設定
 </h3>
 
 <form method="post">
-<input type="hidden" name="source" value="{{ source }}">
-<input type="hidden" name="plan_date" value="{{ plan_date }}">
-    
+    <input type="hidden" name="source" value="{{ source }}">
+    <input type="hidden" name="plan_date" value="{{ plan_date }}">
     {% csrf_token %}
+
+    {% if not recipes %}
+        <p>該当するレシピがありません</p>
+    {% endif %}
+
     <select name="recipe_id">
-        
         <option value="">未設定</option>
 
         {% for recipe in recipes %}
         <option value="{{ recipe.id }}"
-        {% if slot.recipe and slot.recipe.id == recipe.id %}
-        selected
-        {% endif %}
+            {% if slot.recipe and slot.recipe.id == recipe.id %}
+                selected
+            {% endif %}
         >
-
-        {{ recipe.recipe_name }}    
+            {{ recipe.recipe_name }}
         </option>
         {% endfor %}
-
     </select>
 
     <button type="submit" class="save-button">保存</button>
-
 </form>
 
 <br>
 
-<a href="{% url 'recipes:menu_detail' plan_date=slot.menu_day.plan_date %}">
-戻る
-</a>
+{% if source == "menu_update" %}
+    <a href="{% url 'recipes:menu_update' plan_date=slot.menu_day.plan_date|date:'Y-m-d' %}">
+        戻る
+    </a>
+{% else %}
+    <a href="{% url 'home' %}">
+        戻る
+    </a>
+{% endif %}
 
 {% endblock %}
