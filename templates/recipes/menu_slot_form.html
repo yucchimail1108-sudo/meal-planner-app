@@ -4,6 +4,13 @@
 
 <h2>{{ slot.menu_day.plan_date }}の献立</h2>
 
+<form method="get">
+    <input type="hidden" name="source" value="{{ source }}">
+    <input type="hidden" name="plan_date" value="{{ plan_date }}">
+    <input type="text" name="q" value="{{ q }}" placeholder="レシピ名で検索">
+    <button type="submit" class="save-button">検索</button>
+</form>
+
 <h3>
 {% if slot.meal_type == "staple" %}主食
 {% elif slot.meal_type == "main" %}主菜

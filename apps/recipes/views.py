@@ -604,10 +604,17 @@ def menu_slot_update_view(request, slot_id):
 
     target_category = meal_type_to_category.get(slot.meal_type)
 
+    q = request.GET.get("q", "").strip()
+
     recipes = Recipe.objects.filter(
         user=request.user,
         menu_category=target_category
-    ).order_by("-id")
+    )
+
+    if q:
+        recipes = recipes.filter(recipe_name__icontains=q)
+
+    recipes = recipes.order_by("-id")
 
     if request.method == "POST":
         recipe_id = request.POST.get("recipe_id")
@@ -652,6 +659,7 @@ def menu_slot_update_view(request, slot_id):
             "recipes": recipes,
             "source": source,
             "plan_date": plan_date,
+            "q": q,
         }
     )
 
