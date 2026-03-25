@@ -31,25 +31,25 @@
     <input type="hidden" name="plan_date" value="{{ plan_date }}">
     {% csrf_token %}
 
-    {% if not recipes %}
+    {% if recipes %}
+        <select name="recipe_id">
+            <option value="">未設定</option>
+
+            {% for recipe in recipes %}
+            <option value="{{ recipe.id }}"
+                {% if slot.recipe and slot.recipe.id == recipe.id %}
+                    selected
+                {% endif %}
+            >
+                {{ recipe.recipe_name }}
+            </option>
+            {% endfor %}
+        </select>
+
+        <button type="submit" class="save-button">保存</button>
+    {% else %}
         <p>該当するレシピがありません</p>
     {% endif %}
-
-    <select name="recipe_id">
-        <option value="">未設定</option>
-
-        {% for recipe in recipes %}
-        <option value="{{ recipe.id }}"
-            {% if slot.recipe and slot.recipe.id == recipe.id %}
-                selected
-            {% endif %}
-        >
-            {{ recipe.recipe_name }}
-        </option>
-        {% endfor %}
-    </select>
-
-    <button type="submit" class="save-button">保存</button>
 </form>
 
 <br>
