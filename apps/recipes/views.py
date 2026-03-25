@@ -595,7 +595,19 @@ def menu_slot_update_view(request, slot_id):
         menu_day__user=request.user
     )
 
-    recipes = Recipe.objects.filter(user=request.user)
+    meal_type_to_category = {
+        "staple": 1,
+        "main": 2,
+        "side": 3,
+        "soup": 4,
+    }
+
+    target_category = meal_type_to_category.get(slot.meal_type)
+
+    recipes = Recipe.objects.filter(
+        user=request.user,
+        menu_category=target_category
+    ).order_by("-id")
 
     if request.method == "POST":
         recipe_id = request.POST.get("recipe_id")
