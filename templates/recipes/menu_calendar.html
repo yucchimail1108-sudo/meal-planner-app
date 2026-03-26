@@ -69,5 +69,21 @@
         </tr>
         {% endfor %}
     </tbody>
+
+    <h3>つくった！</h3>
+
+    <form method="post" action="{% url 'recipes:menu_cooked' %}">
+        {% csrf_token %}
+        <label for="cooked_date">何日の献立をつくりましたか？</label>
+        <input
+            type="date"
+            id="cooked_date"
+            name="cooked_date"
+            max="{{ today|date:'Y-m-d' }}"
+            required
+        >
+        <button type="submit" class="save-button">つくった！</button>
+    </form>
+    
 </table>
 {% endblock %}

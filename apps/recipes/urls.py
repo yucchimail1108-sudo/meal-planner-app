@@ -5,6 +5,7 @@ app_name = 'recipes'
 
 urlpatterns = [
     path("", views.recipe_list_view, name="recipe_list"),
+    path("menu/cooked/", views.menu_cooked_view, name="menu_cooked"),
     path("menu/", views.menu_day_create_view, name="menu_create"),
     path("menu/calendar/", views.menu_calendar_view, name="menu_calendar"),
     path("menu/slot/<int:slot_id>/edit/", views.menu_slot_update_view, name="menu_slot_update"),
@@ -27,4 +28,4 @@ urlpatterns = [
     path("shopping-list/<int:item_id>/delete/", views.shopping_list_delete_view, name="shopping_list_delete"),
     path("home-foods/", views.home_food_list_view, name="home_food_list"),
     path("home-foods/<int:item_id>/delete/", views.home_food_delete_view, name="home_food_delete"),
-]
+ ]

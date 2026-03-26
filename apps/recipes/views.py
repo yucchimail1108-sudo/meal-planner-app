@@ -577,7 +577,7 @@ def menu_calendar_view(request):
         "prev_month": prev_month,
         "next_year": next_year,
         "next_month": next_month,
-        "today": today,
+        "today": date.today(),
     }
 
     return render(
@@ -679,6 +679,38 @@ def menu_slot_delete_view(request, slot_id):
         return redirect("home")
 
     return redirect("home")
+
+# 献立の「つくった！」機能
+@login_required
+def menu_cooked_view(request):
+    if request.method != "POST":
+        return redirect("recipes:menu_calendar")
+
+    cooked_date = request.POST.get("cooked_date")
+
+    if not cooked_date:
+        messages.error(request, "日付を選択してください")
+        return redirect("recipes:menu_calendar")
+
+    if cooked_date > str(date.today()):
+        messages.error(request, "未来の日付は選択できません")
+        return redirect("recipes:menu_calendar")
+
+    menu_day = MenuDay.objects.filter(
+        user=request.user,
+        plan_date=cooked_date,
+    ).first()
+
+    if not menu_day:
+        messages.error(request, "選択した日の献立が見つかりません")
+        return redirect("recipes:menu_calendar")
+
+    menu_day.is_cooked = True
+    menu_day.save()
+
+    messages.success(request, "つくった日を登録しました")
+    return redirect("recipes:menu_calendar")
+
 
 # 買い物リスト一覧＆追加＆購入済み処理
 @login_required
