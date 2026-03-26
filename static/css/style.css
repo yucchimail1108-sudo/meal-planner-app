@@ -515,4 +515,9 @@ body {
     display: block;
 }
 
-
+/* カレンダーのつくった！ボタン横のコメント */
+.calendar-description {
+    font-size: 0.9em;
+    color: #666;
+    margin-bottom: 10px;
+}

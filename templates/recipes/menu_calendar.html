@@ -75,7 +75,9 @@
     </tbody>
 </table>
 
-<h3>つくった！</h3>
+<p class="calendar-description">
+※つくった！を押して、献立をつくった日付を選択すると「おうち食材」から使用した食材を削除できます
+</p>
 
     <form method="post" action="{% url 'recipes:menu_cooked' %}">
         {% csrf_token %}

@@ -766,23 +766,7 @@ def menu_cooked_view(request):
 
     messages.success(
         request,
-        f"対象レシピ: {', '.join(recipe_names) if recipe_names else 'なし'}"
-    )
-    messages.success(
-        request,
-        f"対象食材: {', '.join(ingredient_names) if ingredient_names else 'なし'}"
-    )
-    messages.success(
-        request,
-        f"おうち食材から減る候補: {', '.join(removable_food_names) if removable_food_names else 'なし'}"
-    )
-    messages.success(
-        request,
-        f"おうち食材にない食材: {', '.join(not_owned_food_names) if not_owned_food_names else 'なし'}"
-    )
-    messages.success(
-        request,
-        f"つくった日を登録しました。おうち食材を{removed_count}件減らしました"
+        "つくった献立に使用していた食材を、おうち食材から減らしました"
     )
     return redirect("recipes:menu_calendar")
 
