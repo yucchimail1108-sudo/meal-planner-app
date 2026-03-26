@@ -508,6 +508,7 @@ def build_calendar_day_data(day_date, month, menu_day):
         "day": day_date.day,
         "is_current_month": (day_date.month == month),
         "menu_day": menu_day,
+        "is_cooked": menu_day.is_cooked if menu_day else False,
         "has_visible_menu": visible,
         "meal_items": meal_items,
         "has_more_meals": len(meal_items) > 2,

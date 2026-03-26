@@ -39,7 +39,7 @@
                         {% endif %}
                     </div>
 
-                    {% if item.is_current_month %}
+                      {% if item.is_current_month %}
                         {% if item.has_visible_menu %}
                             {% for meal_item in item.display_meal_items %}
                                 <div class="calendar-meal-item">{{ meal_item }}</div>
@@ -56,6 +56,10 @@
                             {% if item.menu_day.deli %}
                                 <div class="calendar-label">惣菜</div>
                             {% endif %}
+
+                            {% if item.is_cooked %}
+                                <div class="calendar-label">🍲 つくった</div>
+                            {% endif %}
                         {% else %}
                             <div class="calendar-status">献立なし</div>
                             <a href="{% url 'recipes:menu_create' %}?plan_date={{ item.date|date:'Y-m-d' }}" class="select-button">
@@ -69,8 +73,9 @@
         </tr>
         {% endfor %}
     </tbody>
+</table>
 
-    <h3>つくった！</h3>
+<h3>つくった！</h3>
 
     <form method="post" action="{% url 'recipes:menu_cooked' %}">
         {% csrf_token %}
@@ -84,6 +89,5 @@
         >
         <button type="submit" class="save-button">つくった！</button>
     </form>
-    
-</table>
+
 {% endblock %}
