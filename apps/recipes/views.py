@@ -705,6 +705,10 @@ def menu_cooked_view(request):
     if not menu_day:
         messages.error(request, "選択した日の献立が見つかりません")
         return redirect("recipes:menu_calendar")
+    
+    if menu_day.is_cooked:
+        messages.error(request, "その日はすでに調理済みです")
+        return redirect("recipes:menu_calendar")
 
     menu_day.is_cooked = True
     menu_day.save()
