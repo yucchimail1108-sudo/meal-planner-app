@@ -682,6 +682,9 @@ def menu_slot_delete_view(request, slot_id):
 
     return redirect("home")
 
+
+
+
 # 献立の「つくった！」機能
 @login_required
 def menu_cooked_view(request):
@@ -713,24 +716,38 @@ def menu_cooked_view(request):
         messages.error(request, "その日はすでに調理済みです")
         return redirect("recipes:menu_calendar")
 
+
     selected_recipes = []
 
     for slot in menu_day.slots.all():
         if slot.recipe:
             selected_recipes.append(slot.recipe)
-            
+
+    if not selected_recipes:
+        messages.error(
+            request,
+            "レシピが登録されている日のみ、つくった！を登録できます"
+        )
+        return redirect("recipes:menu_calendar")
+
     recipe_ingredients = RecipeIngredient.objects.filter(
         recipe__in=selected_recipes
     ).select_related("food_item", "recipe")
 
+    target_ingredients = [
+        ingredient
+        for ingredient in recipe_ingredients
+        if ingredient.ingredient_kind == 0
+    ]
+
     ingredient_names = [
         ingredient.food_item.ingredient_name
-        for ingredient in recipe_ingredients
+        for ingredient in target_ingredients
     ]
 
     ingredient_food_item_ids = [
         ingredient.food_item_id
-        for ingredient in recipe_ingredients
+        for ingredient in target_ingredients
     ]
 
     home_food_items = HomeFoodItem.objects.filter(
@@ -738,31 +755,10 @@ def menu_cooked_view(request):
         food_item_id__in=ingredient_food_item_ids
     ).select_related("food_item")
 
-    removed_count = home_food_items.count()
-
-    home_food_item_ids = {
-        home_food_item.food_item_id
-        for home_food_item in home_food_items
-    }
-
-    removable_food_names = [
-        ingredient.food_item.ingredient_name
-        for ingredient in recipe_ingredients
-        if ingredient.food_item_id in home_food_item_ids
-    ]
-
-    not_owned_food_names = [
-        ingredient.food_item.ingredient_name
-        for ingredient in recipe_ingredients
-        if ingredient.food_item_id not in home_food_item_ids
-    ]
-
     with transaction.atomic():
         menu_day.is_cooked = True
         menu_day.save()
         home_food_items.delete()
-
-    recipe_names = [recipe.recipe_name for recipe in selected_recipes]
 
     messages.success(
         request,
