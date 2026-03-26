@@ -700,6 +700,8 @@ def menu_cooked_view(request):
     menu_day = MenuDay.objects.filter(
         user=request.user,
         plan_date=cooked_date,
+    ).prefetch_related(
+        "slots__recipe"
     ).first()
 
     if not menu_day:
@@ -710,9 +712,36 @@ def menu_cooked_view(request):
         messages.error(request, "その日はすでに調理済みです")
         return redirect("recipes:menu_calendar")
 
+    selected_recipes = []
+
+    for slot in menu_day.slots.all():
+        if slot.recipe:
+            selected_recipes.append(slot.recipe)
+            
+    recipe_ingredients = RecipeIngredient.objects.filter(
+        recipe__in=selected_recipes
+    ).select_related("food_item", "recipe")
+
+    ingredient_names = [
+        ingredient.food_item.ingredient_name
+        for ingredient in recipe_ingredients
+    ]
+
     menu_day.is_cooked = True
     menu_day.save()
 
+    recipe_names = [recipe.recipe_name for recipe in selected_recipes]
+
+    messages.success(
+        request,
+        f"対象レシピ: {', '.join(recipe_names) if recipe_names else 'なし'}"
+    )
+    messages.success(
+        request,
+        f"対象食材: {', '.join(ingredient_names) if ingredient_names else 'なし'}"
+    )
+    
+    
     messages.success(request, "つくった日を登録しました")
     return redirect("recipes:menu_calendar")
 
