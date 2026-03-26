@@ -7,6 +7,7 @@ from .models import Recipe, RecipeIngredient, RecipeStep, Favorite, MenuDay, Men
 from .forms import RecipeForm, RecipeIngredientForm, RecipeStepForm, MenuDayForm, ShoppingListItemForm, ShoppingListExtractForm, HomeFoodItemForm, FoodItemCreateForm
 from django.core.paginator import Paginator
 from django.db.models import Q
+from django.db import transaction
 from django.contrib import messages
 from .services import (
     get_or_create_menu_day_with_slots,
@@ -727,8 +728,39 @@ def menu_cooked_view(request):
         for ingredient in recipe_ingredients
     ]
 
-    menu_day.is_cooked = True
-    menu_day.save()
+    ingredient_food_item_ids = [
+        ingredient.food_item_id
+        for ingredient in recipe_ingredients
+    ]
+
+    home_food_items = HomeFoodItem.objects.filter(
+        user=request.user,
+        food_item_id__in=ingredient_food_item_ids
+    ).select_related("food_item")
+
+    removed_count = home_food_items.count()
+
+    home_food_item_ids = {
+        home_food_item.food_item_id
+        for home_food_item in home_food_items
+    }
+
+    removable_food_names = [
+        ingredient.food_item.ingredient_name
+        for ingredient in recipe_ingredients
+        if ingredient.food_item_id in home_food_item_ids
+    ]
+
+    not_owned_food_names = [
+        ingredient.food_item.ingredient_name
+        for ingredient in recipe_ingredients
+        if ingredient.food_item_id not in home_food_item_ids
+    ]
+
+    with transaction.atomic():
+        menu_day.is_cooked = True
+        menu_day.save()
+        home_food_items.delete()
 
     recipe_names = [recipe.recipe_name for recipe in selected_recipes]
 
@@ -740,11 +772,19 @@ def menu_cooked_view(request):
         request,
         f"対象食材: {', '.join(ingredient_names) if ingredient_names else 'なし'}"
     )
-    
-    
-    messages.success(request, "つくった日を登録しました")
+    messages.success(
+        request,
+        f"おうち食材から減る候補: {', '.join(removable_food_names) if removable_food_names else 'なし'}"
+    )
+    messages.success(
+        request,
+        f"おうち食材にない食材: {', '.join(not_owned_food_names) if not_owned_food_names else 'なし'}"
+    )
+    messages.success(
+        request,
+        f"つくった日を登録しました。おうち食材を{removed_count}件減らしました"
+    )
     return redirect("recipes:menu_calendar")
-
 
 # 買い物リスト一覧＆追加＆購入済み処理
 @login_required
