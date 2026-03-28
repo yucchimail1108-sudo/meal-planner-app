@@ -62,16 +62,17 @@
 <h2>材料</h2>
 
 <ul>
-    {% for ingredient in recipe.ingredients.all %}
+    {% for item in converted_ingredients %}
         <li>
-            {{ ingredient.food_item }} {{ ingredient.amount_text }}
-        
-            <a href="{% url 'recipes:ingredient_update' ingredient.id %}">編集</a>
-            <a href="{% url 'recipes:ingredient_delete' ingredient.id %}">削除</a>
+            {{ item.ingredient.food_item }} {{ item.ingredient.amount_text }}
+            → {{ item.converted_amount }}
+
+            <a href="{% url 'recipes:ingredient_update' item.ingredient.id %}">編集</a>
+            <a href="{% url 'recipes:ingredient_delete' item.ingredient.id %}">削除</a>
         </li>
     {% empty %}
         <li>材料はまだ登録されていません。</li>
-    {% endfor %}        
+    {% endfor %}
 </ul>
 
 <p>
