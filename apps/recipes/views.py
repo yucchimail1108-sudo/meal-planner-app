@@ -1,5 +1,7 @@
 import calendar
 from datetime import date, datetime, timedelta
+import re
+from decimal import Decimal, InvalidOperation
 
 from django.shortcuts import render, get_object_or_404,redirect
 from django.contrib.auth.decorators import login_required
@@ -59,6 +61,29 @@ def recipe_list_view(request):
             "favorite_recipe_ids": favorite_recipe_ids
         }
     )
+# 分量換算
+def convert_amount_text(amount_text, scale):
+    match = re.match(r"^(\d+(?:\.\d+)?)(.*)$", amount_text.strip())
+    
+    if not match:
+        return amount_text
+    
+    number_text = match.group(1)
+    until_text = match.group(2)
+    
+    try:
+        converted = Decimal(number_text) * scale
+    except InvalidOperation:
+        return amount_text
+    
+    if converted == converted.to_integral():
+        converted_text = str(int(converted))
+        
+    else:
+        converted_text = str(converted.normalize())
+        
+    return f"{converted_text}{until_text}"
+
 
 # レシピ詳細画面
 @login_required
@@ -69,15 +94,33 @@ def recipe_detail_view(request, recipe_id):
         user=request.user
     )
 
-    scale = request.GET.get("scale", "1") # デフォルト値１倍
+    scale_text = request.GET.get("scale", "1") # デフォルト値１倍
     
-    
+    try:
+        scale =Decimal(scale_text)
+    except InvalidOperation:
+        scale = Decimal("1")
+        scale_text = "1"
+        
+    ingredients = recipe.ingredients.all()
+
+    converted_ingredients = []
+    for ingredient in ingredients:
+        converted_ingredients.append({
+            "ingredient": ingredient,
+            "converted_amount": convert_amount_text(
+                ingredient.amount_text,
+                scale
+            )
+        })
+        
     return render(
         request, 
         "recipes/recipe_detail.html", 
         {
             "recipe": recipe,
-            "scale": scale,
+            "scale": scale_text,
+            "converted_ingredients": converted_ingredients,
         }
     )
 

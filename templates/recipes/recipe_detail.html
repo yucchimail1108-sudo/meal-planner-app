@@ -22,26 +22,25 @@
 <p>カテゴリ{{ recipe.get_menu_category_display }}</p> 
 {% endif %}
 
-<p>
-    【分量換算】
-    <form  method="get" style="display: inline;">
-        <select name="scale" onchange="this.form.submit()">
-            <option value="0.25" {% if scale == "0.25" %}selected{% endif %}>1/4</option>
-            <option value="0.5" {% if scale == "0.5" %}selected{% endif %}>1/2</option>
-            <option value="1" {% if scale == "1" %}selected{% endif %}>1</option>
-            <option value="1.5" {% if scale == "1.5" %}selected{% endif %}>1.5</option>
-            <option value="2" {% if scale == "2" %}selected{% endif %}>2</option>
-            <option value="3" {% if scale == "3" %}selected{% endif %}>3</option>
-            <option value="4" {% if scale == "4" %}selected{% endif %}>4</option>
-            <option value="5" {% if scale == "5" %}selected{% endif %}>5</option>
-            <option value="6" {% if scale == "6" %}selected{% endif %}>6</option>
-            <option value="7" {% if scale == "7" %}selected{% endif %}>7</option>
-            <option value="8" {% if scale == "8" %}selected{% endif %}>8</option>
-            <option value="9" {% if scale == "9" %}selected{% endif %}>9</option>
-            <option value="10" {% if scale == "10" %}selected{% endif %}>10</option>
-        </select>
-    </form>
-</p>
+<form  method="get">
+    <label for="scale">【分量換算】</label>
+    <select name="scale" id="scale" onchange="this.form.submit()">
+        <option value="0.25" {% if scale == "0.25" %}selected{% endif %}>1/4</option>
+        <option value="0.5" {% if scale == "0.5" %}selected{% endif %}>1/2</option>
+        <option value="1" {% if scale == "1" %}selected{% endif %}>1</option>
+        <option value="1.5" {% if scale == "1.5" %}selected{% endif %}>1.5</option>
+        <option value="2" {% if scale == "2" %}selected{% endif %}>2</option>
+        <option value="3" {% if scale == "3" %}selected{% endif %}>3</option>
+        <option value="4" {% if scale == "4" %}selected{% endif %}>4</option>
+        <option value="5" {% if scale == "5" %}selected{% endif %}>5</option>
+        <option value="6" {% if scale == "6" %}selected{% endif %}>6</option>
+        <option value="7" {% if scale == "7" %}selected{% endif %}>7</option>
+        <option value="8" {% if scale == "8" %}selected{% endif %}>8</option>
+        <option value="9" {% if scale == "9" %}selected{% endif %}>9</option>
+        <option value="10" {% if scale == "10" %}selected{% endif %}>10</option>
+    </select>
+</form>
+
 
 <p>作る量{{ recipe.servings }}人前</p>
 
