@@ -65,10 +65,7 @@
     {% for item in converted_ingredients %}
         <li>
             {{ item.ingredient.food_item }} {{ item.ingredient.amount_text }}
-            → {{ item.converted_amount }}
-
-            <a href="{% url 'recipes:ingredient_update' item.ingredient.id %}">編集</a>
-            <a href="{% url 'recipes:ingredient_delete' item.ingredient.id %}">削除</a>
+            → <span style="color: blue;">{{ item.converted_amount }}</span>
         </li>
     {% empty %}
         <li>材料はまだ登録されていません。</li>
@@ -88,9 +85,7 @@
     {% for step in recipe.steps.all %}
         <li>
             {{ step.instruction }}
-            <a href="{% url 'recipes:step_update' step.id %}">編集</a>
-            <a href="{% url 'recipes:step_delete' step.id %}">削除</a>
-        </li>
+         </li>
     {% empty %}
         <li>作り方はまだ登録されていません。</li>
     {% endfor %}
