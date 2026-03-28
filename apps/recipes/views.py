@@ -61,28 +61,65 @@ def recipe_list_view(request):
             "favorite_recipe_ids": favorite_recipe_ids
         }
     )
+    
 # 分量換算
 def convert_amount_text(amount_text, scale):
-    match = re.match(r"^(\d+(?:\.\d+)?)(.*)$", amount_text.strip())
-    
-    if not match:
-        return amount_text
-    
-    number_text = match.group(1)
-    until_text = match.group(2)
-    
-    try:
-        converted = Decimal(number_text) * scale
-    except InvalidOperation:
-        return amount_text
-    
-    if converted == converted.to_integral():
-        converted_text = str(int(converted))
-        
-    else:
-        converted_text = str(converted.normalize())
-        
-    return f"{converted_text}{until_text}"
+    text = amount_text.strip()
+
+    # 全角数字を半角数字に変換
+    text = text.translate(str.maketrans("０１２３４５６７８９", "0123456789"))
+
+    # 全角スラッシュを半角スラッシュに変換
+    text = text.replace("／", "/")
+
+    def format_decimal(value):
+        if value % 1 == 0:
+            return str(int(value))
+        return str(value.normalize())
+
+    # ① 分数が先頭にある場合 例: 1/2個
+    fraction_match = re.match(r"^(\d+)\s*/\s*(\d+)(.*)$", text)
+    if fraction_match:
+        numerator = Decimal(fraction_match.group(1))
+        denominator = Decimal(fraction_match.group(2))
+        unit_text = fraction_match.group(3)
+
+        try:
+            base_value = numerator / denominator
+            converted = base_value * scale
+        except (InvalidOperation, ZeroDivisionError):
+            return amount_text
+
+        return f"{format_decimal(converted)}{unit_text}"
+
+    # ② 数字が末尾にある場合 例: 大さじ1 / 小さじ2
+    suffix_number_match = re.match(r"^(.*?)(\d+(?:\.\d+)?)$", text)
+    if suffix_number_match:
+        prefix_text = suffix_number_match.group(1)
+        number_text = suffix_number_match.group(2)
+
+        try:
+            converted = Decimal(number_text) * scale
+        except InvalidOperation:
+            return amount_text
+
+        return f"{prefix_text}{format_decimal(converted)}"
+
+    # ③ 数字が先頭にある場合 例: 500cc / 150g
+    prefix_number_match = re.match(r"^(\d+(?:\.\d+)?)(.*)$", text)
+    if prefix_number_match:
+        number_text = prefix_number_match.group(1)
+        unit_text = prefix_number_match.group(2)
+
+        try:
+            converted = Decimal(number_text) * scale
+        except InvalidOperation:
+            return amount_text
+
+        return f"{format_decimal(converted)}{unit_text}"
+
+    # ④ 数字がない場合 例: 適量
+    return amount_text
 
 
 # レシピ詳細画面
@@ -94,14 +131,14 @@ def recipe_detail_view(request, recipe_id):
         user=request.user
     )
 
-    scale_text = request.GET.get("scale", "1") # デフォルト値１倍
-    
+    scale_text = request.GET.get("scale", "1")
+
     try:
-        scale =Decimal(scale_text)
+        scale = Decimal(scale_text)
     except InvalidOperation:
         scale = Decimal("1")
         scale_text = "1"
-        
+
     ingredients = recipe.ingredients.all()
 
     converted_ingredients = []
@@ -113,16 +150,17 @@ def recipe_detail_view(request, recipe_id):
                 scale
             )
         })
-        
+
     return render(
-        request, 
-        "recipes/recipe_detail.html", 
+        request,
+        "recipes/recipe_detail.html",
         {
             "recipe": recipe,
             "scale": scale_text,
             "converted_ingredients": converted_ingredients,
         }
     )
+
 
 # レシピ登録画面
 @login_required
