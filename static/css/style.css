@@ -521,3 +521,18 @@ body {
     color: #666;
     margin-bottom: 10px;
 }
+
+/* マイレシピの画像と参照URL部分 */
+.image-url-area {
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+}
+
+.image-area {
+    width: 50%;
+}
+
+.url-area {
+    width: 50%;
+}
