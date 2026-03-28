@@ -922,7 +922,6 @@ def shopping_list_view(request):
             return redirect("recipes:shopping_list")
 
         # 追加処理
-        form = ShoppingListItemForm(request.POST)
         if form.is_valid():
             shopping_item = form.save(commit=False)
             shopping_item.user = request.user
@@ -934,6 +933,15 @@ def shopping_list_view(request):
 
             if not exists:
                 shopping_item.save()
+                messages.success(
+                    request,
+                    f"{shopping_item.food_item.ingredient_name}を買い物リストに追加しました"
+                )
+            else:
+                messages.info(
+                    request,
+                    "すでに登録されている食材です"
+                )
 
             return redirect("recipes:shopping_list")
  
@@ -981,11 +989,11 @@ def shopping_list_view(request):
                 user=request.user
             ).values_list("food_item_id", flat=True)
         )
+
         # まだ買い物リストに無く、かつおうち食材にも無い食材だけ追加
-        added_count = 0
+        added_food_names = []
 
         for food_item_id in food_item_ids:
-            
             # おうち食材にあるなら追加しない
             if food_item_id in home_food_item_ids:
                 continue
@@ -994,21 +1002,28 @@ def shopping_list_view(request):
                 user=request.user,
                 food_item_id=food_item_id
             ).exists()
-            
+
             if not exists:
                 ShoppingListItem.objects.create(
                     user=request.user,
                     food_item_id=food_item_id
                 )
-                added_count += 1
-        
-        if added_count == 0:
-            messages.info(request, "追加対象の食材はありませんでした（すでに買い物リストにあるか、おうち食材にあります）。")
+
+                food_item = food_items_dict[food_item_id]
+                added_food_names.append(food_item.ingredient_name)
+
+        if not added_food_names:
+            messages.info(
+                request,
+                "追加対象の食材はありませんでした（すでに買い物リストにあるか、おうち食材にあります）"
+            )
         else:
-            messages.success(request, f"{added_count}件の食材を買い物リストに追加しました。")
-
+            added_names_text = "、".join(added_food_names)
+            messages.success(
+                request,
+                f"買い物リストに追加しました：{added_names_text}"
+            )
         return redirect("recipes:shopping_list")
-
 
     return render(
         request,
