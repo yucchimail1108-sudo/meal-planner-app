@@ -68,11 +68,17 @@ def recipe_detail_view(request, recipe_id):
         id=recipe_id,
         user=request.user
     )
+
+    scale = request.GET.get("scale", "1") # デフォルト値１倍
+    
     
     return render(
         request, 
         "recipes/recipe_detail.html", 
-        {"recipe": recipe}
+        {
+            "recipe": recipe,
+            "scale": scale,
+        }
     )
 
 # レシピ登録画面
