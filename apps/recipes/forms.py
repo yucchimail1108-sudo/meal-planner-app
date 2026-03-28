@@ -1,4 +1,5 @@
 from django import forms
+from django.forms import inlineformset_factory
 from .models import Recipe, RecipeIngredient, RecipeStep, MenuDay, ShoppingListItem, HomeFoodItem, FoodItem
 
 # レシピ
@@ -87,3 +88,21 @@ class FoodItemCreateForm(forms.ModelForm):
     class Meta:
         model = FoodItem
         fields = ["ingredient_name", "category"]
+        
+# レシピ編集画面の食材追加用        
+RecipeIngredientFormSet = inlineformset_factory(
+    Recipe,
+    RecipeIngredient,
+    form=RecipeIngredientForm,
+    extra=1,
+    can_delete=True
+)
+
+# レシピ編集画面の作り方追加用        
+RecipeStepFormSet = inlineformset_factory(
+    Recipe,
+    RecipeStep,
+    form=RecipeStepForm,
+    extra=2, # 最初から作り方を2行出す
+    can_delete=True
+)

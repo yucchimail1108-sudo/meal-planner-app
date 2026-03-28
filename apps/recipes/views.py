@@ -6,7 +6,7 @@ from decimal import Decimal, InvalidOperation
 from django.shortcuts import render, get_object_or_404,redirect
 from django.contrib.auth.decorators import login_required
 from .models import Recipe, RecipeIngredient, RecipeStep, Favorite, MenuDay, MenuSlot, ShoppingListItem, HomeFoodItem, FoodItem
-from .forms import RecipeForm, RecipeIngredientForm, RecipeStepForm, MenuDayForm, ShoppingListItemForm, ShoppingListExtractForm, HomeFoodItemForm, FoodItemCreateForm
+from .forms import RecipeForm, RecipeIngredientForm, RecipeStepForm, MenuDayForm, ShoppingListItemForm, ShoppingListExtractForm, HomeFoodItemForm, FoodItemCreateForm, RecipeIngredientFormSet, RecipeStepFormSet
 from django.core.paginator import Paginator
 from django.db.models import Q
 from django.db import transaction
@@ -167,18 +167,35 @@ def recipe_detail_view(request, recipe_id):
 def recipe_create_view(request):
     if request.method == 'POST':
         form = RecipeForm(request.POST, request.FILES)
-        if form.is_valid():
+        ingredient_formset = RecipeIngredientFormSet(request.POST, prefix="ingredients")
+        step_formset = RecipeStepFormSet(request.POST, prefix="steps")
+        
+        if form.is_valid() and ingredient_formset.is_valid() and step_formset.is_valid():
             recipe = form.save(commit=False)
             recipe.user = request.user
             recipe.save()
-            return redirect('recipes:recipe_list')
+
+            ingredient_formset.instance = recipe
+            ingredient_formset.save()
+
+            step_formset.instance = recipe
+            step_formset.save()
+
+            return redirect("recipes:recipe_detail", recipe_id=recipe.id)            
+            
     else:
         form = RecipeForm()
+        ingredient_formset = RecipeIngredientFormSet(prefix="ingredients")
+        step_formset = RecipeStepFormSet(prefix="steps")
         
     return render(
         request,
         "recipes/recipe_form.html", 
-        {"form": form}
+        {
+            "form": form,
+            "ingredient_formset": ingredient_formset,
+            "step_formset": step_formset,
+        }
     )
 
 # レシピ編集画面

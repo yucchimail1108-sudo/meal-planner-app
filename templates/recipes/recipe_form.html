@@ -2,54 +2,50 @@
 
 {% block content %}
 
-<h1>≪マイレシピ登録≫</h1>
+<h1>≪レシピ編集≫</h1>
 
-    <form method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit" class="save-button">登録</button>
-    </form>
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
 
-    {% if recipe %}
-        <p>【材料】</p>
+    <p>【写真】{{ form.image }}</p>
 
-        <ul>
-            {% for ingredient in recipe.ingredients.all %}
-                <li>
-                    {{ ingredient.food_item }} {{ ingredient.amount_text }}
-                </li>
-            {% empty %}
-                <li>材料はまだ登録されていません</li>
-            {% endfor %}
-        </ul>
+    <p>【参照URL】{{ form.reference_url }}</p>
 
-        <p>
-            <a href="{% url 'recipes:ingredient_create' recipe.id %}">
-                ＋材料を追加
-            </a>
-        </p>
+    <p>【レシピ名】{{ form.recipe_name }}</p>
 
-        <p>【作り方】</p>
+    <p>【カテゴリ】{{ form.menu_category }}</p>
 
-        <ol>
-            {% for step in recipe.steps.all %}
-                <li>{{ step.instruction }}</li>
-            {% empty %}
-                <li>作り方はまだ登録されていません</li>
-            {% endfor %}
-        </ol>
+    <p>【作る量】{{ form.servings }}</p>
 
-        <p>
-            <a href="{% url 'recipes:step_create' recipe.id %}">
-                ＋作り方を追加
-            </a>
-        </p>
-    {% endif %}
+    <p>【材料】</p>
+    {{ ingredient_formset.management_form }}
+    {% for ingredient_form in ingredient_formset %}
+        <div>
+            {{ ingredient_form.as_p }}
+        </div>
+    {% endfor %}
+
+    <p>【作り方】</p>
+    {{ step_formset.management_form }}
+    {% for form in step_formset %}
+        <div>
+            {{ forloop.counter }}.
+            {{ form.instruction }}
+        </div>
+{% endfor %}
+
+    <p>【メモ】</p>
+    <p>{{ form.memo }}</p>
 
     <p>
-        <a href="{% url 'recipes:recipe_list' %}">
-            レシピ一覧に戻る
-        </a>
+        <button type="submit" class="save-button">登録</button>
     </p>
+</form>
+
+<p>
+    <a href="{% url 'recipes:recipe_list' %}">
+        レシピ一覧に戻る
+    </a>
+</p>
 
 {% endblock %}
