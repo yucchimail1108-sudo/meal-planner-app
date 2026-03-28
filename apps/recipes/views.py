@@ -896,6 +896,7 @@ def shopping_list_view(request):
         # 購入済み処理
         if action == "mark_as_purchased":
             checked_ids = request.POST.getlist("checked_items")
+            purchased_food_names = []
 
             for item_id in checked_ids:
                 item = get_object_or_404(
@@ -908,7 +909,7 @@ def shopping_list_view(request):
                 exists = HomeFoodItem.objects.filter(
                     user=request.user,
                     food_item=item.food_item
-                ).exists()             
+                ).exists()
 
                 if not exists:
                     HomeFoodItem.objects.create(
@@ -916,9 +917,20 @@ def shopping_list_view(request):
                         food_item=item.food_item
                     )
 
+                purchased_food_names.append(item.food_item.ingredient_name)
+
                 # 買い物リストから削除
                 item.delete()
-            messages.success(request, "購入済みの食材は、おうち食材へ追加しました")
+
+            if purchased_food_names:
+                purchased_names_text = "、".join(purchased_food_names)
+                messages.success(
+                    request,
+                    f"購入済み食材（{purchased_names_text}）を、おうち食材に追加しました"
+                )
+            else:
+                messages.info(request, "購入済みの食材を選択してください")
+
             return redirect("recipes:shopping_list")
 
         # 追加処理
