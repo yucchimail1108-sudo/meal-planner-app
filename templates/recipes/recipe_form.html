@@ -2,18 +2,54 @@
 
 {% block content %}
 
-<h1>マイレシピ登録</h1>
+<h1>≪マイレシピ登録≫</h1>
 
-<form method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit" class="save-button">登録</button>
-</form>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="save-button">登録</button>
+    </form>
 
-<p>
-    <a href="{% url 'recipes:recipe_list' %}">
-        レシピ一覧に戻る
-    </a>
-</p>
+    {% if recipe %}
+        <p>【材料】</p>
+
+        <ul>
+            {% for ingredient in recipe.ingredients.all %}
+                <li>
+                    {{ ingredient.food_item }} {{ ingredient.amount_text }}
+                </li>
+            {% empty %}
+                <li>材料はまだ登録されていません</li>
+            {% endfor %}
+        </ul>
+
+        <p>
+            <a href="{% url 'recipes:ingredient_create' recipe.id %}">
+                ＋材料を追加
+            </a>
+        </p>
+
+        <p>【作り方】</p>
+
+        <ol>
+            {% for step in recipe.steps.all %}
+                <li>{{ step.instruction }}</li>
+            {% empty %}
+                <li>作り方はまだ登録されていません</li>
+            {% endfor %}
+        </ol>
+
+        <p>
+            <a href="{% url 'recipes:step_create' recipe.id %}">
+                ＋作り方を追加
+            </a>
+        </p>
+    {% endif %}
+
+    <p>
+        <a href="{% url 'recipes:recipe_list' %}">
+            レシピ一覧に戻る
+        </a>
+    </p>
 
 {% endblock %}

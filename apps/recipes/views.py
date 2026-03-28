@@ -204,7 +204,10 @@ def recipe_update_view(request, recipe_id):
     return render(
         request,
         "recipes/recipe_form.html",
-        {"form": form}
+        {
+            "form": form,
+            "recipe": recipe,
+        }
     )
     
 # レシピ削除画面
