@@ -879,7 +879,10 @@ def shopping_list_view(request):
     # ログインユーザーの買い物リストを取得
     shopping_items = ShoppingListItem.objects.filter(
         user=request.user
-    ).select_related("food_item")
+    ).select_related("food_item").order_by(
+        "food_item__category",
+        "food_item__ingredient_name"
+    )
 
     # 買い物リスト追加フォームを先に用意
     form = ShoppingListItemForm(request.POST or None)
@@ -957,13 +960,20 @@ def shopping_list_view(request):
 
         # レシピ食材取得
         ingredients = RecipeIngredient.objects.filter(
-            recipe_id__in=recipe_ids
+            recipe_id__in=recipe_ids,
+            ingredient_kind=0
         ).select_related("food_item")
 
         # 食材IDの重複を除外
-        food_item_ids = list({
-            ingredient.food_item.id for ingredient in ingredients
-        })
+        food_items_dict = {}
+
+        for ingredient in ingredients:
+            food_item = ingredient.food_item
+
+            if food_item.id not in food_items_dict:
+                food_items_dict[food_item.id] = food_item
+
+        food_item_ids = list(food_items_dict.keys())
 
         # そのユーザーのおうち食材ID一覧を取得
         home_food_item_ids = set(
