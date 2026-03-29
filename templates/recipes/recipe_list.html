@@ -20,12 +20,24 @@
 
     <label for="category">カテゴリで絞り込み</label>
     <select name="category" id="category">
-        <option value="">すべて</option>
-        <option value="1" {% if selected_category == "1" %}selected{% endif %}>主食</option>
-        <option value="2" {% if selected_category == "2" %}selected{% endif %}>主菜</option>
-        <option value="3" {% if selected_category == "3" %}selected{% endif %}>副菜</option>
-        <option value="4" {% if selected_category == "4" %}selected{% endif %}>汁物</option>
-        <option value="favorite" {% if selected_category == "favorite" %}selected{% endif %}>お気に入り</option>
+        <option value="">
+            すべて（{{ category_counts.all }}）
+        </option>
+        <option value="1" {% if selected_category == "1" %}selected{% endif %}>
+            主食（{{ category_counts.staple }}）
+        </option>
+        <option value="2" {% if selected_category == "2" %}selected{% endif %}>
+            主菜（{{ category_counts.main }}）
+        </option>
+        <option value="3" {% if selected_category == "3" %}selected{% endif %}>
+            副菜（{{ category_counts.side }}）
+        </option>
+        <option value="4" {% if selected_category == "4" %}selected{% endif %}>
+            汁物（{{ category_counts.soup }}）
+        </option>
+        <option value="favorite" {% if selected_category == "favorite" %}selected{% endif %}>
+            お気に入り（{{ category_counts.favorite }}）
+        </option>
     </select>
     <button type="submit">絞り込む</button>
 </form>

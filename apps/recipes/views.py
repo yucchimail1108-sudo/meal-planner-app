@@ -22,10 +22,22 @@ from .services import (
 @login_required
 def recipe_list_view(request):
     
-    recipes = Recipe.objects.filter(user=request.user).order_by("id")
+    base_recipes = Recipe.objects.filter(user=request.user)
+    
+    recipes = base_recipes.order_by("-id") # -id･･･降順表示
     
     selected_category = request.GET.get("category")
     search_query = request.GET.get("q")
+    
+    # 各カテゴリの件数を（）表示する
+    category_counts = {
+        "all": base_recipes.count(),
+        "staple": base_recipes.filter(menu_category=1).count(),
+        "main": base_recipes.filter(menu_category=2).count(),
+        "side": base_recipes.filter(menu_category=3).count(),
+        "soup": base_recipes.filter(menu_category=4).count(),
+        "favorite": Favorite.objects.filter(user=request.user).count(),
+    }
    
     # 検索
     if search_query:
@@ -58,7 +70,8 @@ def recipe_list_view(request):
         {
             "recipes":recipes,
             "selected_category":selected_category,
-            "favorite_recipe_ids": favorite_recipe_ids
+            "favorite_recipe_ids": favorite_recipe_ids,
+            "category_counts": category_counts,
         }
     )
     
