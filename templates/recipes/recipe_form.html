@@ -1,51 +1,72 @@
 {% extends "base.html" %}
 
 {% block content %}
+<div class="page-container">
 
-<h1>≪レシピ編集≫</h1>
+    <div class="page-header">
+        <h1 class="page-title">≪レシピ編集≫</h1>
+    </div>
 
-<form method="post" enctype="multipart/form-data">
-    {% csrf_token %}
+    <div class="content-card section-block">
+        <form method="post" enctype="multipart/form-data" class="form-block">
+            {% csrf_token %}
 
-    <p>【写真】{{ form.image }}</p>
+            <div class="form-group">
+                <label>写真</label>
+                {{ form.image }}
+            </div>
 
-    <p>【参照URL】{{ form.reference_url }}</p>
+            <div class="form-group">
+                <label>参照URL</label>
+                {{ form.reference_url }}
+            </div>
 
-    <p>【レシピ名】{{ form.recipe_name }}</p>
+            <div class="form-group">
+                <label>レシピ名</label>
+                {{ form.recipe_name }}
+            </div>
 
-    <p>【カテゴリ】{{ form.menu_category }}</p>
+            <div class="form-group">
+                <label>カテゴリ</label>
+                {{ form.menu_category }}
+            </div>
 
-    <p>【作る量】{{ form.servings }}</p>
+            <div class="form-group">
+                <label>作る量</label>
+                {{ form.servings }}
+            </div>
 
-    <p>【材料】</p>
-    {{ ingredient_formset.management_form }}
-    {% for ingredient_form in ingredient_formset %}
-        <div>
-            {{ ingredient_form.as_p }}
-        </div>
-    {% endfor %}
+            <div class="form-group">
+                <label>材料</label>
+                {{ ingredient_formset.management_form }}
+                {% for ingredient_form in ingredient_formset %}
+                    <div class="form-sub-block">
+                        {{ ingredient_form.as_p }}
+                    </div>
+                {% endfor %}
+            </div>
 
-    <p>【作り方】</p>
-    {{ step_formset.management_form }}
-    {% for form in step_formset %}
-        <div>
-            {{ forloop.counter }}.
-            {{ form.instruction }}
-        </div>
-{% endfor %}
+            <div class="form-group">
+                <label>作り方</label>
+                {{ step_formset.management_form }}
+                {% for form in step_formset %}
+                    <div class="form-sub-block">
+                        <p>{{ forloop.counter }}. {{ form.instruction }}</p>
+                    </div>
+                {% endfor %}
+            </div>
 
-    <p>【メモ】</p>
-    <p>{{ form.memo }}</p>
+            <div class="form-group">
+                <label>メモ</label>
+                {{ form.memo }}
+            </div>
 
-    <p>
-        <button type="submit" class="save-button">登録</button>
-    </p>
-</form>
+            <div class="form-actions">
+                <button type="submit" class="save-button">登録</button>
+                <a href="{% url 'recipes:recipe_list' %}" class="back-button">レシピ一覧に戻る</a>
+            </div>
+        </form>
+    </div>
 
-<p>
-    <a href="{% url 'recipes:recipe_list' %}">
-        レシピ一覧に戻る
-    </a>
-</p>
-
+</div>
 {% endblock %}

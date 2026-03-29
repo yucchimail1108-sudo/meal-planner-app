@@ -5,22 +5,27 @@
 {% block content %}
 <h2>{{ target_date }}の献立</h2>
 
-<div class="menu-detail-nav">
-    <a href="{% url 'recipes:menu_detail' plan_date=prev_date|date:'Y-m-d' %}" class="back-button">前日</a>
-    <a href="{% url 'recipes:menu_detail' plan_date=next_date|date:'Y-m-d' %}" class="save-button">翌日</a>
+<div class="page-header">
+    <div class="page-header-actions">
+        <a href="{% url 'recipes:menu_detail' plan_date=prev_date|date:'Y-m-d' %}" class="back-button">前日</a>
+        <a href="{% url 'recipes:menu_detail' plan_date=next_date|date:'Y-m-d' %}" class="save-button">翌日</a>
+    </div>
+
+    <div class="page-header-actions">
+        {% if menu_day %}
+        <a href="{% url 'recipes:menu_update' plan_date=menu_day.plan_date %}" class="edit-button">
+            編集
+        </a>
+        {% endif %}
+
+        {% if can_delete_menu %}
+        <a href="{% url 'recipes:menu_delete' plan_date=menu_day.plan_date %}" class="delete-button">
+            削除
+        </a>
+        {% endif %}
+    </div>
 </div>
 
-{% if menu_day %}
-<a href="{% url 'recipes:menu_update' plan_date=menu_day.plan_date %}" class="edit-button">
-献立編集
-</a>
-{% endif %}
-
-{% if can_delete_menu %}
-<a href="{% url 'recipes:menu_delete' plan_date=menu_day.plan_date %}" class="delete-button">
-献立削除
-</a>
-{% endif %}
 
 {% if menu_day %}
 <p>外食：{% if menu_day.eat_out %}あり{% else %}なし{% endif %}</p>

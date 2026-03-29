@@ -847,10 +847,10 @@ def menu_cooked_view(request):
         if ingredient.ingredient_kind == 0
     ]
 
-    ingredient_names = [
+    ingredient_names = sorted(list({
         ingredient.food_item.ingredient_name
         for ingredient in target_ingredients
-    ]
+    }))
 
     ingredient_food_item_ids = [
         ingredient.food_item_id
@@ -867,11 +867,12 @@ def menu_cooked_view(request):
         menu_day.save()
         home_food_items.delete()
 
+    ingredient_names_text = "、".join(ingredient_names)
+
     messages.success(
         request,
-        "つくった献立に使用していた食材を、おうち食材から減らしました"
+        f"おうち食材から減らしました：{ingredient_names_text}"
     )
-    return redirect("recipes:menu_calendar")
 
 # 買い物リスト一覧＆追加＆購入済み処理
 @login_required
@@ -1180,7 +1181,6 @@ def home_food_delete_view(request, item_id):
     # POST送信のときだけ削除する
     if request.method == "POST":
         home_food_item.delete()
-        messages.success(request, "おうち食材から削除しました")
-        return redirect("recipes:home_food_list")
-
+        
+    messages.success(request, "おうち食材から削除しました")
     return redirect("recipes:home_food_list")

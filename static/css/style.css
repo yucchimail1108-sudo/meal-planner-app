@@ -30,7 +30,9 @@ body {
 .save-button,
 .search-button,
 .select-button,
-.edit-button {
+.edit-button,
+.delete-button,
+.list-delete-button {
     display: inline-block;
     margin: 4px 6px 4px 0;
     padding: 8px 12px;
@@ -39,6 +41,7 @@ body {
     border-radius: 6px;
     cursor: pointer;
     font-size: 14px;
+    background-color: #ffffff;
 }
 
 /* =========================
@@ -102,6 +105,11 @@ body {
 
 .back-button:hover {
     background-color: #e3f2fd;
+}
+
+.delete-button:hover,
+.list-delete-button:hover {
+    background-color: #c0392b;
 }
 
 
@@ -451,11 +459,11 @@ body {
 }
 
 /* 献立削除ボタン */
-.delete-button {
+.delete-button,
+.list-delete-button {
     background-color: #e74c3c;
-    color: white;
-    padding: 8px 12px;
-    border-radius: 8px;
+    border-color: #c0392b;
+    color: #ffffff;
 }
 
 /* 献立詳細画面を４枠２列、画像表示（NO IMAGE） */
@@ -535,4 +543,89 @@ body {
 
 .url-area {
     width: 50%;
+}
+
+
+/* タイトルやボタンの見た目を他画面に寄せる */
+.page-container {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+}
+
+.page-title {
+    margin: 0;
+}
+
+.page-header-actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.content-card {
+    background-color: #ffffff;
+    border: 1px solid #dddddd;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.section-block {
+    margin-bottom: 20px;
+}
+
+.section-title {
+    margin-top: 0;
+    margin-bottom: 8px;
+}
+
+.section-text {
+    margin-top: 0;
+    margin-bottom: 16px;
+    color: #666666;
+}
+
+.form-block {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.form-group label {
+    font-weight: bold;
+}
+
+.form-row {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.form-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 8px;
+}
+
+.form-sub-block {
+    padding: 12px;
+    border: 1px solid #eeeeee;
+    border-radius: 8px;
+    background-color: #fafafa;
+    margin-bottom: 10px;
 }
