@@ -113,11 +113,6 @@ body {
 }
 
 
-.main-content {
-    max-width: 800px;
-    margin: 0 auto;
-}
-
 .menu-edit-container {
     background-color: #fff;
     padding: 20px;
@@ -261,6 +256,8 @@ body {
 
 /* ナビげーションバーを画面下に固定する */
 .main-content {
+    max-width: 800px;
+    margin: 0 auto;
     padding-bottom: 80px;
 }
 
@@ -374,12 +371,15 @@ body {
 .home-menu-label {
     font-size: 14px;
     font-weight: bold;
-    margin-bottom: 8px;
+    margin-bottom: 6px;
+    text-align: center;
 }
 
 .home-menu-value {
-    margin: 0;
+    margin: 4px 0 6px;
     word-break: break-word;
+    text-align: center;
+    font-size: 13px;
 }
 
 .home-menu-flags {
@@ -387,29 +387,32 @@ body {
 }
 
 /* ホーム画面の献立画像 */
-.home-menu-image-box {
-    height: 100px;
+.home-menu-image-box{
+    width: 40%;
+    height: 60px;
     border: 1px solid #cccccc;
     border-radius: 8px;
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-bottom: 12px;
+    margin: 0 auto 8px; /* 中央寄せ */
     color: #777777;
     background-color: #f8f8f8;
-    font-size: 14px;
+    font-size: 11px; 
+    overflow: hidden;
+}
+
+.home-menu-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
 }
 
 /* 探すボタン */
 .home-menu-card .select-button {
     display: inline-block;
     margin-top: 8px;
-}
-
-/* ホーム画面の献立保存ボタン */
-.home-save-area {
-    margin-top: 24px;
-    text-align: center;
 }
 
 /* ホームの案内文を少し目立たせる */
@@ -467,53 +470,80 @@ body {
 }
 
 /* 献立詳細画面を４枠２列、画像表示（NO IMAGE） */
+.menu-detail-status {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-bottom: 16px;
+    font-weight: bold;
+}
+
+.menu-detail-status p {
+    margin: 0;
+}
+
+.menu-detail-empty-message {
+    text-align: center;
+    margin: 20px 0;
+    color: #666666;
+}
+
 .menu-detail-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 16px;
-    margin-top: 20px;
+    gap: 12px;
+    margin-top: 12px;
+}
+
+.menu-detail-card-title {
+    text-align: center;
+    margin-top: 0;
+    margin-bottom: 10px;
+    font-size: 18px;
 }
 
 .menu-detail-card {
     border: 1px solid #cccccc;
     border-radius: 8px;
-    padding: 12px;
+    padding: 10px;
     background-color: #ffffff;
+    text-align: center;
 }
 
 .menu-detail-image {
-    width: 100%;
-    max-width: 180px;
-    height: 120px;
+    width: 70%;
+    height: 90px;
     object-fit: cover;
     border-radius: 8px;
     display: block;
-    margin-bottom: 8px;
+    margin: 0 auto 8px;
 }
 
 .menu-detail-no-image {
-    width: 100%;
-    max-width: 180px;
-    height: 120px;
+    width: 70%;
+    height: 90px;
     background-color: #dddddd;
     color: #666666;
     display: flex;
     align-items: center;
     justify-content: center;
     border-radius: 8px;
-    margin-bottom: 8px;
+    margin: 0 auto 8px;
     font-size: 12px;
 }
 
 .menu-detail-recipe-name {
-    margin: 0;
+    margin: 4px 0 0;
     font-weight: bold;
     word-break: break-word;
+    text-align: center;
 }
 
 .menu-detail-empty-text {
-    margin: 0;
+    margin: 4px 0 0;
     color: #666666;
+    text-align: center;
 }
 
 /* 献立詳細の見た目崩れ対策 */
@@ -521,6 +551,65 @@ body {
     text-decoration: none;
     color: inherit;
     display: block;
+}
+
+.menu-detail-date-title {
+    margin: 0;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+/* 献立詳細画面をホーム画面に寄せる */
+.menu-detail-header {
+    margin-bottom: 16px;
+}
+
+.menu-detail-header .page-header-actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.menu-detail-status {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-bottom: 16px;
+    font-weight: bold;
+}
+
+.menu-detail-status p {
+    margin: 0;
+}
+
+.menu-detail-page-title {
+    text-align: center;
+    margin: 12px 0 8px;
+    font-size: 20px;
+}
+
+.menu-detail-date-nav {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.menu-detail-arrow {
+    text-decoration: none;
+    color: #333333;
+    font-size: 20px;
+    font-weight: bold;
+    padding: 4px 8px;
+}
+
+.menu-detail-bottom-actions {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 16px;
 }
 
 /* カレンダーのつくった！ボタン横のコメント */
@@ -628,4 +717,93 @@ body {
     border-radius: 8px;
     background-color: #fafafa;
     margin-bottom: 10px;
+}
+
+/* ホーム画面ヘッダー */
+.header-inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.main-nav {
+    margin-top: 0;
+}
+
+.home-title {
+    margin-bottom: 4px;
+}
+
+.menu-date-title {
+    text-align: center;
+    margin: 16px 0;
+    font-weight: bold;
+}
+
+/* 外食＆惣菜チェック */
+.home-flags {
+    text-align: center;
+    margin: 16px 0;
+    font-size: 16px;
+}
+
+.home-flags label {
+    margin: 0 10px;
+}
+
+/* 探すボタン */
+.home-search-button {
+    text-align: center;
+    margin-top: 8px;
+}
+
+/* ホームの保存ボタン */
+.home-save-area {
+    text-align: center;
+    margin-top: 12px;
+}
+
+.home-save-area .save-button {
+    width: 80%;
+    max-width: 160px;
+    padding: 12px;
+    font-size: 16px;
+}
+
+/* ホームのカードサイズ調整（スマホでひと画面に収める） */
+.home-menu-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+.home-menu-card {
+    padding: 10px;
+}
+
+/* 余白を詰める */
+.home-menu-section {
+    margin-top: 10px;
+}
+
+.menu-date-title {
+    margin: 10px 0;
+}
+
+/* ヘッダーのタイトルを小さくする */
+.site-title {
+    font-size: 18px;
+    margin: 0;
+}
+
+/* ヘッダーの余白削る */
+.site-header {
+    padding: 10px 12px;
+    margin-bottom: 8px;
+}
+
+/* ナビの文字を小さくする */
+.nav-link,
+.logout-button {
+    font-size: 12px;
+    padding: 6px 8px;
 }

@@ -460,10 +460,6 @@ def menu_day_detail_view(request, plan_date):
 
     menu_day = get_menu_day_with_slots(request.user, target_date)
 
-    if not menu_day:
-        messages.error(request, "献立が存在しません")
-        return redirect("recipes:menu_calendar")
-
     slot_map = {
         "staple": None,
         "main": None,
@@ -471,17 +467,29 @@ def menu_day_detail_view(request, plan_date):
         "soup": None,
     }
 
-    for slot in menu_day.slots.all():
-        slot_map[slot.meal_type] = slot
+    if menu_day:
+        for slot in menu_day.slots.all():
+            slot_map[slot.meal_type] = slot
 
-    can_delete_menu = (
-        any(slot.recipe for slot in menu_day.slots.all())
-        or menu_day.eat_out
-        or menu_day.deli
-    )
+        has_recipe = any(slot.recipe for slot in menu_day.slots.all())
 
-    prev_date = menu_day.plan_date - timedelta(days=1)
-    next_date = menu_day.plan_date + timedelta(days=1)
+        can_delete_menu = (
+            has_recipe
+            or menu_day.eat_out
+            or menu_day.deli
+        )
+
+        is_empty_menu_day = (
+            not has_recipe
+            and not menu_day.eat_out
+            and not menu_day.deli
+        )
+    else:
+        can_delete_menu = False
+        is_empty_menu_day = True
+
+    prev_date = target_date - timedelta(days=1)
+    next_date = target_date + timedelta(days=1)
 
     return render(
         request,
@@ -489,13 +497,14 @@ def menu_day_detail_view(request, plan_date):
         {
             "menu_day": menu_day,
             "slots": slot_map,
-            "target_date": menu_day.plan_date,
+            "target_date": target_date,
             "prev_date": prev_date,
             "next_date": next_date,
             "can_delete_menu": can_delete_menu,
+            "is_empty_menu_day": is_empty_menu_day,
         }
     )
-
+    
 # 献立編集
 @login_required
 def menu_day_update_view(request, plan_date):

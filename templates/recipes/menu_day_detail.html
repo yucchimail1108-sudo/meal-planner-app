@@ -3,40 +3,28 @@
 {% block title %}献立詳細 | うちごはんプランナー{% endblock %}
 
 {% block content %}
-<h2>{{ target_date }}の献立</h2>
+<h2 class="menu-detail-page-title">≪献立詳細≫</h2>
 
-<div class="page-header">
-    <div class="page-header-actions">
-        <a href="{% url 'recipes:menu_detail' plan_date=prev_date|date:'Y-m-d' %}" class="back-button">前日</a>
-        <a href="{% url 'recipes:menu_detail' plan_date=next_date|date:'Y-m-d' %}" class="save-button">翌日</a>
-    </div>
-
-    <div class="page-header-actions">
-        {% if menu_day %}
-        <a href="{% url 'recipes:menu_update' plan_date=menu_day.plan_date %}" class="edit-button">
-            編集
-        </a>
-        {% endif %}
-
-        {% if can_delete_menu %}
-        <a href="{% url 'recipes:menu_delete' plan_date=menu_day.plan_date %}" class="delete-button">
-            削除
-        </a>
-        {% endif %}
-    </div>
+<div class="menu-detail-date-nav">
+    <a href="{% url 'recipes:menu_detail' plan_date=prev_date|date:'Y-m-d' %}" class="menu-detail-arrow">◀</a>
+    <p class="menu-detail-date-title">{{ target_date }}の献立</p>
+    <a href="{% url 'recipes:menu_detail' plan_date=next_date|date:'Y-m-d' %}" class="menu-detail-arrow">▶</a>
 </div>
 
 
-{% if menu_day %}
-<p>外食：{% if menu_day.eat_out %}あり{% else %}なし{% endif %}</p>
-<p>惣菜：{% if menu_day.deli %}あり{% else %}なし{% endif %}</p>
+
+{% if is_empty_menu_day %}
+<p class="menu-detail-empty-message">この日はまだ献立が登録されていません</p>
 {% else %}
-<p>この日はまだ献立が登録されていません</p>
+<div class="menu-detail-status">
+    <p>外食：{% if menu_day.eat_out %}あり{% else %}なし{% endif %}</p>
+    <p>惣菜：{% if menu_day.deli %}あり{% else %}なし{% endif %}</p>
+</div>
 {% endif %}
 
 <div class="menu-detail-grid">
     <div class="menu-detail-card">
-        <h3>主食</h3>
+        <h3 class="menu-detail-card-title">主食</h3>
 
         {% if slots.staple and slots.staple.recipe %}
         <a href="{% url 'recipes:recipe_detail' slots.staple.recipe.id %}">
@@ -54,7 +42,7 @@
     </div>
 
     <div class="menu-detail-card">
-        <h3>主菜</h3>
+        <h3 class="menu-detail-card-title">主菜</h3>
 
         {% if slots.main and slots.main.recipe %}
         <a href="{% url 'recipes:recipe_detail' slots.main.recipe.id %}">   
@@ -72,7 +60,7 @@
     </div>
 
     <div class="menu-detail-card">
-        <h3>副菜</h3>
+        <h3 class="menu-detail-card-title">副菜</h3>
 
         {% if slots.side and slots.side.recipe %}
         <a href="{% url 'recipes:recipe_detail' slots.side.recipe.id %}">
@@ -90,7 +78,7 @@
     </div>
 
     <div class="menu-detail-card">
-        <h3>汁物</h3>
+        <h3 class="menu-detail-card-title">汁物</h3>
 
         {% if slots.soup and slots.soup.recipe %}
         <a href="{% url 'recipes:recipe_detail' slots.soup.recipe.id %}">
@@ -107,5 +95,14 @@
         {% endif %}
     </div>
 </div>
+
+<div class="menu-detail-bottom-actions">
+    <a href="{% url 'recipes:menu_update' plan_date=target_date|date:'Y-m-d' %}" class="edit-button">編集</a>
+
+    {% if can_delete_menu %}
+    <a href="{% url 'recipes:menu_delete' plan_date=target_date|date:'Y-m-d' %}" class="delete-button">削除</a>
+    {% endif %}
+</div>
+
 
 {% endblock %}

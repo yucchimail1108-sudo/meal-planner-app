@@ -3,12 +3,11 @@
 {% block title %}ホーム | うちごはんプランナー{% endblock %}
 
 {% block content %}
-<h1>ホーム</h1>
-<p>こんにちは！{{ user.first_name }}さん</p>
-<p>献立をつくりましょう！</p>
+<h2>こんにちは！{{ user.first_name }}さん</h2>
+<h2>献立をつくりましょう！</h2>
 
 <section class="home-menu-section">
-    <p class="home-menu-date">{{ today|date:"Y年n月j日" }} の献立</p>
+    <h3 class="menu-date-title">{{ today|date:"Y年n月j日" }} の献立</h3>
 
     {% if menu_day %}
         <form method="post">
@@ -33,23 +32,23 @@
                             {{ temp_staple_recipe.recipe_name }}（未保存）
                         {% elif staple_slot and staple_slot.recipe %}
                             {{ staple_slot.recipe.recipe_name }}
-                        {% else %}
-                            未設定
                         {% endif %}
                     </p>
 
                     {% if staple_slot %}
                         {% if menu_day and not menu_day.eat_out and not menu_day.deli %}
                             {% if staple_slot.recipe %}
-                                <button type="submit" name="delete_slot_id" value="{{ staple_slot.id }}" class="delete-button">
-                                    削除
-                                </button>
+                                <div class="home-search-button">
+                                    <button type="submit" name="delete_slot_id" value="{{ staple_slot.id }}" class="delete-button">
+                                        削除
+                                    </button>
+                                </div>
                             {% else %}
-                                <p>
+                                <div class="home-search-button">
                                     <a href="{% url 'recipes:menu_slot_update' slot_id=staple_slot.id %}" class="select-button">
                                         探す
                                     </a>
-                                </p>
+                                </div>
                             {% endif %}
                         {% else %}
                             <p class="home-menu-disabled-text">選択不可</p>
@@ -67,23 +66,23 @@
                             {{ temp_main_recipe.recipe_name }}（未保存）
                         {% elif main_slot and main_slot.recipe %}
                             {{ main_slot.recipe.recipe_name }}
-                        {% else %}
-                            未設定
                         {% endif %}
                     </p>
 
                     {% if main_slot %}
                         {% if menu_day and not menu_day.eat_out and not menu_day.deli %}
                             {% if main_slot.recipe %}
-                                <button type="submit" name="delete_slot_id" value="{{ main_slot.id }}" class="delete-button">
-                                    削除
-                                </button>
+                                <div class="home-search-button">
+                                    <button type="submit" name="delete_slot_id" value="{{ main_slot.id }}" class="delete-button">
+                                        削除
+                                    </button>
+                                </div>
                             {% else %}
-                                <p>
+                                <div class="home-search-button">
                                     <a href="{% url 'recipes:menu_slot_update' slot_id=main_slot.id %}" class="select-button">
                                         探す
                                     </a>
-                                </p>
+                                </div>
                             {% endif %}
                         {% else %}
                             <p class="home-menu-disabled-text">選択不可</p>
@@ -101,22 +100,22 @@
                             {{ temp_side_recipe.recipe_name }}（未保存）
                         {% elif side_slot and side_slot.recipe %}
                             {{ side_slot.recipe.recipe_name }}
-                        {% else %}
-                            未設定
                         {% endif %}
                     </p>
                     {% if side_slot %}
                         {% if menu_day and not menu_day.eat_out and not menu_day.deli %}
                             {% if side_slot.recipe %}
-                                <button type="submit" name="delete_slot_id" value="{{ side_slot.id }}" class="delete-button">
-                                    削除
-                                </button>   
+                                <div class="home-search-button">
+                                    <button type="submit" name="delete_slot_id" value="{{ side_slot.id }}" class="delete-button">
+                                        削除
+                                    </button>
+                                </div>  
                             {% else %}
-                                <p>
+                                <div class="home-search-button">
                                     <a href="{% url 'recipes:menu_slot_update' slot_id=side_slot.id %}" class="select-button">
                                         探す
                                     </a>
-                                </p>
+                                </div>
                             {% endif %}
                         {% else %}
                             <p class="home-menu-disabled-text">選択不可</p>
@@ -134,23 +133,23 @@
                             {{ temp_soup_recipe.recipe_name }}（未保存）
                         {% elif soup_slot and soup_slot.recipe %}
                             {{ soup_slot.recipe.recipe_name }}
-                        {% else %}
-                            未設定
                         {% endif %}
                     </p>
 
                     {% if soup_slot %}
                         {% if menu_day and not menu_day.eat_out and not menu_day.deli %}
                             {% if soup_slot.recipe %}
-                                <button type="submit" name="delete_slot_id" value="{{ soup_slot.id }}" class="delete-button">
-                                    削除
-                                </button>   
+                                <div class="home-search-button">
+                                    <button type="submit" name="delete_slot_id" value="{{ soup_slot.id }}" class="delete-button">
+                                        削除
+                                    </button>
+                                </div>
                             {% else %}
-                                <p>
+                                <div class="home-search-button">
                                     <a href="{% url 'recipes:menu_slot_update' slot_id=soup_slot.id %}" class="select-button">
                                         探す
                                     </a>
-                                </p>
+                                </div>
                             {% endif %}
                         {% else %}
                             <p class="home-menu-disabled-text">選択不可</p>
@@ -159,16 +158,13 @@
                 </div>
             </div>
             
-            <!-- チェック -->   
-            <div class="home-menu-flags">
+            <!-- 外食＆惣菜チェック -->   
+            <div class="home-flags">
                 <label>
-                    <input type="checkbox" name="eat_out" {% if menu_day and menu_day.eat_out %}checked{% endif %}>
-                    外食
+                    <input type="checkbox" name="eat_out"> 外食
                 </label>
-
                 <label>
-                    <input type="checkbox" name="deli" {% if menu_day and menu_day.deli %}checked{% endif %}>
-                    惣菜
+                    <input type="checkbox" name="deli"> 惣菜
                 </label>
             </div>
 
