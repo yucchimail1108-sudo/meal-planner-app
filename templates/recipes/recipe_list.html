@@ -48,28 +48,40 @@
 
 <ul style="padding-left: 0;">
 {% for recipe in recipes %}
-<li style="border: 1px solid #ccc; padding: 12px; margin-bottom: 12px; list-style: none;">
-
-    <p>
-        <a href="{% url 'recipes:recipe_detail' recipe.id %}">
-            {{ recipe.recipe_name }}
-        </a>
-    </p>
-
-    {% if recipe.menu_category %}
-        <p>カテゴリ：{{ recipe.get_menu_category_display }}</p>
+<li style="border: 1px solid #ccc; padding: 12px; margin-bottom: 12px; list-style: none; display: flex; gap: 12px;"> 
+    
+    {% if recipe.image %}
+        <img src="{{ recipe.image.url }}" style="width: 120px; height: 120px; object-fit: cover;">
+    {% else %}
+        <div style="width: 120px; height: 120px; background: #eee; display: flex; align-items: center; justify-content: center;">
+            NO IMAGE
+        </div>
     {% endif %}
 
-    <p>{{ recipe.servings }}人前</p>
+    <div>    
+        <p>
+            <a href="{% url 'recipes:recipe_detail' recipe.id %}">
+                {{ recipe.recipe_name }}
+            </a>
+        </p>
 
-    <p>
-        {% if recipe.id in favorite_recipe_ids %}
-            <a href="{% url 'recipes:favorite_toggle' recipe.id %}">♥ お気に入り</a>
-        {% else %}
-            <a href="{% url 'recipes:favorite_toggle' recipe.id %}">♡ お気に入り</a>
+        {% if recipe.menu_category %}
+            <p>カテゴリ：{{ recipe.get_menu_category_display }}</p>
         {% endif %}
-    </p>
+
+        <p>{{ recipe.servings }}人前</p>
+
+        <p>
+            {% if recipe.id in favorite_recipe_ids %}
+                <a href="{% url 'recipes:favorite_toggle' recipe.id %}">♥ お気に入り</a>
+            {% else %}
+                <a href="{% url 'recipes:favorite_toggle' recipe.id %}">♡ お気に入り</a>
+            {% endif %}
+        </p>
+    </div>
+
 </li>
+
 {% empty %}
 <li style="list-style: none;">レシピがありません。</li>
 {% endfor %}
