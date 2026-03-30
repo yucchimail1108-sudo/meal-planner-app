@@ -4,15 +4,32 @@
 <div class="page-container">
 
     <div class="page-header">
-        <h1 class="page-title">≪レシピ編集≫</h1>
+        {% if recipe %}
+            <h1 class="page-title">≪レシピ編集≫</h1>
+        {% else %}
+            <h1 class="page-title">≪マイレシピ登録≫</h1>
+        {% endif %}
     </div>
 
     <div class="content-card section-block">
         <form method="post" enctype="multipart/form-data" class="form-block">
             {% csrf_token %}
 
-            <div class="form-group">
+           <div class="form-group">
                 <label>写真</label>
+
+                <div class="recipe-form-image-block">
+                    {% if recipe and recipe.image %}
+                        <img
+                            src="{{ recipe.image.url }}"
+                            alt="{{ recipe.recipe_name }}"
+                            class="recipe-form-image-preview"
+                        >
+                    {% else %}
+                        <div class="recipe-form-no-image">NO IMAGE</div>
+                    {% endif %}
+                </div>
+
                 {{ form.image }}
             </div>
 
@@ -62,7 +79,11 @@
             </div>
 
             <div class="form-actions">
-                <button type="submit" class="save-button">登録</button>
+                {% if recipe %}
+                    <button type="submit" class="save-button">保存</button>
+                {% else %}
+                    <button type="submit" class="save-button">登録</button>
+                {% endif %}
                 <a href="{% url 'recipes:recipe_list' %}" class="back-button">レシピ一覧に戻る</a>
             </div>
         </form>

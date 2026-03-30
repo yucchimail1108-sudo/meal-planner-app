@@ -211,21 +211,45 @@ def recipe_update_view(request, recipe_id):
 
     if request.method == 'POST':
         form = RecipeForm(request.POST, request.FILES, instance=recipe)
-        if form.is_valid():
+        ingredient_formset = RecipeIngredientFormSet(
+            request.POST,
+            instance=recipe,
+            prefix="ingredients"
+        )
+        step_formset = RecipeStepFormSet(
+            request.POST,
+            instance=recipe,
+            prefix="steps"
+        )
+
+        if form.is_valid() and ingredient_formset.is_valid() and step_formset.is_valid():
             form.save()
+            ingredient_formset.save()
+            step_formset.save()
+
             return redirect(
                 'recipes:recipe_detail',
                 recipe_id=recipe.id
             )
     else:
         form = RecipeForm(instance=recipe)
-        
+        ingredient_formset = RecipeIngredientFormSet(
+            instance=recipe,
+            prefix="ingredients"
+        )
+        step_formset = RecipeStepFormSet(
+            instance=recipe,
+            prefix="steps"
+        )
+
     return render(
         request,
         "recipes/recipe_form.html",
         {
             "form": form,
             "recipe": recipe,
+            "ingredient_formset": ingredient_formset,
+            "step_formset": step_formset,
         }
     )
     

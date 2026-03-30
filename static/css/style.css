@@ -927,3 +927,65 @@ body {
     margin-top: 24px;
     text-align: center;
 }
+
+/* =========================
+   レシピ詳細 見出し強化
+========================= */
+.section-block {
+    margin-top: 20px;
+    padding-top: 12px;
+    border-top: 1px solid #eeeeee;
+}
+
+.section-block .detail-label {
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 6px;
+    display: block;
+}
+
+
+/* =========================
+   レシピ登録・編集画面 画像表示
+========================= */
+.recipe-form-image-block {
+    margin-bottom: 10px;
+}
+
+.recipe-form-image-preview {
+    width: 160px;
+    height: 160px;
+    object-fit: cover;
+    border-radius: 8px;
+    display: block;
+    border: 1px solid #cccccc;
+    background-color: #ffffff;width: 120px;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 8px;
+    display: block;
+    border: 1px solid #cccccc;
+    background-color: #ffffff;
+
+    /* 追加（これが重要）画面のサイズに合わせる */
+    max-width: 100%;
+}
+
+.recipe-form-image-block img {
+    width: 120px;
+    height: 120px;
+    object-fit: cover;
+}
+
+.recipe-form-no-image {
+    width: 160px;
+    height: 160px;
+    background-color: #eeeeee;
+    color: #666666;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    border: 1px solid #cccccc;
+    font-size: 13px;
+}
