@@ -42,9 +42,12 @@
     <button type="submit">絞り込む</button>
 </form>
 
-<p>
-    <a href="{% url 'recipes:recipe_create' %}">レシピを登録する</a>
-</p>
+<div style="margin: 12px 0; text-align: right;">
+    <a href="{% url 'recipes:recipe_create' %}" 
+       style="display: inline-block; padding: 8px 16px; background: #007BFF; color: white; text-decoration: none; border-radius: 4px;">
+        ＋ レシピ追加
+    </a>
+</div>
 
 <ul style="padding-left: 0;">
 {% for recipe in recipes %}
