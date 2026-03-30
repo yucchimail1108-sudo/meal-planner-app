@@ -360,6 +360,10 @@ def step_create_view(request, recipe_id):
         if form.is_valid():
             step = form.save(commit=False)
             step.recipe = recipe
+
+            last_step = RecipeStep.objects.filter(recipe=recipe).count()
+            step.step_no = last_step + 1
+
             step.save()
             return redirect("recipes:recipe_detail", recipe_id=recipe.id)
     else:

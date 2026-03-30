@@ -15,22 +15,28 @@
         <form method="post" enctype="multipart/form-data" class="form-block">
             {% csrf_token %}
 
-           <div class="form-group">
-                <label>写真</label>
+            <div class="form-group">
+                <label for="{{ form.image.id_for_label }}">写真</label>
+                <div class="form-field">
+                    <div class="recipe-form-image-block">
+                        {% if recipe and recipe.image %}
+                            <img
+                                src="{{ recipe.image.url }}"
+                                alt="{{ recipe.recipe_name }}"
+                                class="recipe-form-image-preview"
+                            >
+                        {% else %}
+                            <div class="recipe-form-no-image">NO IMAGE</div>
+                        {% endif %}
+                    </div>
 
-                <div class="recipe-form-image-block">
-                    {% if recipe and recipe.image %}
-                        <img
-                            src="{{ recipe.image.url }}"
-                            alt="{{ recipe.recipe_name }}"
-                            class="recipe-form-image-preview"
-                        >
-                    {% else %}
-                        <div class="recipe-form-no-image">NO IMAGE</div>
-                    {% endif %}
+                    <input
+                        type="file"
+                        name="{{ form.image.name }}"
+                        id="{{ form.image.id_for_label }}"
+                        accept="image/*"
+                    >
                 </div>
-
-                {{ form.image }}
             </div>
 
             <div class="form-group">
@@ -39,43 +45,116 @@
             </div>
 
             <div class="form-group">
-                <label>レシピ名</label>
+                <label>レシピ名<span class="required-mark">＊</span></label>
                 {{ form.recipe_name }}
             </div>
 
             <div class="form-group">
-                <label>カテゴリ</label>
+                <label>カテゴリ<span class="required-mark">＊</span></label>
                 {{ form.menu_category }}
             </div>
 
             <div class="form-group">
-                <label>作る量</label>
-                {{ form.servings }}
+                <label>作る量<span class="required-mark">＊</span></label>
+                <div class="form-field servings-field">
+                    {{ form.servings }}
+                    <span class="servings-unit">人前</span>
+                </div>
             </div>
 
-            <div class="form-group">
-                <label>材料</label>
-                {{ ingredient_formset.management_form }}
-                {% for ingredient_form in ingredient_formset %}
-                    <div class="form-sub-block">
-                        {{ ingredient_form.as_p }}
+            <div class="form-group form-group-vertical">
+                <label>材料<span class="required-mark">＊</span></label>
+
+                <div class="form-field">
+                    {{ ingredient_formset.management_form }}
+
+                    <div id="ingredient-form-list">
+                        {% for ingredient_form in ingredient_formset %}
+                            <div class="ingredient-row">
+                                <div class="ingredient-col ingredient-food">
+                                    {{ ingredient_form.food_item }}
+                                </div>
+
+                                <div class="ingredient-col ingredient-amount">
+                                    {{ ingredient_form.amount_text }}
+                                </div>
+
+                                <div class="ingredient-col ingredient-kind">
+                                    {{ ingredient_form.ingredient_kind }}
+                                </div>
+
+                                {% for hidden_field in ingredient_form.hidden_fields %}
+                                    {{ hidden_field }}
+                                {% endfor %}
+                            </div>
+                        {% endfor %}
                     </div>
-                {% endfor %}
+
+                    <button type="button" id="add-ingredient-button" class="select-button">
+                        ＋材料を追加
+                    </button>
+
+                    <div id="empty-ingredient-form" style="display: none;">
+                        <div class="ingredient-row">
+                            <div class="ingredient-col ingredient-food">
+                                {{ ingredient_formset.empty_form.food_item }}
+                            </div>
+
+                            <div class="ingredient-col ingredient-amount">
+                                {{ ingredient_formset.empty_form.amount_text }}
+                            </div>
+
+                            <div class="ingredient-col ingredient-kind">
+                                {{ ingredient_formset.empty_form.ingredient_kind }}
+                            </div>
+
+                            {% for hidden_field in ingredient_formset.empty_form.hidden_fields %}
+                                {{ hidden_field }}
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
             </div>
 
-            <div class="form-group">
+            <div class="form-group form-group-vertical">
                 <label>作り方</label>
-                {{ step_formset.management_form }}
-                {% for form in step_formset %}
-                    <div class="form-sub-block">
-                        <p>{{ forloop.counter }}. {{ form.instruction }}</p>
-                    </div>
-                {% endfor %}
+
+                <div class="recipe-steps-section">
+                </div>
             </div>
 
-            <div class="form-group">
+                {{ step_formset.management_form }}
+
+                <div id="step-form-list">
+                    {% for form in step_formset %}
+                        <div class="step-row">
+                            {{ form.id }}
+
+                            <div class="step-number">
+                                {{ forloop.counter }}.
+                            </div>
+
+                            <div class="step-input-area">
+                                {{ form.instruction }}
+                                {% if form.errors.instruction %}
+                                    <p class="form-error">{{ form.errors.instruction.0 }}</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+                <div class="step-add-button-wrap">
+                    <button type="button" id="add-step-button" class="select-button">
+                        ＋作り方を追加
+                    </button>
+                </div>
+            </div>
+
+            <div class="form-group form-group-vertical">
                 <label>メモ</label>
-                {{ form.memo }}
+                <div class="form-field">
+                    {{ form.memo }}
+                </div>
             </div>
 
             <div class="form-actions">
@@ -90,4 +169,114 @@
     </div>
 
 </div>
+
+<template id="empty-step-template">
+    <div class="step-row">
+        <div class="step-number">__STEP_NO__.</div>
+        <div class="step-input-area">
+            __FORM__
+        </div>
+    </div>
+</template>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    function autoResizeTextarea(textarea) {
+        textarea.style.height = "auto";
+        textarea.style.height = textarea.scrollHeight + "px";
+    }
+
+    const addButton = document.getElementById("add-ingredient-button");
+    const formList = document.getElementById("ingredient-form-list");
+    const emptyForm = document.getElementById("empty-ingredient-form").innerHTML;
+    const totalForms = document.getElementById("id_ingredients-TOTAL_FORMS");
+
+    if (addButton && formList && totalForms) {
+        addButton.addEventListener("click", function () {
+            const ingredientRows = formList.querySelectorAll(".ingredient-row");
+
+            for (const row of ingredientRows) {
+                const foodSelect = row.querySelector('select[name$="-food_item"]');
+                const amountInput = row.querySelector('input[name$="-amount_text"]');
+                const kindSelect = row.querySelector('select[name$="-ingredient_kind"]');
+
+                if (foodSelect && !foodSelect.value) {
+                    alert("材料名を入力してください");
+                    foodSelect.focus();
+                    return;
+                }
+
+                if (amountInput && !amountInput.value.trim()) {
+                    alert("分量を入力してください");
+                    amountInput.focus();
+                    return;
+                }
+
+                if (kindSelect && !kindSelect.value) {
+                    alert("カテゴリ欄を入力してください");
+                    kindSelect.focus();
+                    return;
+                }
+            }
+
+            const formCount = Number(totalForms.value);
+            const newFormHtml = emptyForm.replace(/__prefix__/g, formCount);
+
+            formList.insertAdjacentHTML("beforeend", newFormHtml);
+            totalForms.value = formCount + 1;
+        });
+    }
+
+    document.querySelectorAll(".step-textarea").forEach(function (textarea) {
+        autoResizeTextarea(textarea);
+
+        textarea.addEventListener("input", function () {
+            autoResizeTextarea(textarea);
+        });
+    });
+
+    const addStepButton = document.getElementById("add-step-button");
+    const stepFormList = document.getElementById("step-form-list");
+    const emptyStepTemplate = document.getElementById("empty-step-template");
+    const totalStepForms = document.getElementById("id_steps-TOTAL_FORMS");
+
+    if (addStepButton && stepFormList && emptyStepTemplate && totalStepForms) {
+        addStepButton.addEventListener("click", function () {
+            const stepInputs = stepFormList.querySelectorAll("textarea");
+
+            for (const input of stepInputs) {
+                if (input.value.trim() === "") {
+                    alert("作り方を入力してください");
+                    input.focus();
+                    return;
+                }
+            }
+
+            const formCount = Number(totalStepForms.value);
+            const stepNo = formCount + 1;
+
+            let formHtml = `{{ step_formset.empty_form.instruction|escapejs }}`;
+            formHtml = formHtml.replace(/__prefix__/g, formCount);
+
+            let newStepHtml = emptyStepTemplate.innerHTML;
+            newStepHtml = newStepHtml.replace("__STEP_NO__.", stepNo + ".");
+            newStepHtml = newStepHtml.replace("__FORM__", formHtml);
+
+            stepFormList.insertAdjacentHTML("beforeend", newStepHtml);
+            totalStepForms.value = formCount + 1;
+
+            const newTextarea = stepFormList.lastElementChild.querySelector("textarea");
+
+            if (newTextarea) {
+                autoResizeTextarea(newTextarea);
+
+                newTextarea.addEventListener("input", function () {
+                    autoResizeTextarea(newTextarea);
+                });
+            }
+        });
+    }
+});
+</script>
+
 {% endblock %}

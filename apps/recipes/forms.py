@@ -7,13 +7,39 @@ class RecipeForm(forms.ModelForm):
     class Meta:
         model = Recipe
         fields = [
-            'recipe_name',
-            'menu_category',
-            'servings',
-            'image',
-            'memo',
-            'reference_url'
-            ]
+            "recipe_name",
+            "menu_category",
+            "servings",
+            "image",
+            "memo",
+            "reference_url",
+        ]
+        widgets = {
+            "recipe_name": forms.TextInput(
+                attrs={"placeholder": "レシピ名入力"}
+            ),
+            "reference_url": forms.URLInput(
+                attrs={"placeholder": "URL入力"}
+            ),
+            "memo": forms.Textarea(
+                attrs={
+                    "placeholder": "メモ入力",
+                    "rows": 3,
+                }
+            ),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.fields["menu_category"].choices = [
+        ("", "選択してください"),
+        *self.fields["menu_category"].choices[1:]
+    ]
+
+        self.fields["servings"].widget = forms.Select(
+            choices=[(i, i) for i in range(1, 101)]
+    )
         
 # レシピ材料
 class RecipeIngredientForm(forms.ModelForm):
@@ -25,6 +51,16 @@ class RecipeIngredientForm(forms.ModelForm):
         self.recipe = kwargs.pop("recipe", None)
         super().__init__(*args, **kwargs)
 
+        self.fields["amount_text"].widget.attrs["placeholder"] = "分量入力"
+        self.fields["food_item"].empty_label = "材料選択"
+
+        original_choices = list(self.fields["ingredient_kind"].choices)
+        filtered_choices = [choice for choice in original_choices if choice[0] != ""]
+        self.fields["ingredient_kind"].choices = [("", "カテゴリ選択"), *filtered_choices]
+
+        if not self.instance.pk:
+            self.initial["ingredient_kind"] = ""
+        
     def clean(self):
         cleaned_data = super().clean()
         food_item = cleaned_data.get("food_item")
@@ -44,11 +80,20 @@ class RecipeIngredientForm(forms.ModelForm):
 
         return cleaned_data    
 
-# 作り方    
+# 作り方
 class RecipeStepForm(forms.ModelForm):
     class Meta:
         model = RecipeStep
-        fields = ["step_no", "instruction"]
+        fields = ["instruction"]
+        widgets = {
+            "instruction": forms.Textarea(
+                attrs={
+                    "placeholder": "作り方を入力してください",
+                    "rows": 1,
+                    "class": "step-textarea",
+                }
+            ),
+        }
 
 # 献立
 class MenuDayForm(forms.ModelForm):
