@@ -21,15 +21,14 @@ from .services import (
 # レシピ一覧画面
 @login_required
 def recipe_list_view(request):
-    
+
     base_recipes = Recipe.objects.filter(user=request.user)
-    
-    recipes = base_recipes.order_by("-id") # -id･･･降順表示
-    
-    selected_category = request.GET.get("category")
-    search_query = request.GET.get("q")
-    
-    # 各カテゴリの件数を（）表示する
+
+    recipes = base_recipes.order_by("-id")
+
+    selected_category = request.GET.get("category", "")
+    search_query = request.GET.get("q", "").strip()
+
     category_counts = {
         "all": base_recipes.count(),
         "staple": base_recipes.filter(menu_category=1).count(),
@@ -38,38 +37,28 @@ def recipe_list_view(request):
         "soup": base_recipes.filter(menu_category=4).count(),
         "favorite": Favorite.objects.filter(user=request.user).count(),
     }
-   
-    # 検索
+
     if search_query:
         recipes = recipes.filter(
             Q(recipe_name__icontains=search_query) |
             Q(ingredients__food_item__ingredient_name__icontains=search_query)
         ).distinct()
-    
-    # お気に入り
+
     if selected_category == "favorite":
         recipes = recipes.filter(favorite_set__user=request.user)
-    
-    # カテゴリ
     elif selected_category in ["1", "2", "3", "4"]:
         recipes = recipes.filter(menu_category=int(selected_category))
 
-    # お気に入りID取得
     favorite_recipe_ids = set(
         Favorite.objects.filter(user=request.user).values_list("recipe_id", flat=True)
     )
-    
-    # ページネーション     
-    paginator = Paginator(recipes, 5)
-    page_number = request.GET.get("page")
-    recipes = paginator.get_page(page_number)
-            
+
     return render(
-        request, 
+        request,
         "recipes/recipe_list.html",
         {
-            "recipes":recipes,
-            "selected_category":selected_category,
+            "recipes": recipes,
+            "selected_category": selected_category,
             "favorite_recipe_ids": favorite_recipe_ids,
             "category_counts": category_counts,
         }

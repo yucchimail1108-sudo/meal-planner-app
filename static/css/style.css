@@ -14,7 +14,7 @@ body {
 
 .site-title a {
     text-decoration: none;
-    color: #333;
+    color: black;
 }
 
 .main-nav {
@@ -734,6 +734,9 @@ body {
     margin-bottom: 4px;
 }
 
+
+
+
 .menu-date-title {
     text-align: center;
     margin: 16px 0;
@@ -789,9 +792,10 @@ body {
     margin: 10px 0;
 }
 
-/* ヘッダーのタイトルを小さくする */
+/* ヘッダーのタイトル */
 .site-title {
-    font-size: 18px;
+    font-size: 28px;
+    font-weight: bold;
     margin: 0;
 }
 

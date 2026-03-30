@@ -2,108 +2,114 @@
 
 {% block content %}
 
-<h1>マイレシピ一覧</h1>
-<p>登録件数：{{ recipes.paginator.count }}件</p>
+<form method="get" action="{% url 'recipes:recipe_list' %}" style="margin: 16px 0;">
 
-<form method="get">
-    <input
-        type="text"
-        name="q"
-        placeholder="レシピ名や材料を入力"
-        value="{{ request.GET.q }}"
-    >
-    <button type="submit">検索</button>
-</form>
+    <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px;">
+        <div style="position: relative; flex: 1;">
+            <input
+                type="text"
+                id="recipe-search"
+                name="q"
+                placeholder="レシピ名や材料を入力"
+                value="{{ request.GET.q }}"
+                style="width: 100%; height: 36px; padding: 0 36px 0 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box;"
+            >
 
-<form method="get">
-    <input type="hidden" name="q" value="{{ request.GET.q }}">
-
-    <label for="category">カテゴリで絞り込み</label>
-    <select name="category" id="category">
-        <option value="">
-            すべて（{{ category_counts.all }}）
-        </option>
-        <option value="1" {% if selected_category == "1" %}selected{% endif %}>
-            主食（{{ category_counts.staple }}）
-        </option>
-        <option value="2" {% if selected_category == "2" %}selected{% endif %}>
-            主菜（{{ category_counts.main }}）
-        </option>
-        <option value="3" {% if selected_category == "3" %}selected{% endif %}>
-            副菜（{{ category_counts.side }}）
-        </option>
-        <option value="4" {% if selected_category == "4" %}selected{% endif %}>
-            汁物（{{ category_counts.soup }}）
-        </option>
-        <option value="favorite" {% if selected_category == "favorite" %}selected{% endif %}>
-            お気に入り（{{ category_counts.favorite }}）
-        </option>
-    </select>
-    <button type="submit">絞り込む</button>
-</form>
-
-<div style="margin: 12px 0; text-align: right;">
-    <a href="{% url 'recipes:recipe_create' %}" 
-       style="display: inline-block; padding: 8px 16px; background: #007BFF; color: white; text-decoration: none; border-radius: 4px;">
-        ＋ レシピ追加
-    </a>
-</div>
-
-<ul style="padding-left: 0;">
-{% for recipe in recipes %}
-<li style="border: 1px solid #ccc; padding: 12px; margin-bottom: 12px; list-style: none; display: flex; gap: 12px;"> 
-    
-    {% if recipe.image %}
-        <img src="{{ recipe.image.url }}" style="width: 120px; height: 120px; object-fit: cover;">
-    {% else %}
-        <div style="width: 120px; height: 120px; background: #eee; display: flex; align-items: center; justify-content: center;">
-            NO IMAGE
+            <button
+                type="button"
+                onclick="document.getElementById('recipe-search').value=''"
+                style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); border: none; background: none; color: #999; font-size: 18px; cursor: pointer; padding: 0;"
+                aria-label="検索文字を削除"
+            >
+                ×
+            </button>
         </div>
-    {% endif %}
 
-    <div>    
-        <p>
-            <a href="{% url 'recipes:recipe_detail' recipe.id %}">
-                {{ recipe.recipe_name }}
-            </a>
-        </p>
-
-        {% if recipe.menu_category %}
-            <p>カテゴリ：{{ recipe.get_menu_category_display }}</p>
-        {% endif %}
-
-        <p>{{ recipe.servings }}人前</p>
-
-        <p>
-            {% if recipe.id in favorite_recipe_ids %}
-                <a href="{% url 'recipes:favorite_toggle' recipe.id %}">♥ お気に入り</a>
-            {% else %}
-                <a href="{% url 'recipes:favorite_toggle' recipe.id %}">♡ お気に入り</a>
-            {% endif %}
-        </p>
+        <button
+            type="submit"
+            style="width: 36px; height: 36px; border: 1px solid #ccc; background: #fff; color: #666; border-radius: 4px; cursor: pointer; font-size: 16px; line-height: 1;"
+            aria-label="検索"
+            title="検索"
+        >
+            🔍
+        </button>
     </div>
 
-</li>
+    <div style="display: flex; justify-content: space-between; align-items: center; gap: 12px;">
+        <select
+            name="category"
+            id="category"
+            style="height: 36px; padding: 0 8px; border: 1px solid #ccc; border-radius: 4px; background: #fff;"
+        >
+            <option value="" {% if not selected_category %}selected{% endif %}>
+                すべてのレシピ（{{ category_counts.all }}）
+            </option>
+            <option value="1" {% if selected_category == "1" %}selected{% endif %}>
+                主食（{{ category_counts.staple }}）
+            </option>
+            <option value="2" {% if selected_category == "2" %}selected{% endif %}>
+                主菜（{{ category_counts.main }}）
+            </option>
+            <option value="3" {% if selected_category == "3" %}selected{% endif %}>
+                副菜（{{ category_counts.side }}）
+            </option>
+            <option value="4" {% if selected_category == "4" %}selected{% endif %}>
+                汁物（{{ category_counts.soup }}）
+            </option>
+            <option value="favorite" {% if selected_category == "favorite" %}selected{% endif %}>
+                お気に入り（{{ category_counts.favorite }}）
+            </option>
+        </select>
 
-{% empty %}
-<li style="list-style: none;">レシピがありません。</li>
-{% endfor %}
-</ul>
+        <a href="{% url 'recipes:recipe_create' %}"
+           style="display: inline-block; height: 36px; line-height: 36px; padding: 0 14px; background: #007BFF; color: white; text-decoration: none; border-radius: 4px; white-space: nowrap;">
+            ＋レシピ追加
+        </a>
+    </div>
 
-<div>
-    {% if recipes.has_previous %}
-        <a href="?page=1&q={{ request.GET.q }}&category={{ selected_category }}">最初</a>
-        <a href="?page={{ recipes.previous_page_number }}&q={{ request.GET.q }}&category={{ selected_category }}">前へ</a>
-    {% endif %}
+</form>
 
-    <span>
-        {{ recipes.number }} / {{ recipes.paginator.num_pages }}
-    </span>
+<div style="display: grid; grid-template-columns: repeat(2, 180px); gap: 16px; justify-content: center; margin-top: 16px;">
+    {% for recipe in recipes %}
+        <div style="border: 1px solid #ccc; padding: 8px; background: #fff; width: 180px;">
 
-    {% if recipes.has_next %}
-        <a href="?page={{ recipes.next_page_number }}&q={{ request.GET.q }}&category={{ selected_category }}">次へ</a>
-        <a href="?page={{ recipes.paginator.num_pages }}&q={{ request.GET.q }}&category={{ selected_category }}">最後</a>
-    {% endif %}
+            <div style="position: relative; width: 100%; max-width: 140px; margin: 0 auto;">
+
+                <a href="{% url 'recipes:recipe_detail' recipe.id %}"
+                   style="text-decoration: none; color: inherit; display: block;">
+
+                    {% if recipe.image %}
+                        <img src="{{ recipe.image.url }}"
+                             style="width: 100%; aspect-ratio: 1 / 1; object-fit: cover; display: block;">
+                    {% else %}
+                        <div style="width: 100%; aspect-ratio: 1 / 1; background: #eee; display: flex; align-items: center; justify-content: center; font-size: 14px;">
+                            NO IMAGE
+                        </div>
+                    {% endif %}
+                </a>
+
+                {% if recipe.id in favorite_recipe_ids %}
+                    <a href="{% url 'recipes:favorite_toggle' recipe.id %}"
+                       style="position: absolute; top: 8px; right: 8px; text-decoration: none; font-size: 22px; color: red; line-height: 1;">
+                        ♥
+                    </a>
+                {% else %}
+                    <a href="{% url 'recipes:favorite_toggle' recipe.id %}"
+                       style="position: absolute; top: 8px; right: 8px; text-decoration: none; font-size: 22px; color: white; line-height: 1; text-shadow: 0 0 3px #666;">
+                        ♥
+                    </a>
+                {% endif %}
+
+            </div>
+
+            <p style="margin: 8px 0 0; font-size: 13px; text-align: center;">
+                {{ recipe.get_menu_category_display }}_{{ recipe.recipe_name }}
+            </p>
+
+        </div>
+    {% empty %}
+        <p>レシピがありません。</p>
+    {% endfor %}
 </div>
 
 {% endblock %}
