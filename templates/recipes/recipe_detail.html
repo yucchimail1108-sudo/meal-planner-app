@@ -2,100 +2,117 @@
 
 {% block content %}
 
-<h1>≪レシピ詳細≫</h1>
-
-<div class="image-url-area">
-
-    <div class="image-area">
-        {% if recipe.image %}
-            <img src="{{ recipe.image.url }}" alt="{{ recipe.recipe_name }}" width="250">
-        {% else %}
-            <p>NO IMAGE</p>
-        {% endif %}
+<div class="page-container recipe-detail-page">
+        
+    <div class="page-header recipe-detail-header">
+        <h1 class="page-title">≪レシピ詳細≫</h1>
     </div>
 
-    <div class="url-area">
-        <p>【参照URL】</p>
+    <div class="form-actions recipe-detail-actions">
+        <a href="{% url 'recipes:recipe_update' recipe.id %}" class="edit-button">編集</a>
+        <a href="{% url 'recipes:recipe_delete' recipe.id %}" class="delete-button">削除</a>
+    </div>
 
-        {% if recipe.reference_url %}
+    <div class="content-card">
+
+        <div class="image-url-area">
+            <div class="image-area">
+                {% if recipe.image %}
+                    <img
+                        src="{{ recipe.image.url }}"
+                        alt="{{ recipe.recipe_name }}"
+                        class="recipe-detail-image"
+                    >
+                {% else %}
+                    <div class="recipe-detail-no-image">NO IMAGE</div>
+                {% endif %}
+            </div>
+
+            <div class="url-area">
+                <p class="detail-label">【参照URL】</p>
+
+                {% if recipe.reference_url %}
+                    <p class="detail-text recipe-url-text">
+                        <a href="{{ recipe.reference_url }}" target="_blank" rel="noopener noreferrer">
+                            {{ recipe.reference_url }}
+                        </a>
+                    </p>
+                {% else %}
+                    <p class="detail-empty-text">登録されていません</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="recipe-detail-info">
             <p>
-                <a href="{{ recipe.reference_url }}" target="_blank" rel="noopener noreferrer">
-                    {{ recipe.reference_url }}
-                </a>
+                <span class="detail-label">【レシピ名】</span>
+                <span class="recipe-name">{{ recipe.recipe_name }}</span>
             </p>
-        {% endif %}
+            {% if recipe.menu_category %}
+                <p><span class="detail-label">【カテゴリ】</span>{{ recipe.get_menu_category_display }}</p>
+            {% endif %}
+
+            <p><span class="detail-label">【作る量】</span>{{ recipe.servings }}人前</p>
+
+            <form method="get" class="recipe-scale-form">
+                <label for="scale" class="detail-label recipe-scale-label">【分量換算】</label>
+                <select name="scale" id="scale" onchange="this.form.submit()">
+                    <option value="0.25" {% if scale == "0.25" %}selected{% endif %}>×1/4</option>
+                    <option value="0.5" {% if scale == "0.5" %}selected{% endif %}>×1/2</option>
+                    <option value="1" {% if scale == "1" %}selected{% endif %}>×1</option>
+                    <option value="1.5" {% if scale == "1.5" %}selected{% endif %}>×1.5</option>
+                    <option value="2" {% if scale == "2" %}selected{% endif %}>×2</option>
+                    <option value="3" {% if scale == "3" %}selected{% endif %}>×3</option>
+                    <option value="4" {% if scale == "4" %}selected{% endif %}>×4</option>
+                    <option value="5" {% if scale == "5" %}selected{% endif %}>×5</option>
+                    <option value="6" {% if scale == "6" %}selected{% endif %}>×6</option>
+                    <option value="7" {% if scale == "7" %}selected{% endif %}>×7</option>
+                    <option value="8" {% if scale == "8" %}selected{% endif %}>×8</option>
+                    <option value="9" {% if scale == "9" %}selected{% endif %}>×9</option>
+                    <option value="10" {% if scale == "10" %}selected{% endif %}>×10</option>
+                </select>
+            </form>
+
+            <div class="section-block">
+                <p class="detail-label">【材料】</p>
+                <ul class="recipe-detail-list">
+                    {% for item in converted_ingredients %}
+                        <li>
+                            {{ item.ingredient.food_item }}：{{ item.ingredient.amount_text }}
+                            ➡ <span class="converted-amount">{{ item.converted_amount }}</span>
+                        </li>
+                    {% empty %}
+                        <li>材料はまだ登録されていません</li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+            <div class="section-block">
+                <p class="detail-label">【作り方】</p>
+                <ol class="recipe-detail-list">
+                    {% for step in recipe.steps.all %}
+                        <li>{{ step.instruction }}</li>
+                    {% empty %}
+                        <li>作り方はまだ登録されていません</li>
+                    {% endfor %}
+                </ol>
+            </div>
+
+            <div class="section-block">
+                <p class="detail-label">【メモ】</p>
+                {% if recipe.memo %}
+                    <p class="detail-text">{{ recipe.memo }}</p>
+                {% else %}
+                    <p class="detail-empty-text">メモは登録されていません</p>
+                {% endif %}
+            </div>
+        </div>
+
+    <div class="recipe-detail-back-area">
+        <a href="{% url 'recipes:recipe_list' %}" class="back-button">マイレシピ一覧に戻る</a>
     </div>
 
+    </div>
 </div>
-
-
-    <p>【レシピ名】{{ recipe.recipe_name }}</p>
-
-    {% if recipe.menu_category %}
-    <p>【カテゴリ】{{ recipe.get_menu_category_display }}</p> 
-    {% endif %}
-
-    <form  method="get">
-        <label for="scale">【分量換算】</label>
-        <select name="scale" id="scale" onchange="this.form.submit()">
-            <option value="0.25" {% if scale == "0.25" %}selected{% endif %}>1/4</option>
-            <option value="0.5" {% if scale == "0.5" %}selected{% endif %}>1/2</option>
-            <option value="1" {% if scale == "1" %}selected{% endif %}>1</option>
-            <option value="1.5" {% if scale == "1.5" %}selected{% endif %}>1.5</option>
-            <option value="2" {% if scale == "2" %}selected{% endif %}>2</option>
-            <option value="3" {% if scale == "3" %}selected{% endif %}>3</option>
-            <option value="4" {% if scale == "4" %}selected{% endif %}>4</option>
-            <option value="5" {% if scale == "5" %}selected{% endif %}>5</option>
-            <option value="6" {% if scale == "6" %}selected{% endif %}>6</option>
-            <option value="7" {% if scale == "7" %}selected{% endif %}>7</option>
-            <option value="8" {% if scale == "8" %}selected{% endif %}>8</option>
-            <option value="9" {% if scale == "9" %}selected{% endif %}>9</option>
-            <option value="10" {% if scale == "10" %}selected{% endif %}>10</option>
-        </select>
-    </form>
-
-
-    <p>【作る量】{{ recipe.servings }}人前</p>
-
-    <p>【材料】</p>
-
-    <ul>
-        {% for item in converted_ingredients %}
-            <li>
-                {{ item.ingredient.food_item }} {{ item.ingredient.amount_text }}
-                ➡ <span style="color: blue;">{{ item.converted_amount }}</span>
-            </li>
-        {% empty %}
-            <li>材料はまだ登録されていません</li>
-        {% endfor %}
-    </ul>
-
-
-    <p>【作り方】</p>
-
-    <ol>
-        {% for step in recipe.steps.all %}
-            <li>
-                {{ step.instruction }}
-            </li>
-        {% empty %}
-            <li>作り方はまだ登録されていません</li>
-        {% endfor %}
-    </ol>
-    
-
-    <p>【メモ】</p>
-
-    {% if recipe.memo %}
-        <p>{{ recipe.memo }}</p>
-    {% else %}
-        <p>メモは登録されていません</p>
-    {% endif %}
-
-
-    <p><a href="{% url 'recipes:recipe_update' recipe.id %}">編集</a></p>
-    <p><a href="{% url 'recipes:recipe_delete' recipe.id %}">削除</a></p>
-    <p><a href="{% url 'recipes:recipe_list' %}">マイレシピ一覧に戻る</a></p>
-
 
 {% endblock %}

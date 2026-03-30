@@ -794,7 +794,7 @@ body {
 
 /* ヘッダーのタイトル */
 .site-title {
-    font-size: 28px;
+    font-size: 24px;
     font-weight: bold;
     margin: 0;
 }
@@ -810,4 +810,120 @@ body {
 .logout-button {
     font-size: 12px;
     padding: 6px 8px;
+}
+
+/* レシピ詳細画面 */
+.recipe-detail-page {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.recipe-detail-header {
+    margin-bottom: 12px;
+}
+
+.recipe-detail-image {
+    width: 100%;
+    max-width: 260px;
+    height: 180px;
+    object-fit: cover;
+    border-radius: 8px;
+    display: block;
+}
+
+.recipe-detail-no-image {
+    width: 100%;
+    max-width: 260px;
+    height: 180px;
+    background-color: #dddddd;
+    color: #666666;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    font-size: 14px;
+}
+
+.recipe-detail-info {
+    margin-top: 20px;
+}
+
+.recipe-detail-info p {
+    margin: 0 0 12px;
+    line-height: 1.6;
+}
+
+.detail-label {
+    font-weight: bold;
+    margin-right: 6px;
+}
+
+.detail-text {
+    margin: 0;
+    line-height: 1.6;
+    word-break: break-word;
+}
+
+.detail-empty-text {
+    color: #666666;
+    margin: 0;
+}
+
+.recipe-url-text a {
+    word-break: break-all;
+}
+
+.recipe-scale-form {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+}
+
+.recipe-scale-form select {
+    padding: 6px 8px;
+    border: 1px solid #cccccc;
+    border-radius: 6px;
+    background-color: #ffffff;
+}
+
+.recipe-detail-list {
+    margin: 8px 0 0 20px;
+    padding: 0;
+    line-height: 1.8;
+}
+
+.converted-amount {
+    color: #1976d2;
+    font-weight: bold;
+}
+
+.recipe-detail-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+.recipe-detail-actions-top {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+/* レシピ名太字 */
+.recipe-name {
+    font-weight: bold;
+}
+
+/* 分量換算のセレクトボックスのみ青字 */
+.recipe-scale-form select {
+    color: #1976d2;
+    font-weight: bold;
+}
+
+/* マイレシピ一覧に戻る */
+.recipe-detail-back-area {
+    margin-top: 24px;
+    text-align: center;
 }
