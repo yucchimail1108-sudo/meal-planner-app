@@ -78,8 +78,26 @@ class FoodItem(models.Model):
         (7, "その他"),
     ]
     
-    ingredient_name = models.CharField(max_length=30, verbose_name="食材名")
-    category = models.IntegerField(choices=CATEGORY_CHOICES, verbose_name="カテゴリ")
+    ITEM_TYPE_CHOICES = [
+        (1, "食材"),
+        (2, "調味料"),
+    ]
+    
+    ingredient_name = models.CharField(
+        max_length=30,
+        verbose_name="食材名",
+    )
+
+    category = models.IntegerField(
+        choices=CATEGORY_CHOICES,
+        verbose_name="カテゴリ",
+    )
+
+    item_type = models.IntegerField(
+        choices=ITEM_TYPE_CHOICES,
+        default=1,
+        verbose_name="食材種別",
+    )
     
     def __str__(self):
         return self.ingredient_name

@@ -4,12 +4,12 @@
 <div class="page-container home-food-page">
 
     <!-- おうち食材画面のタイトル行 -->
-    <div class="page-header">
+    <div class="page-header home-food-header">
         <h1 class="page-title">おうちにある食材</h1>
     </div>
 
     <!-- おうち食材を追加する際の検索 -->
-    <form method="get" class="search-form">
+    <form method="get" class="search-form home-food-search-form">
         <input
             type="text"
             name="q"
@@ -33,7 +33,7 @@
     </form>
 
     <!-- おうち食材を追加するフォーム -->
-    <div class="content-card section-block">
+    <div class="content-card section-block home-food-card">
         <h2 class="section-title">おうち食材に追加</h2>
         <p class="section-text">
             食材を選んで、おうち食材一覧に追加します
@@ -58,7 +58,7 @@
     </div>
 
     <!-- 新しい食材を作成して追加するフォーム -->
-    <div class="content-card section-block">
+    <div class="content-card section-block home-food-card">
         <h2 class="section-title">新しい食材を追加</h2>
         <p class="section-text">
             食材マスタにない食材は、こちらから追加できます
@@ -73,14 +73,20 @@
                     <label for="{{ create_form.ingredient_name.id_for_label }}">食材名</label>
                     {{ create_form.ingredient_name }}
                 </div>
+
                 <div class="form-group">
                     <label for="{{ create_form.category.id_for_label }}">カテゴリ</label>
                     {{ create_form.category }}
                 </div>
+
+                <div class="form-group">
+                    <label for="{{ create_form.item_type.id_for_label }}">種別</label>
+                    {{ create_form.item_type }}
+                </div>
             </div>
 
             <div class="form-actions">
-                <button type="submit" class="save-button">新規追加</button>
+                <button type="button" class="select-button">＋ 新規食材</button>
             </div>
         </form>
     </div>
@@ -93,8 +99,8 @@
             {% regroup home_food_items by food_item.get_category_display as grouped_home_foods %}
 
             {% for category_group in grouped_home_foods %}
-                <div class="category-block">
-                    <h3 class="category-title">{{ category_group.grouper }}</h3>
+                <div class="category-block home-food-category-block">
+                    <h3 class="category-title home-food-category-title">{{ category_group.grouper }}</h3>
 
                     <ul class="item-list">
                         {% for item in category_group.list %}

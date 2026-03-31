@@ -17,10 +17,6 @@ body {
     color: black;
 }
 
-.main-nav {
-    margin-top: 12px;
-}
-
 /* =========================
    ボタン共通スタイル（全ボタンの土台）
 ========================= */
@@ -344,96 +340,6 @@ body {
     word-break: break-word;
 }
 
-/* ホーム画面 */
-.home-menu-section {
-    margin-top: 24px;
-}
-
-.home-menu-date {
-    font-weight: bold;
-    margin-bottom: 16px;
-}
-
-.home-menu-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
-    margin-bottom: 16px;
-}
-
-.home-menu-card {
-    border: 1px solid #cccccc;
-    border-radius: 8px;
-    padding: 12px;
-    background-color: #ffffff;
-}
-
-.home-menu-label {
-    font-size: 14px;
-    font-weight: bold;
-    margin-bottom: 6px;
-    text-align: center;
-}
-
-.home-menu-value {
-    margin: 4px 0 6px;
-    word-break: break-word;
-    text-align: center;
-    font-size: 13px;
-}
-
-.home-menu-flags {
-    margin-bottom: 16px;
-}
-
-/* ホーム画面の献立画像 */
-.home-menu-image-box{
-    width: 40%;
-    height: 60px;
-    border: 1px solid #cccccc;
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 0 auto 8px; /* 中央寄せ */
-    color: #777777;
-    background-color: #f8f8f8;
-    font-size: 11px; 
-    overflow: hidden;
-}
-
-.home-menu-image {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-}
-
-/* 探すボタン */
-.home-menu-card .select-button {
-    display: inline-block;
-    margin-top: 8px;
-}
-
-/* ホームの案内文を少し目立たせる */
-.home-menu-notice {
-    margin-bottom: 12px;
-    font-weight: bold;
-    color: #666666;
-}
-
-/* ホームのカード全体を少し薄く */
-.home-menu-grid-disabled {
-    opacity: 0.7;
-}
-
-/* 外食/惣菜の「選択不可」を地味に表示 */
-.home-menu-disabled-text {
-    margin-top: 8px;
-    color: #777777;
-    font-size: 14px;
-}
-
 /* 献立の見た目変更 */
 .menu-detail-nav {
     display: flex;
@@ -568,19 +474,6 @@ body {
     display: flex;
     gap: 8px;
     flex-wrap: wrap;
-}
-
-.menu-detail-status {
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-    flex-wrap: wrap;
-    margin-bottom: 16px;
-    font-weight: bold;
-}
-
-.menu-detail-status p {
-    margin: 0;
 }
 
 .menu-detail-page-title {
@@ -725,62 +618,10 @@ body {
     margin-bottom: 4px;
 }
 
-
-
-
 .menu-date-title {
     text-align: center;
-    margin: 16px 0;
-    font-weight: bold;
-}
-
-/* 外食＆惣菜チェック */
-.home-flags {
-    text-align: center;
-    margin: 16px 0;
-    font-size: 16px;
-}
-
-.home-flags label {
-    margin: 0 10px;
-}
-
-/* 探すボタン */
-.home-search-button {
-    text-align: center;
-    margin-top: 8px;
-}
-
-/* ホームの保存ボタン */
-.home-save-area {
-    text-align: center;
-    margin-top: 12px;
-}
-
-.home-save-area .save-button {
-    width: 80%;
-    max-width: 160px;
-    padding: 12px;
-    font-size: 16px;
-}
-
-/* ホームのカードサイズ調整（スマホでひと画面に収める） */
-.home-menu-grid {
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-}
-
-.home-menu-card {
-    padding: 10px;
-}
-
-/* 余白を詰める */
-.home-menu-section {
-    margin-top: 10px;
-}
-
-.menu-date-title {
     margin: 10px 0;
+    font-weight: bold;
 }
 
 /* ヘッダーのタイトル */
@@ -937,50 +778,75 @@ body {
 
 
 /* =========================
-   レシピ登録・編集画面 画像表示
+   レシピ登録・編集画面
 ========================= */
+
+/* 画像表示 */
 .recipe-form-image-block {
+    width: 120px;
     margin-bottom: 10px;
+    text-align: center;
 }
 
-.form-field input[type="file"] {
-    display: block;
-    width: auto;
-    max-width: 100%;
-}
-
-.recipe-form-image-preview {
-    width: 120px;
-    height: 120px;
-    object-fit: cover;
-    border-radius: 8px;
-    display: block;
-    border: 1px solid #cccccc;
-    background-color: #ffffff;
-}
-
-.recipe-form-image-block img {
-    width: 120px;
-    height: 120px;
-    object-fit: cover;
-}
-
+.recipe-form-image-preview,
 .recipe-form-no-image {
     width: 120px;
     height: 120px;
-    background-color: #eeeeee;
-    color: #666666;
+    border-radius: 8px;
+    border: 1px solid #cccccc;
+    box-sizing: border-box;
+}
+
+.recipe-form-image-preview {
+    display: block;
+    object-fit: cover;
+    background-color: #ffffff;
+}
+
+.recipe-form-no-image {
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: 8px;
-    border: 1px solid #cccccc;
+    background-color: #eeeeee;
+    color: #666666;
     font-size: 13px;
 }
 
-/* =========================
-   フォーム 横並びレイアウト
-========================= */
+/* 画像アップロード */
+.hidden-file-input {
+    display: none !important;
+}
+
+.custom-file-upload {
+    width: 120px;
+    margin-top: 10px;
+}
+
+.custom-file-upload .custom-file-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 120px;
+    min-width: 0;
+    margin: 0;
+    padding: 8px 0;
+    background-color: #ffb74d;
+    border: 1px solid #f57c00;
+    border-radius: 8px;
+    color: #ffffff;
+    font-size: 13px;
+    line-height: 1.4;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+    box-sizing: border-box;
+}
+
+.custom-file-upload .custom-file-button:hover {
+    background-color: #f57c00;
+}
+
+/* フォーム横並び */
 .form-group {
     display: flex;
     align-items: flex-start;
@@ -1011,23 +877,53 @@ body {
     margin-left: 2px;
 }
 
+/* 作る量 */
 .servings-field {
     display: flex;
     align-items: center;
     gap: 8px;
 }
+
 .servings-field select {
     width: auto;
     min-width: 80px;
 }
+
 .servings-unit {
     color: #333333;
     white-space: nowrap;
 }
 
-/* =========================
-   レシピ材料欄
-========================= */
+/* 縦並びフォーム */
+.form-group-vertical {
+    flex-direction: column;
+    align-items: stretch;
+    width: 100%;
+    gap: 6px;
+}
+
+.form-group-vertical label {
+    width: auto;
+    min-width: 0;
+    padding-top: 0;
+    margin-bottom: 0;
+}
+
+.form-group-vertical .form-field {
+    flex: none;
+    width: 100%;
+    max-width: 100%;
+}
+
+.form-group-vertical textarea,
+.form-group-vertical input,
+.form-group-vertical select {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+/* 材料欄 */
 .ingredient-row {
     display: flex;
     gap: 8px;
@@ -1063,25 +959,31 @@ body {
     font-size: 14px;
 }
 
-/* =========================
-   レシピ作り方欄
-========================= */
-
-.step-add-button-wrap {
-    margin-top: 12px;
+/* 作り方欄 */
+.recipe-steps-section {
+    margin-top: 0;
 }
 
-.sub-button {
-    padding: 8px 14px;
-    border: 1px solid #999;
-    border-radius: 8px;
-    background-color: #fff;
-    cursor: pointer;
-    font-size: 14px;
+#step-form-list {
+    margin-top: 0;
 }
 
-.sub-button:hover {
-    opacity: 0.85;
+.step-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.step-number {
+    width: 32px;
+    padding-top: 10px;
+    font-weight: bold;
+    flex-shrink: 0;
+}
+
+.step-input-area {
+    flex: 1;
 }
 
 .step-input-area textarea {
@@ -1092,109 +994,175 @@ body {
     overflow: hidden;
 }
 
-
-.form-group-vertical {
-    flex-direction: column;
-    align-items: stretch;
-    width: 100%;
-    gap: 6px;
-}
-
-.form-group-vertical label {
-    width: auto;
-    min-width: 0;
-    padding-top: 0;
-    margin-bottom: 0;
-}
-
-.form-group-vertical .form-field {
-    flex: none;
-    width: 100%;
-    max-width: 100%;
-}
-
-.form-group-vertical textarea,
-.form-group-vertical input,
-.form-group-vertical select {
-    width: 100%;
-    max-width: 100%;
-    box-sizing: border-box;
-}
-
-.recipe-steps-section {
-    margin-top: 0;
-}
-
-.recipe-steps-section .form-section-title {
-    margin: 0 0 6px 0;
-}
-
-#step-form-list {
-    margin-top: 0;
+.step-add-button-wrap {
+    margin-top: 12px;
 }
 
 /* =========================
-   レシピ画像アップロード
+   ホーム画面
 ========================= */
-.recipe-form-image-block {
-    width: 120px;
-    margin-bottom: 10px;
-    text-align: center;
+.home-menu-section {
+    margin-top: 24px;
 }
 
-.recipe-form-image-preview,
-.recipe-form-no-image {
-    width: 120px;
-    height: 120px;
-    border-radius: 8px;
+.home-menu-date {
+    font-weight: bold;
+    margin-bottom: 16px;
+}
+
+.home-menu-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.home-menu-card {
     border: 1px solid #cccccc;
-    box-sizing: border-box;
-}
-
-.recipe-form-image-preview {
-    display: block;
-    object-fit: cover;
-    background-color: #ffffff;
-}
-
-.recipe-form-no-image {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: #eeeeee;
-    color: #666666;
-    font-size: 13px;
-}
-
-.hidden-file-input {
-    display: none !important;
-}
-
-.custom-file-upload {
-    width: 120px;
-    margin-top: 10px;
-}
-
-.custom-file-upload .custom-file-button {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 120px;
-    min-width: 0;
-    margin: 0;
-    padding: 8px 0;
-    background-color: #ffb74d;
-    border: 1px solid #f57c00;
     border-radius: 8px;
-    color: #ffffff;
-    font-size: 13px;
-    line-height: 1.4;
+    padding: 12px;
+    background-color: #ffffff;
     text-align: center;
-    text-decoration: none;
-    cursor: pointer;
-    box-sizing: border-box;
 }
 
-.custom-file-upload .custom-file-button:hover {
-    background-color: #f57c00;
+.home-menu-label {
+    font-size: 14px;
+    font-weight: bold;
+    margin-bottom: 6px;
+    text-align: center;
+}
+
+.home-menu-value {
+    margin: 4px 0 6px;
+    word-break: break-word;
+    text-align: center;
+    font-size: 13px;
+}
+
+.home-menu-image-box {
+    width: 40%;
+    height: 60px;
+    border: 1px solid #cccccc;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 8px; /* 中央寄せ */
+    color: #777777;
+    background-color: #f8f8f8;
+    font-size: 11px; 
+    overflow: hidden;
+}
+
+.home-menu-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.home-search-button {
+    text-align: center;
+    margin-top: 8px;
+}
+
+.home-menu-card .select-button {
+    display: inline-block;
+    margin-top: 8px;
+    min-width: 64px;
+    padding: 8px 12px;
+}
+
+.home-flags {
+    text-align: center;
+    margin: 16px 0;
+    font-size: 16px;
+}
+
+.home-flags label {
+    margin: 0 10px;
+}
+
+.home-save-area {
+    text-align: center;
+    margin-top: 12px;
+}
+
+.home-save-area .save-button {
+    width: 80%;
+    max-width: 160px;
+    padding: 12px;
+    font-size: 16px;
+}
+
+.home-menu-notice {
+    margin-bottom: 12px;
+    font-weight: bold;
+    color: #666666;
+}
+
+.home-menu-grid-disabled {
+    opacity: 0.7;
+}
+
+.home-menu-disabled-text {
+    margin-top: 8px;
+    color: #777777;
+    font-size: 14px;
+}
+
+/* =========================
+   おうち食材画面
+========================= */
+.home-food-page {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.home-food-header {
+    margin-bottom: 16px;
+}
+
+.home-food-search-form {
+    background-color: #ffffff;
+    border: 1px solid #dddddd;
+    border-radius: 10px;
+    padding: 16px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.home-food-card {
+    margin-bottom: 20px;
+}
+
+.home-food-card .section-title {
+    margin-bottom: 8px;
+}
+
+.home-food-card .section-text {
+    margin-bottom: 16px;
+    color: #666666;
+    line-height: 1.6;
+}
+
+.home-food-category-block {
+    margin-bottom: 20px;
+}
+
+.home-food-category-title {
+    margin: 0 0 10px;
+    font-size: 16px;
+    font-weight: bold;
+    padding-bottom: 6px;
+    border-bottom: 1px solid #eeeeee;
+}
+
+.empty-box {
+    padding: 20px;
+    text-align: center;
+    color: #666666;
+    border: 1px dashed #cccccc;
+    border-radius: 8px;
+    background-color: #fafafa;
 }

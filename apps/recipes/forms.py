@@ -132,7 +132,7 @@ class HomeFoodItemForm(forms.ModelForm):
 class FoodItemCreateForm(forms.ModelForm):
     class Meta:
         model = FoodItem
-        fields = ["ingredient_name", "category"]
+        fields = ["ingredient_name", "category", "item_type"]
         
 # レシピ編集画面の食材追加用        
 RecipeIngredientFormSet = inlineformset_factory(
