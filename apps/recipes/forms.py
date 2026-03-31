@@ -56,7 +56,7 @@ class RecipeIngredientForm(forms.ModelForm):
 
         original_choices = list(self.fields["ingredient_kind"].choices)
         filtered_choices = [choice for choice in original_choices if choice[0] != ""]
-        self.fields["ingredient_kind"].choices = [("", "カテゴリ選択"), *filtered_choices]
+        self.fields["ingredient_kind"].choices = [("", "ｶﾃｺﾞﾘ選択"), *filtered_choices]
 
         if not self.instance.pk:
             self.initial["ingredient_kind"] = ""

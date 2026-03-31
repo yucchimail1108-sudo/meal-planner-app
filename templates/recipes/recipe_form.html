@@ -24,18 +24,34 @@
                                 src="{{ recipe.image.url }}"
                                 alt="{{ recipe.recipe_name }}"
                                 class="recipe-form-image-preview"
+                                id="image-preview"
                             >
+                            <div class="recipe-form-no-image" id="no-image-text" style="display: none;">NO IMAGE</div>
                         {% else %}
-                            <div class="recipe-form-no-image">NO IMAGE</div>
+                            <img
+                                src=""
+                                alt="画像プレビュー"
+                                class="recipe-form-image-preview"
+                                id="image-preview"
+                                style="display: none;"
+                            >
+                            <div class="recipe-form-no-image" id="no-image-text">NO IMAGE</div>
                         {% endif %}
                     </div>
 
-                    <input
-                        type="file"
-                        name="{{ form.image.name }}"
-                        id="{{ form.image.id_for_label }}"
-                        accept="image/*"
-                    >
+                    <div class="custom-file-upload">
+                        <label for="{{ form.image.id_for_label }}" class="custom-file-button">
+                            画像を選択
+                        </label>
+
+                        <input
+                            type="file"
+                            name="{{ form.image.name }}"
+                            id="{{ form.image.id_for_label }}"
+                            accept="image/*"
+                            class="hidden-file-input"
+                        >
+                    </div>
                 </div>
             </div>
 
@@ -120,35 +136,34 @@
                 <label>作り方</label>
 
                 <div class="recipe-steps-section">
-                </div>
-            </div>
+                    {{ step_formset.management_form }}
 
-                {{ step_formset.management_form }}
+                    <div id="step-form-list">
+                        {% for form in step_formset %}
+                            <div class="step-row">
+                                {{ form.id }}
 
-                <div id="step-form-list">
-                    {% for form in step_formset %}
-                        <div class="step-row">
-                            {{ form.id }}
+                                <div class="step-number">
+                                    {{ forloop.counter }}.
+                                </div>
 
-                            <div class="step-number">
-                                {{ forloop.counter }}.
+                                <div class="step-input-area">
+                                    {{ form.instruction }}
+                                    {% if form.errors.instruction %}
+                                        <p class="form-error">{{ form.errors.instruction.0 }}</p>
+                                    {% endif %}
+                                </div>
                             </div>
+                        {% endfor %}
+                    </div>
 
-                            <div class="step-input-area">
-                                {{ form.instruction }}
-                                {% if form.errors.instruction %}
-                                    <p class="form-error">{{ form.errors.instruction.0 }}</p>
-                                {% endif %}
-                            </div>
-                        </div>
-                    {% endfor %}
+                    <div class="step-add-button-wrap">
+                        <button type="button" id="add-step-button" class="select-button">
+                            ＋作り方を追加
+                        </button>
+                    </div>
                 </div>
-                <div class="step-add-button-wrap">
-                    <button type="button" id="add-step-button" class="select-button">
-                        ＋作り方を追加
-                    </button>
-                </div>
-            </div>
+            </div> 
 
             <div class="form-group form-group-vertical">
                 <label>メモ</label>
@@ -224,6 +239,32 @@ document.addEventListener("DOMContentLoaded", function () {
 
             formList.insertAdjacentHTML("beforeend", newFormHtml);
             totalForms.value = formCount + 1;
+        });
+    }
+
+    const imageInput = document.getElementById("{{ form.image.id_for_label }}");
+    const imagePreview = document.getElementById("image-preview");
+    const noImageText = document.getElementById("no-image-text");
+
+    if (imageInput && imagePreview && noImageText) {
+        imageInput.addEventListener("change", function () {
+            const file = imageInput.files[0];
+
+            if (file) {
+                const reader = new FileReader();
+
+                reader.onload = function (e) {
+                    imagePreview.src = e.target.result;
+                    imagePreview.style.display = "block";
+                    noImageText.style.display = "none";
+                };
+
+                reader.readAsDataURL(file);
+            } else {
+                imagePreview.src = "";
+                imagePreview.style.display = "none";
+                noImageText.style.display = "flex";
+            }
         });
     }
 
