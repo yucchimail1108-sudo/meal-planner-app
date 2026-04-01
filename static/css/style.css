@@ -938,18 +938,13 @@ body {
 }
 
 .ingredient-food {
-    flex: 1.8;
-    min-width: 120px;
+    flex: 8;
+    min-width: 100px;
 }
 
 .ingredient-amount {
     flex: 1.2;
-    min-width: 90px;
-}
-
-.ingredient-kind {
-    flex: 1;
-    min-width: 90px;
+    min-width: 70px;
 }
 
 .ingredient-col select,

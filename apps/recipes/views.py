@@ -880,16 +880,12 @@ def menu_cooked_view(request):
         recipe__in=selected_recipes
     ).select_related("food_item", "recipe")
 
+    # 食材のみ対象（調味料は除外）
     target_ingredients = [
         ingredient
         for ingredient in recipe_ingredients
-        if ingredient.ingredient_kind == 0
+        if ingredient.food_item.item_type == FoodItem.ITEM_TYPE_CHOICES[0][0]
     ]
-
-    ingredient_names = sorted(list({
-        ingredient.food_item.ingredient_name
-        for ingredient in target_ingredients
-    }))
 
     ingredient_food_item_ids = [
         ingredient.food_item_id
@@ -901,17 +897,28 @@ def menu_cooked_view(request):
         food_item_id__in=ingredient_food_item_ids
     ).select_related("food_item")
 
+    deleted_food_names = sorted(list({
+        home_food_item.food_item.ingredient_name
+        for home_food_item in home_food_items
+    }))
+
     with transaction.atomic():
         menu_day.is_cooked = True
         menu_day.save()
         home_food_items.delete()
 
-    ingredient_names_text = "、".join(ingredient_names)
-
-    messages.success(
-        request,
-        f"おうち食材から減らしました：{ingredient_names_text}"
-    )
+    if deleted_food_names:
+        deleted_food_names_text = "、".join(deleted_food_names)
+        messages.success(
+            request,
+            f"おうち食材から減らしました：{deleted_food_names_text}"
+        )
+    else:
+        messages.success(
+            request,
+            "つくった！を登録しました（減らしたおうち食材はありません）"
+        )
+    return redirect("recipes:menu_calendar")
 
 # 買い物リスト一覧＆追加＆購入済み処理
 @login_required
@@ -1020,8 +1027,7 @@ def shopping_list_view(request):
 
         # レシピ食材取得
         ingredients = RecipeIngredient.objects.filter(
-            recipe_id__in=recipe_ids,
-            ingredient_kind=0
+            recipe_id__in=recipe_ids
         ).select_related("food_item")
 
         # 食材IDの重複を除外
@@ -1030,10 +1036,12 @@ def shopping_list_view(request):
         for ingredient in ingredients:
             food_item = ingredient.food_item
 
+            # 調味料は買い物リストに追加しない
+            if food_item.item_type == 2:
+                continue
+
             if food_item.id not in food_items_dict:
                 food_items_dict[food_item.id] = food_item
-
-        food_item_ids = list(food_items_dict.keys())
 
         # そのユーザーのおうち食材ID一覧を取得
         home_food_item_ids = set(
@@ -1142,10 +1150,14 @@ def home_food_list_view(request):
             if create_form.is_valid():
                 ingredient_name = create_form.cleaned_data["ingredient_name"]
                 category = create_form.cleaned_data["category"]
+                item_type = create_form.cleaned_data["item_type"]
 
                 food_item, created = FoodItem.objects.get_or_create(
                     ingredient_name=ingredient_name,
-                    defaults={"category": category}
+                    defaults={
+                        "category": category,
+                        "item_type": item_type,
+                    }
                 )
 
                 exists = HomeFoodItem.objects.filter(

@@ -18,9 +18,13 @@ class FoodItemAdmin(admin.ModelAdmin):
 # レシピ食材管理画面
 @admin.register(RecipeIngredient)
 class RecipeIngredientAdmin(admin.ModelAdmin):
-    list_display = ("id", "recipe", "food_item", "ingredient_kind", "amount_text", "created_at")
+    list_display = ("id", "recipe", "food_item", "food_item_type_display", "amount_text", "created_at")
     search_fields = ("recipe__recipe_name", "food_item__ingredient_name", "amount_text")
-    list_filter = ("ingredient_kind", "created_at")
+    list_filter = ("food_item__item_type", "created_at")
+
+    @admin.display(description="食材種別")
+    def food_item_type_display(self, obj):
+        return obj.food_item.get_item_type_display()
     
 # 作り方管理画面
 @admin.register(RecipeStep)

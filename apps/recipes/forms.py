@@ -45,8 +45,8 @@ class RecipeForm(forms.ModelForm):
 class RecipeIngredientForm(forms.ModelForm):
     class Meta:
         model = RecipeIngredient
-        fields = ["food_item", "ingredient_kind", "amount_text"]
-    
+        fields = ["food_item", "amount_text"]
+
     def __init__(self, *args, **kwargs):
         self.recipe = kwargs.pop("recipe", None)
         super().__init__(*args, **kwargs)
@@ -54,13 +54,6 @@ class RecipeIngredientForm(forms.ModelForm):
         self.fields["amount_text"].widget.attrs["placeholder"] = "分量入力"
         self.fields["food_item"].empty_label = "材料選択"
 
-        original_choices = list(self.fields["ingredient_kind"].choices)
-        filtered_choices = [choice for choice in original_choices if choice[0] != ""]
-        self.fields["ingredient_kind"].choices = [("", "ｶﾃｺﾞﾘ選択"), *filtered_choices]
-
-        if not self.instance.pk:
-            self.initial["ingredient_kind"] = ""
-        
     def clean(self):
         cleaned_data = super().clean()
         food_item = cleaned_data.get("food_item")
@@ -78,7 +71,7 @@ class RecipeIngredientForm(forms.ModelForm):
             if qs.exists():
                 raise forms.ValidationError("この食材はすでに登録されています。")
 
-        return cleaned_data    
+        return cleaned_data   
 
 # 作り方
 class RecipeStepForm(forms.ModelForm):

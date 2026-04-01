@@ -138,6 +138,14 @@ class RecipeIngredient(models.Model):
          verbose_name="分量"
      )
     
+    def save(self, *args, **kwargs):
+        if self.food_item.item_type == 1:
+            self.ingredient_kind = 0
+        elif self.food_item.item_type == 2:
+            self.ingredient_kind = 1
+
+        super().save(*args, **kwargs)
+    
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

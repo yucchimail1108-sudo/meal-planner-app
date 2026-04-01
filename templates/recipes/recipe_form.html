@@ -87,16 +87,13 @@
                     <div id="ingredient-form-list">
                         {% for ingredient_form in ingredient_formset %}
                             <div class="ingredient-row">
-                                <div class="ingredient-col ingredient-food">
-                                    {{ ingredient_form.food_item }}
-                                </div>
 
+                                <div class="ingredient-col ingredient-food">
+                                        {{ ingredient_form.food_item }}
+                                </div>
+                                
                                 <div class="ingredient-col ingredient-amount">
                                     {{ ingredient_form.amount_text }}
-                                </div>
-
-                                <div class="ingredient-col ingredient-kind">
-                                    {{ ingredient_form.ingredient_kind }}
                                 </div>
 
                                 {% for hidden_field in ingredient_form.hidden_fields %}
@@ -107,8 +104,12 @@
                     </div>
 
                     <button type="button" id="add-ingredient-button" class="select-button">
-                        ＋材料を追加
+                        ＋材料欄を追加
                     </button>
+
+                    <a href="{% url 'recipes:home_food_list' %}" class="select-button">
+                        ＋新規食材
+                    </a>
 
                     <div id="empty-ingredient-form" style="display: none;">
                         <div class="ingredient-row">
@@ -118,10 +119,6 @@
 
                             <div class="ingredient-col ingredient-amount">
                                 {{ ingredient_formset.empty_form.amount_text }}
-                            </div>
-
-                            <div class="ingredient-col ingredient-kind">
-                                {{ ingredient_formset.empty_form.ingredient_kind }}
                             </div>
 
                             {% for hidden_field in ingredient_formset.empty_form.hidden_fields %}
@@ -213,7 +210,6 @@ document.addEventListener("DOMContentLoaded", function () {
             for (const row of ingredientRows) {
                 const foodSelect = row.querySelector('select[name$="-food_item"]');
                 const amountInput = row.querySelector('input[name$="-amount_text"]');
-                const kindSelect = row.querySelector('select[name$="-ingredient_kind"]');
 
                 if (foodSelect && !foodSelect.value) {
                     alert("材料名を入力してください");
@@ -224,12 +220,6 @@ document.addEventListener("DOMContentLoaded", function () {
                 if (amountInput && !amountInput.value.trim()) {
                     alert("分量を入力してください");
                     amountInput.focus();
-                    return;
-                }
-
-                if (kindSelect && !kindSelect.value) {
-                    alert("種別を選択してください");
-                    kindSelect.focus();
                     return;
                 }
             }
