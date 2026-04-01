@@ -181,9 +181,14 @@ def recipe_create_view(request):
             ingredient_formset.save()
 
             step_formset.instance = recipe
-            step_formset.save()
+            step_objects = step_formset.save(commit=False)
 
-            return redirect("recipes:recipe_detail", recipe_id=recipe.id)            
+            for index, step in enumerate(step_objects, start=1):
+                step.recipe = recipe
+                step.step_no = index
+                step.save()
+
+            return redirect("recipes:recipe_detail", recipe_id=recipe.id)     
             
     else:
         form = RecipeForm()
@@ -225,7 +230,21 @@ def recipe_update_view(request, recipe_id):
         if form.is_valid() and ingredient_formset.is_valid() and step_formset.is_valid():
             form.save()
             ingredient_formset.save()
-            step_formset.save()
+
+            step_objects = step_formset.save(commit=False)
+
+            for obj in step_formset.deleted_objects:
+                obj.delete()
+
+            saved_steps = []
+
+            for step in step_objects:
+                step.recipe = recipe
+                saved_steps.append(step)
+
+            for index, step in enumerate(saved_steps, start=1):
+                step.step_no = index
+                step.save()
 
             return redirect(
                 'recipes:recipe_detail',

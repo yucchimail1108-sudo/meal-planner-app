@@ -141,6 +141,6 @@ RecipeStepFormSet = inlineformset_factory(
     Recipe,
     RecipeStep,
     form=RecipeStepForm,
-    extra=2, # 最初から作り方を2行出す
+    extra=1,  # 最初は1行だけ表示
     can_delete=True
 )

@@ -140,6 +140,10 @@
                             <div class="step-row">
                                 {{ form.id }}
 
+                                {% for hidden_field in form.hidden_fields %}
+                                    {{ hidden_field }}
+                                {% endfor %}
+
                                 <div class="step-number">
                                     {{ forloop.counter }}.
                                 </div>
@@ -148,6 +152,12 @@
                                     {{ form.instruction }}
                                     {% if form.errors.instruction %}
                                         <p class="form-error">{{ form.errors.instruction.0 }}</p>
+                                    {% endif %}
+
+                                    {% if form.instance.pk %}
+                                        <label>
+                                            {{ form.DELETE }} この作り方を削除
+                                        </label>
                                     {% endif %}
                                 </div>
                             </div>

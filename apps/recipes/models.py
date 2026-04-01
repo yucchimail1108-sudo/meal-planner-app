@@ -109,11 +109,6 @@ class FoodItem(models.Model):
 # レシピ材料
 class RecipeIngredient(models.Model):
     
-    INGREDIENT_KIND_CHOICES = [
-        (0, "食材"),
-        (1, "調味料"),
-    ]
-    
     recipe = models.ForeignKey(
         Recipe,
         on_delete=models.CASCADE,
@@ -125,12 +120,6 @@ class RecipeIngredient(models.Model):
          FoodItem,
          on_delete=models.CASCADE,
          verbose_name="食材"         
-     )
-     
-    ingredient_kind = models.IntegerField(
-         choices=INGREDIENT_KIND_CHOICES,
-         default=0,
-         verbose_name="材料区分"
      )
      
     amount_text = models.CharField(
