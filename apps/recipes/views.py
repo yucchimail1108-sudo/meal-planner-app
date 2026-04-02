@@ -231,23 +231,35 @@ def recipe_update_view(request, recipe_id):
             form.save()
             ingredient_formset.save()
 
-            step_objects = step_formset.save(commit=False)
+            for step_form in step_formset.deleted_forms:
+                if step_form.instance.pk:
+                    step_form.instance.delete()
 
-            for obj in step_formset.deleted_objects:
-                obj.delete()
+            step_number = 1
 
-            saved_steps = []
+            for step_form in step_formset.forms:
+                if step_form in step_formset.deleted_forms:
+                    continue
 
-            for step in step_objects:
+                if not hasattr(step_form, "cleaned_data"):
+                    continue
+
+                if not step_form.cleaned_data:
+                    continue
+
+                instruction = step_form.cleaned_data.get("instruction")
+                if not instruction:
+                    continue
+
+                step = step_form.save(commit=False)
                 step.recipe = recipe
-                saved_steps.append(step)
-
-            for index, step in enumerate(saved_steps, start=1):
-                step.step_no = index
+                step.step_no = step_number
                 step.save()
 
+                step_number += 1
+
             return redirect(
-                'recipes:recipe_detail',
+                "recipes:recipe_detail",
                 recipe_id=recipe.id
             )
     else:

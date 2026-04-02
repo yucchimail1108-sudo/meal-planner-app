@@ -1161,3 +1161,8 @@ body {
     border-radius: 8px;
     background-color: #fafafa;
 }
+
+
+.is-hidden {
+    display: none;
+}

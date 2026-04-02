@@ -137,29 +137,36 @@
 
                     <div id="step-form-list">
                         {% for form in step_formset %}
-                            <div class="step-row">
+                            <div class="step-form-block">
                                 {{ form.id }}
 
-                                {% for hidden_field in form.hidden_fields %}
-                                    {{ hidden_field }}
-                                {% endfor %}
+                                <div class="step-row">
+                                    <div class="step-number">{{ forloop.counter }}.</div>
 
-                                <div class="step-number">
-                                    {{ forloop.counter }}.
+                                    <div class="step-input-area">
+                                        {{ form.instruction }}
+                                    </div>
+
+                                    <div class="step-delete-area">
+                                        <span class="step-delete-field" style="display: none;">
+                                            {{ form.DELETE }}
+                                        </span>
+
+                                        <button
+                                            type="button"
+                                            class="delete-button step-delete-button"
+                                            data-action="delete-step"
+                                        >
+                                            削除
+                                        </button>
+                                    </div>
                                 </div>
 
-                                <div class="step-input-area">
-                                    {{ form.instruction }}
-                                    {% if form.errors.instruction %}
-                                        <p class="form-error">{{ form.errors.instruction.0 }}</p>
-                                    {% endif %}
-
-                                    {% if form.instance.pk %}
-                                        <label>
-                                            {{ form.DELETE }} この作り方を削除
-                                        </label>
-                                    {% endif %}
-                                </div>
+                                {% if form.errors %}
+                                    <div class="error-box">
+                                        {{ form.errors }}
+                                    </div>
+                                {% endif %}
                             </div>
                         {% endfor %}
                     </div>
@@ -170,7 +177,7 @@
                         </button>
                     </div>
                 </div>
-            </div> 
+            </div>
 
             <div class="form-group form-group-vertical">
                 <label>メモ</label>
@@ -193,10 +200,29 @@
 </div>
 
 <template id="empty-step-template">
-    <div class="step-row">
-        <div class="step-number">__STEP_NO__.</div>
-        <div class="step-input-area">
-            __FORM__
+    <div class="step-form-block">
+        __ID_FIELD__
+
+        <div class="step-row">
+            <div class="step-number">__STEP_NO__.</div>
+
+            <div class="step-input-area">
+                __FORM__
+            </div>
+
+            <div class="step-delete-area">
+                <span class="step-delete-field" style="display: none;">
+                    __DELETE_FIELD__
+                </span>
+
+                <button
+                    type="button"
+                    class="delete-button step-delete-button"
+                    data-action="delete-step"
+                >
+                    削除
+                </button>
+            </div>
         </div>
     </div>
 </template>
@@ -208,62 +234,49 @@ document.addEventListener("DOMContentLoaded", function () {
         textarea.style.height = textarea.scrollHeight + "px";
     }
 
-    const addButton = document.getElementById("add-ingredient-button");
-    const formList = document.getElementById("ingredient-form-list");
-    const emptyForm = document.getElementById("empty-ingredient-form").innerHTML;
-    const totalForms = document.getElementById("id_ingredients-TOTAL_FORMS");
+    function updateStepNumbers() {
+            const visibleStepBlocks = document.querySelectorAll(
+                "#step-form-list .step-form-block:not([style*='display: none'])"
+            );
 
-    if (addButton && formList && totalForms) {
-        addButton.addEventListener("click", function () {
-            const ingredientRows = formList.querySelectorAll(".ingredient-row");
-
-            for (const row of ingredientRows) {
-                const foodSelect = row.querySelector('select[name$="-food_item"]');
-                const amountInput = row.querySelector('input[name$="-amount_text"]');
-
-                if (foodSelect && !foodSelect.value) {
-                    alert("材料名を入力してください");
-                    foodSelect.focus();
-                    return;
+            visibleStepBlocks.forEach(function (stepBlock, index) {
+                const stepNumber = stepBlock.querySelector(".step-number");
+                if (stepNumber) {
+                    stepNumber.textContent = (index + 1) + ".";
                 }
+            });
+        }
 
-                if (amountInput && !amountInput.value.trim()) {
-                    alert("分量を入力してください");
-                    amountInput.focus();
-                    return;
-                }
+    function updateStepDeleteButtons() {
+        const stepBlocks = document.querySelectorAll("#step-form-list .step-form-block");
+
+        stepBlocks.forEach(function (stepBlock) {
+            const textarea = stepBlock.querySelector("textarea");
+            const deleteButton = stepBlock.querySelector(".step-delete-button");
+            const deleteCheckbox = stepBlock.querySelector('input[type="checkbox"][name$="-DELETE"]');
+            const idInput = stepBlock.querySelector('input[name$="-id"]');
+
+            if (!textarea || !deleteButton) {
+                return;
             }
 
-            const formCount = Number(totalForms.value);
-            const newFormHtml = emptyForm.replace(/__prefix__/g, formCount);
+            if (stepBlock.style.display === "none") {
+                deleteButton.style.display = "none";
+                return;
+            }
 
-            formList.insertAdjacentHTML("beforeend", newFormHtml);
-            totalForms.value = formCount + 1;
-        });
-    }
+            if (deleteCheckbox && deleteCheckbox.checked) {
+                deleteButton.style.display = "none";
+                return;
+            }
 
-    const imageInput = document.getElementById("{{ form.image.id_for_label }}");
-    const imagePreview = document.getElementById("image-preview");
-    const noImageText = document.getElementById("no-image-text");
+            const hasText = textarea.value.trim() !== "";
+            const hasSavedId = idInput && idInput.value.trim() !== "";
 
-    if (imageInput && imagePreview && noImageText) {
-        imageInput.addEventListener("change", function () {
-            const file = imageInput.files[0];
-
-            if (file) {
-                const reader = new FileReader();
-
-                reader.onload = function (e) {
-                    imagePreview.src = e.target.result;
-                    imagePreview.style.display = "block";
-                    noImageText.style.display = "none";
-                };
-
-                reader.readAsDataURL(file);
+            if (hasSavedId || hasText) {
+                deleteButton.style.display = "inline-block";
             } else {
-                imagePreview.src = "";
-                imagePreview.style.display = "none";
-                noImageText.style.display = "flex";
+                deleteButton.style.display = "none";
             }
         });
     }
@@ -273,6 +286,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         textarea.addEventListener("input", function () {
             autoResizeTextarea(textarea);
+            updateStepDeleteButtons();
         });
     });
 
@@ -283,10 +297,20 @@ document.addEventListener("DOMContentLoaded", function () {
 
     if (addStepButton && stepFormList && emptyStepTemplate && totalStepForms) {
         addStepButton.addEventListener("click", function () {
-            const stepInputs = stepFormList.querySelectorAll("textarea");
+            const visibleStepBlocks = stepFormList.querySelectorAll(".step-form-block");
 
-            for (const input of stepInputs) {
-                if (input.value.trim() === "") {
+            for (const stepBlock of visibleStepBlocks) {
+                if (stepBlock.style.display === "none") {
+                    continue;
+                }
+
+                const deleteCheckbox = stepBlock.querySelector('input[type="checkbox"][name$="-DELETE"]');
+                if (deleteCheckbox && deleteCheckbox.checked) {
+                    continue;
+                }
+
+                const input = stepBlock.querySelector("textarea");
+                if (input && input.value.trim() === "") {
                     alert("作り方を入力してください");
                     input.focus();
                     return;
@@ -299,12 +323,21 @@ document.addEventListener("DOMContentLoaded", function () {
             let formHtml = `{{ step_formset.empty_form.instruction|escapejs }}`;
             formHtml = formHtml.replace(/__prefix__/g, formCount);
 
+            let idFieldHtml = `{{ step_formset.empty_form.id|escapejs }}`;
+            idFieldHtml = idFieldHtml.replace(/__prefix__/g, formCount);
+
+            let deleteFieldHtml = `{{ step_formset.empty_form.DELETE|escapejs }}`;
+            deleteFieldHtml = deleteFieldHtml.replace(/__prefix__/g, formCount);
+
             let newStepHtml = emptyStepTemplate.innerHTML;
             newStepHtml = newStepHtml.replace("__STEP_NO__.", stepNo + ".");
             newStepHtml = newStepHtml.replace("__FORM__", formHtml);
+            newStepHtml = newStepHtml.replace("__ID_FIELD__", idFieldHtml);
+            newStepHtml = newStepHtml.replace("__DELETE_FIELD__", deleteFieldHtml);
 
             stepFormList.insertAdjacentHTML("beforeend", newStepHtml);
             totalStepForms.value = formCount + 1;
+            updateStepNumbers();
 
             const newTextarea = stepFormList.lastElementChild.querySelector("textarea");
 
@@ -313,10 +346,32 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 newTextarea.addEventListener("input", function () {
                     autoResizeTextarea(newTextarea);
+                    updateStepDeleteButtons();
                 });
             }
         });
     }
+
+    stepFormList.addEventListener("click", function (event) {
+        const deleteButton = event.target.closest('[data-action="delete-step"]');
+
+        if (!deleteButton) {
+            return;
+        }
+
+        const stepBlock = deleteButton.closest(".step-form-block");
+        const deleteCheckbox = stepBlock.querySelector('input[type="checkbox"][name$="-DELETE"]');
+
+        if (deleteCheckbox) {
+            deleteCheckbox.checked = true;
+            stepBlock.style.display = "none";
+            updateStepNumbers();
+            updateStepDeleteButtons();
+        }
+    });
+    
+    updateStepNumbers();
+    updateStepDeleteButtons();
 });
 </script>
 
