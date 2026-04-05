@@ -1050,7 +1050,7 @@ def shopping_list_view(request):
                     shopping_item.save()
                     messages.success(
                         request,
-                        f"{shopping_item.food_item.ingredient_name}を買い物リストに追加しました"
+                        f"買い物リストに追加しました：{shopping_item.food_item.ingredient_name}"
                     )
                 else:
                     messages.info(
