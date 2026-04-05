@@ -55,6 +55,9 @@
                             class="modal-search-input"
                             placeholder="食材名で検索"
                         >
+                        <p id="food-item-search-empty" class="modal-search-empty" style="display: none;">
+                            該当する食材がありません
+                        </p>
                     </div>
 
                     <div class="modal-form-row">
@@ -152,22 +155,31 @@ document.addEventListener("DOMContentLoaded", function () {
     // ===== 食材検索 =====
     const searchInput = document.getElementById("food-item-search");
     const select = document.getElementById("id_food_item");
+    const emptyMessage = document.getElementById("food-item-search-empty");
 
-    if (searchInput && select) {
+    if (searchInput && select && emptyMessage) {
         const options = Array.from(select.options);
 
         searchInput.addEventListener("input", function () {
             const keyword = this.value.toLowerCase();
+            let visibleCount = 0;
 
             options.forEach(option => {
                 const text = option.text.toLowerCase();
 
                 if (text.includes(keyword)) {
                     option.style.display = "";
+                    visibleCount += 1;
                 } else {
                     option.style.display = "none";
                 }
             });
+
+            if (visibleCount === 0) {
+                emptyMessage.style.display = "block";
+            } else {
+                emptyMessage.style.display = "none";
+            }
         });
     }
 });
