@@ -47,13 +47,20 @@
             <form method="post" class="form-block" action="{% url 'recipes:shopping_list' %}">
                 {% csrf_token %}
                 <input type="hidden" name="action" value="manual_add">
+                    <div class="modal-search-block">
+                        <label for="food-item-search">食材検索</label>
+                        <input
+                            type="text"
+                            id="food-item-search"
+                            class="modal-search-input"
+                            placeholder="食材名で検索"
+                        >
+                    </div>
 
-                <div class="form-row">
-                    <div class="form-group">
+                    <div class="modal-form-row">
                         <label for="{{ form.food_item.id_for_label }}">食材名</label>
                         {{ form.food_item }}
                     </div>
-                </div>
 
                 <div class="form-actions">
                     <button type="submit" class="save-button">追加</button>
@@ -142,6 +149,27 @@ document.addEventListener("DOMContentLoaded", function () {
             modal.classList.remove("active");
         }
     });
+    // ===== 食材検索 =====
+    const searchInput = document.getElementById("food-item-search");
+    const select = document.getElementById("id_food_item");
+
+    if (searchInput && select) {
+        const options = Array.from(select.options);
+
+        searchInput.addEventListener("input", function () {
+            const keyword = this.value.toLowerCase();
+
+            options.forEach(option => {
+                const text = option.text.toLowerCase();
+
+                if (text.includes(keyword)) {
+                    option.style.display = "";
+                } else {
+                    option.style.display = "none";
+                }
+            });
+        });
+    }
 });
 </script>
 {% endblock %}
