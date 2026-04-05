@@ -40,8 +40,9 @@
     <div id="manual-add-form" class="content-card section-block">
         <h2 class="section-title">食材を手動で追加</h2>
 
-        <form method="post" class="form-block">
+        <form method="post" class="form-block" action="{% url 'recipes:shopping_list' %}">
             {% csrf_token %}
+            <input type="hidden" name="action" value="manual_add">
 
             <div class="form-row">
                 <div class="form-group">

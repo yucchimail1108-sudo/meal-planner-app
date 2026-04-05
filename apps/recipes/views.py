@@ -974,7 +974,9 @@ def shopping_list_view(request):
         # 購入済み処理
         if action == "mark_as_purchased":
             checked_ids = request.POST.getlist("checked_items")
-            purchased_food_names = []
+
+            added_home_food_names = []
+            removed_condiment_names = []
 
             for item_id in checked_ids:
                 item = get_object_or_404(
@@ -983,138 +985,200 @@ def shopping_list_view(request):
                     user=request.user
                 )
 
-                # おうち食材に追加（重複防止）
-                exists = HomeFoodItem.objects.filter(
-                    user=request.user,
-                    food_item=item.food_item
-                ).exists()
+                food_item = item.food_item
 
-                if not exists:
-                    HomeFoodItem.objects.create(
+                # 食材だけおうち食材に追加
+                if food_item.item_type == 1:
+                    exists = HomeFoodItem.objects.filter(
                         user=request.user,
-                        food_item=item.food_item
-                    )
+                        food_item=food_item
+                    ).exists()
 
-                purchased_food_names.append(item.food_item.ingredient_name)
+                    if not exists:
+                        HomeFoodItem.objects.create(
+                            user=request.user,
+                            food_item=food_item
+                        )
 
-                # 買い物リストから削除
+                    added_home_food_names.append(food_item.ingredient_name)
+
+                # 調味料はおうち食材に追加しない
+                elif food_item.item_type == 2:
+                    removed_condiment_names.append(food_item.ingredient_name)
+
+                # どちらも買い物リストから削除
                 item.delete()
 
-            if purchased_food_names:
-                purchased_names_text = "、".join(purchased_food_names)
+            if added_home_food_names and removed_condiment_names:
+                added_names_text = "、".join(added_home_food_names)
+                removed_names_text = "、".join(removed_condiment_names)
                 messages.success(
                     request,
-                    f"購入済み食材（{purchased_names_text}）を、おうち食材に追加しました"
+                    f"購入済み食材（{added_names_text}）をおうち食材に追加し、調味料（{removed_names_text}）を買い物リストから削除しました"
+                )
+            elif added_home_food_names:
+                added_names_text = "、".join(added_home_food_names)
+                messages.success(
+                    request,
+                    f"購入済み食材（{added_names_text}）を、おうち食材に追加しました"
+                )
+            elif removed_condiment_names:
+                removed_names_text = "、".join(removed_condiment_names)
+                messages.success(
+                    request,
+                    f"購入済み調味料（{removed_names_text}）を、買い物リストから削除しました"
                 )
             else:
                 messages.info(request, "購入済みの食材を選択してください")
 
             return redirect("recipes:shopping_list")
 
-        # 追加処理
-        if form.is_valid():
-            shopping_item = form.save(commit=False)
-            shopping_item.user = request.user
+        # 手動追加処理
+        elif action == "manual_add":
+            form = ShoppingListItemForm(request.POST)
 
-            exists = ShoppingListItem.objects.filter(
-                user=request.user,
-                food_item=shopping_item.food_item
-            ).exists()
+            if form.is_valid():
+                shopping_item = form.save(commit=False)
+                shopping_item.user = request.user
 
-            if not exists:
-                shopping_item.save()
-                messages.success(
-                    request,
-                    f"{shopping_item.food_item.ingredient_name}を買い物リストに追加しました"
-                )
-            else:
-                messages.info(
-                    request,
-                    "すでに登録されている食材です"
-                )
+                exists = ShoppingListItem.objects.filter(
+                    user=request.user,
+                    food_item=shopping_item.food_item
+                ).exists()
 
+                if not exists:
+                    shopping_item.save()
+                    messages.success(
+                        request,
+                        f"{shopping_item.food_item.ingredient_name}を買い物リストに追加しました"
+                    )
+                else:
+                    messages.info(
+                        request,
+                        "すでに登録されている食材です"
+                    )
+
+                return redirect("recipes:shopping_list")
+
+            messages.error(request, "手動追加フォームの入力内容を確認してください")
+            shopping_items = ShoppingListItem.objects.filter(
+                user=request.user
+            ).select_related("food_item").order_by(
+                "food_item__category",
+                "food_item__ingredient_name"
+            )
+
+            extract_form = ShoppingListExtractForm()
+
+            return render(
+                request,
+                "recipes/shopping_list.html",
+                {
+                    "shopping_items": shopping_items,
+                    "form": form,
+                    "extract_form": extract_form,
+                }
+            )
+
+        # 不明なPOST
+        else:
+            messages.error(request, "不正な操作です")
             return redirect("recipes:shopping_list")
  
- # 抽出処理（GETで日付が来た場合）
+# 抽出処理（GETで日付が来た場合）
     start_date = request.GET.get("start_date")
     end_date = request.GET.get("end_date")
 
-    if start_date and end_date:
-        # 指定期間の献立を取得
-        menu_days = MenuDay.objects.filter(
-            user=request.user,
-            plan_date__range=[start_date, end_date]
-        )
+    if request.method == "GET" and start_date and end_date:
+        extract_form = ShoppingListExtractForm(request.GET)
 
-        # 献立枠を取得
-        menu_slots = MenuSlot.objects.filter(
-            menu_day__in=menu_days
-        ).select_related("recipe")
+        if extract_form.is_valid():
+            start_date = extract_form.cleaned_data["start_date"]
+            end_date = extract_form.cleaned_data["end_date"]
 
-        # レシピID一覧（None除外・重複除外）
-        recipe_ids = list({
-            slot.recipe.id for slot in menu_slots if slot.recipe
-        })
-
-        # レシピ食材取得
-        ingredients = RecipeIngredient.objects.filter(
-            recipe_id__in=recipe_ids
-        ).select_related("food_item")
-
-        # 食材IDの重複を除外
-        food_items_dict = {}
-
-        for ingredient in ingredients:
-            food_item = ingredient.food_item
-
-            # 調味料は買い物リストに追加しない
-            if food_item.item_type == 2:
-                continue
-
-            if food_item.id not in food_items_dict:
-                food_items_dict[food_item.id] = food_item
-
-        # そのユーザーのおうち食材ID一覧を取得
-        home_food_item_ids = set(
-            HomeFoodItem.objects.filter(
-                user=request.user
-            ).values_list("food_item_id", flat=True)
-        )
-
-        # まだ買い物リストに無く、かつおうち食材にも無い食材だけ追加
-        added_food_names = []
-
-        for food_item_id in food_item_ids:
-            # おうち食材にあるなら追加しない
-            if food_item_id in home_food_item_ids:
-                continue
-
-            exists = ShoppingListItem.objects.filter(
+            # 指定期間の献立を取得
+            menu_days = MenuDay.objects.filter(
                 user=request.user,
-                food_item_id=food_item_id
-            ).exists()
+                plan_date__range=[start_date, end_date]
+            )
 
-            if not exists:
+            # 献立に設定されているレシピIDを重複なしで取得
+            recipe_ids = MenuSlot.objects.filter(
+                menu_day__in=menu_days,
+                recipe__isnull=False
+            ).values_list("recipe_id", flat=True).distinct()
+
+            # レシピ材料を取得
+            ingredients = RecipeIngredient.objects.filter(
+                recipe_id__in=recipe_ids
+            ).select_related("food_item")
+
+            # 調味料を除いた food_item を重複なしでまとめる
+            target_food_items = {}
+
+            for ingredient in ingredients:
+                food_item = ingredient.food_item
+
+                # 調味料は除外
+                if food_item.item_type == 2:
+                    continue
+
+                target_food_items[food_item.id] = food_item
+
+            # おうち食材にある food_item_id 一覧
+            home_food_item_ids = set(
+                HomeFoodItem.objects.filter(
+                    user=request.user
+                ).values_list("food_item_id", flat=True)
+            )
+
+            # すでに買い物リストにある food_item_id 一覧
+            existing_shopping_item_ids = set(
+                ShoppingListItem.objects.filter(
+                    user=request.user
+                ).values_list("food_item_id", flat=True)
+            )
+
+            added_food_names = []
+
+            for food_item_id, food_item in target_food_items.items():
+                if food_item_id in home_food_item_ids:
+                    continue
+
+                if food_item_id in existing_shopping_item_ids:
+                    continue
+
                 ShoppingListItem.objects.create(
                     user=request.user,
-                    food_item_id=food_item_id
+                    food_item=food_item
                 )
-
-                food_item = food_items_dict[food_item_id]
                 added_food_names.append(food_item.ingredient_name)
 
-        if not added_food_names:
-            messages.info(
-                request,
-                "追加対象の食材はありませんでした（すでに買い物リストにあるか、おうち食材にあります）"
+            if not added_food_names:
+                messages.info(
+                    request,
+                    "追加対象の食材はありませんでした（すでに買い物リストにあるか、おうち食材にあります）"
+                )
+            else:
+                added_names_text = "、".join(added_food_names)
+                messages.success(
+                    request,
+                    f"買い物リストに追加しました：{added_names_text}"
+                )
+
+            # 抽出後の買い物リストを取り直す
+            shopping_items = ShoppingListItem.objects.filter(
+                user=request.user
+            ).select_related("food_item").order_by(
+                "food_item__category",
+                "food_item__ingredient_name"
             )
-        else:
-            added_names_text = "、".join(added_food_names)
-            messages.success(
-                request,
-                f"買い物リストに追加しました：{added_names_text}"
-            )
-        return redirect("recipes:shopping_list")
+
+    # GETパラメータがあれば、それをフォームに渡す
+    if request.GET.get("start_date") and request.GET.get("end_date"):
+        extract_form = ShoppingListExtractForm(request.GET)
+    else:
+        extract_form = ShoppingListExtractForm()
 
     return render(
         request,
@@ -1122,7 +1186,7 @@ def shopping_list_view(request):
         {
             "shopping_items": shopping_items,
             "form": form,
-             "extract_form": extract_form,
+            "extract_form": extract_form,
         }
     )
     
@@ -1149,29 +1213,48 @@ def shopping_list_delete_view(request, item_id):
 def home_food_list_view(request):
     # おうち食材の追加処理
     if request.method == "POST":
+        print("=== shopping_list_view POST start ===")
+        print("POST data:", request.POST)
         action = request.POST.get("action")
+        print("action:", action)
 
         # 既存食材を選んで追加する処理
         if action == "add_existing_food":
             form = HomeFoodItemForm(request.POST)
             create_form = FoodItemCreateForm()
 
-            if form.is_valid():
-                home_food = form.save(commit=False)
-                home_food.user = request.user
+        # 手動追加処理
+        elif action == "manual_add":
+            print("=== manual add form check ===")
+            is_valid = form.is_valid()
+            print("form valid:", is_valid)
 
-                exists = HomeFoodItem.objects.filter(
+            if is_valid:
+                shopping_item = form.save(commit=False)
+                shopping_item.user = request.user
+
+                exists = ShoppingListItem.objects.filter(
                     user=request.user,
-                    food_item=home_food.food_item
+                    food_item=shopping_item.food_item
                 ).exists()
 
                 if not exists:
-                    home_food.save()
-                    messages.success(request, "おうち食材に追加しました")
+                    shopping_item.save()
+                    messages.success(
+                        request,
+                        f"{shopping_item.food_item.ingredient_name}を買い物リストに追加しました"
+                    )
                 else:
-                    messages.info(request, "この食材はすでに登録されています")
+                    messages.info(
+                        request,
+                        "すでに登録されている食材です"
+                    )
 
-                return redirect("recipes:home_food_list")
+                return redirect("recipes:shopping_list")
+            else:
+                print("=== ShoppingListItemForm errors ===")
+                print(form.errors)
+                messages.error(request, "手動追加フォームの入力内容を確認してください")
 
         # 新規食材を作成して追加する処理
         elif action == "add_new_food":
