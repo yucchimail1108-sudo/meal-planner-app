@@ -163,6 +163,7 @@ document.addEventListener("DOMContentLoaded", function () {
         searchInput.addEventListener("input", function () {
             const keyword = this.value.toLowerCase();
             let visibleCount = 0;
+            let firstMatchedOption = null;
 
             options.forEach(option => {
                 const text = option.text.toLowerCase();
@@ -170,6 +171,10 @@ document.addEventListener("DOMContentLoaded", function () {
                 if (text.includes(keyword)) {
                     option.style.display = "";
                     visibleCount += 1;
+
+                    if (!firstMatchedOption && option.value) {
+                        firstMatchedOption = option;
+                    }
                 } else {
                     option.style.display = "none";
                 }
@@ -177,8 +182,13 @@ document.addEventListener("DOMContentLoaded", function () {
 
             if (visibleCount === 0) {
                 emptyMessage.style.display = "block";
+                select.value = "";
             } else {
                 emptyMessage.style.display = "none";
+
+                if (firstMatchedOption) {
+                    select.value = firstMatchedOption.value;
+                }
             }
         });
     }
