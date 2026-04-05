@@ -7,7 +7,7 @@
     <div class="page-header">
         <h1 class="page-title">≪買い物リスト≫</h1>
         <div class="page-header-actions">
-            <a href="#manual-add-form" class="save-button">＋ 追加</a>
+            <button type="button" class="save-button" id="open-manual-add-modal">＋ 追加</button>
         </div>
     </div>
 
@@ -37,24 +37,29 @@
     </div>
 
     <!-- 食材を手動追加するエリア -->
-    <div id="manual-add-form" class="content-card section-block">
-        <h2 class="section-title">食材を手動で追加</h2>
+    <div id="manual-add-modal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="page-header">
+                <h2 class="section-title">食材を手動で追加</h2>
+                <button type="button" class="delete-button" id="close-manual-add-modal">×</button>
+            </div>
 
-        <form method="post" class="form-block" action="{% url 'recipes:shopping_list' %}">
-            {% csrf_token %}
-            <input type="hidden" name="action" value="manual_add">
+            <form method="post" class="form-block" action="{% url 'recipes:shopping_list' %}">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="manual_add">
 
-            <div class="form-row">
-                <div class="form-group">
-                    <label for="{{ form.food_item.id_for_label }}">食材名</label>
-                    {{ form.food_item }}
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="{{ form.food_item.id_for_label }}">食材名</label>
+                        {{ form.food_item }}
+                    </div>
                 </div>
-            </div>
 
-            <div class="form-actions">
-                <button type="submit" class="save-button">追加</button>
-            </div>
-        </form>
+                <div class="form-actions">
+                    <button type="submit" class="save-button">追加</button>
+                </div>
+            </form>
+        </div>
     </div>
 
     <!-- 購入済み処理専用フォーム -->
@@ -111,4 +116,32 @@
     </div>
 
 </div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const openButton = document.getElementById("open-manual-add-modal");
+    const closeButton = document.getElementById("close-manual-add-modal");
+    const modal = document.getElementById("manual-add-modal");
+
+    if (!openButton || !closeButton || !modal) {
+        console.log("modal elements not found");
+        return;
+    }
+
+    openButton.addEventListener("click", function () {
+        modal.classList.add("active");
+    });
+
+    closeButton.addEventListener("click", function () {
+        modal.classList.remove("active");
+    });
+
+    modal.addEventListener("click", function (event) {
+        if (event.target === modal) {
+            modal.classList.remove("active");
+        }
+    });
+});
+</script>
 {% endblock %}
