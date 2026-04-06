@@ -1233,3 +1233,8 @@ body {
     font-size: 14px;
     background-color: #ffffff;
 }
+
+/* 作る量だけ幅を制限 */
+#id_servings {
+    width: 80px;
+}

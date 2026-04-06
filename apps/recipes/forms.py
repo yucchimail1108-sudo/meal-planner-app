@@ -31,15 +31,20 @@ class RecipeForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        
+        self.fields["recipe_name"].required = True
+        self.fields["menu_category"].required = True
+        self.fields["servings"].required = True
 
         self.fields["menu_category"].choices = [
         ("", "選択してください"),
         *self.fields["menu_category"].choices[1:]
-    ]
+        ]
 
-        self.fields["servings"].widget = forms.Select(
-            choices=[(i, i) for i in range(1, 101)]
-    )
+        self.fields["servings"] = forms.ChoiceField(
+            choices=[("", "-")] + [(i, i) for i in range(1, 101)],
+            required=True
+        )       
         
 # レシピ材料
 class RecipeIngredientForm(forms.ModelForm):
