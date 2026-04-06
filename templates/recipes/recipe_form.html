@@ -103,7 +103,8 @@
                         {% endfor %}
                     </div>
 
-                    <button type="button" id="add-ingredient-button" class="select-button">
+                    <p id="ingredient-add-error" class="form-error-message" style="display: none;"></p>
+                    <button type="button" class="select-button" id="add-ingredient-button">
                         ＋材料欄を追加
                     </button>
 
@@ -155,7 +156,6 @@
                                         <button
                                             type="button"
                                             class="delete-button step-delete-button"
-                                            data-action="delete-step"
                                         >
                                             削除
                                         </button>
@@ -172,6 +172,8 @@
                     </div>
 
                     <div class="step-add-button-wrap">
+                        <p id="step-add-error" class="form-error-message" style="display: none;"></p>
+
                         <button type="button" id="add-step-button" class="select-button">
                             ＋作り方を追加
                         </button>
@@ -218,7 +220,6 @@
                 <button
                     type="button"
                     class="delete-button step-delete-button"
-                    data-action="delete-step"
                 >
                     削除
                 </button>
@@ -229,149 +230,200 @@
 
 <script>
 document.addEventListener("DOMContentLoaded", function () {
-    function autoResizeTextarea(textarea) {
-        textarea.style.height = "auto";
-        textarea.style.height = textarea.scrollHeight + "px";
-    }
-
-    function updateStepNumbers() {
-            const visibleStepBlocks = document.querySelectorAll(
-                "#step-form-list .step-form-block:not([style*='display: none'])"
-            );
-
-            visibleStepBlocks.forEach(function (stepBlock, index) {
-                const stepNumber = stepBlock.querySelector(".step-number");
-                if (stepNumber) {
-                    stepNumber.textContent = (index + 1) + ".";
-                }
-            });
-        }
-
-    function updateStepDeleteButtons() {
-        const stepBlocks = document.querySelectorAll("#step-form-list .step-form-block");
-
-        stepBlocks.forEach(function (stepBlock) {
-            const textarea = stepBlock.querySelector("textarea");
-            const deleteButton = stepBlock.querySelector(".step-delete-button");
-            const deleteCheckbox = stepBlock.querySelector('input[type="checkbox"][name$="-DELETE"]');
-            const idInput = stepBlock.querySelector('input[name$="-id"]');
-
-            if (!textarea || !deleteButton) {
-                return;
-            }
-
-            if (stepBlock.style.display === "none") {
-                deleteButton.style.display = "none";
-                return;
-            }
-
-            if (deleteCheckbox && deleteCheckbox.checked) {
-                deleteButton.style.display = "none";
-                return;
-            }
-
-            const hasText = textarea.value.trim() !== "";
-            const hasSavedId = idInput && idInput.value.trim() !== "";
-
-            if (hasSavedId || hasText) {
-                deleteButton.style.display = "inline-block";
-            } else {
-                deleteButton.style.display = "none";
-            }
-        });
-    }
-
-    document.querySelectorAll(".step-textarea").forEach(function (textarea) {
-        autoResizeTextarea(textarea);
-
-        textarea.addEventListener("input", function () {
-            autoResizeTextarea(textarea);
-            updateStepDeleteButtons();
-        });
-    });
+    const addIngredientButton = document.getElementById("add-ingredient-button");
+    const ingredientFormList = document.getElementById("ingredient-form-list");
+    const ingredientTotalForms = document.getElementById("id_ingredients-TOTAL_FORMS");
+    const ingredientError = document.getElementById("ingredient-add-error");
 
     const addStepButton = document.getElementById("add-step-button");
     const stepFormList = document.getElementById("step-form-list");
-    const emptyStepTemplate = document.getElementById("empty-step-template");
-    const totalStepForms = document.getElementById("id_steps-TOTAL_FORMS");
+    const stepTotalForms = document.getElementById("id_steps-TOTAL_FORMS");
+    const stepError = document.getElementById("step-add-error");
 
-    if (addStepButton && stepFormList && emptyStepTemplate && totalStepForms) {
-        addStepButton.addEventListener("click", function () {
-            const visibleStepBlocks = stepFormList.querySelectorAll(".step-form-block");
+    function showError(target, message) {
+        if (!target) return;
+        target.textContent = message;
+        target.style.display = "block";
+    }
 
-            for (const stepBlock of visibleStepBlocks) {
-                if (stepBlock.style.display === "none") {
-                    continue;
-                }
+    function clearError(target) {
+        if (!target) return;
+        target.textContent = "";
+        target.style.display = "none";
+    }
 
-                const deleteCheckbox = stepBlock.querySelector('input[type="checkbox"][name$="-DELETE"]');
-                if (deleteCheckbox && deleteCheckbox.checked) {
-                    continue;
-                }
+    function isIngredientRowFilled(row) {
+        const foodSelect = row.querySelector('select[name$="-food_item"]');
+        const amountInput = row.querySelector('input[name$="-amount_text"]');
 
-                const input = stepBlock.querySelector("textarea");
-                if (input && input.value.trim() === "") {
-                    alert("作り方を入力してください");
-                    input.focus();
-                    return;
-                }
-            }
+        const foodValue = foodSelect ? foodSelect.value.trim() : "";
+        const amountValue = amountInput ? amountInput.value.trim() : "";
 
-            const formCount = Number(totalStepForms.value);
-            const stepNo = formCount + 1;
+        return foodValue !== "" && amountValue !== "";
+    }
 
-            let formHtml = `{{ step_formset.empty_form.instruction|escapejs }}`;
-            formHtml = formHtml.replace(/__prefix__/g, formCount);
+    function isStepRowFilled(row) {
+        const stepTextarea = row.querySelector('textarea[name$="-instruction"]');
+        const stepValue = stepTextarea ? stepTextarea.value.trim() : "";
+        return stepValue !== "";
+    }
 
-            let idFieldHtml = `{{ step_formset.empty_form.id|escapejs }}`;
-            idFieldHtml = idFieldHtml.replace(/__prefix__/g, formCount);
+    function getVisibleStepRows() {
+        return Array.from(stepFormList.querySelectorAll(".step-row")).filter(function (row) {
+            const deleteCheckbox = row.querySelector('input[name$="-DELETE"]');
+            const isHidden = row.style.display === "none";
+            const isDeleted = deleteCheckbox ? deleteCheckbox.checked : false;
+            return !isHidden && !isDeleted;
+        });
+    }
 
-            let deleteFieldHtml = `{{ step_formset.empty_form.DELETE|escapejs }}`;
-            deleteFieldHtml = deleteFieldHtml.replace(/__prefix__/g, formCount);
+    function updateStepNumbers() {
+        const visibleRows = getVisibleStepRows();
 
-            let newStepHtml = emptyStepTemplate.innerHTML;
-            newStepHtml = newStepHtml.replace("__STEP_NO__.", stepNo + ".");
-            newStepHtml = newStepHtml.replace("__FORM__", formHtml);
-            newStepHtml = newStepHtml.replace("__ID_FIELD__", idFieldHtml);
-            newStepHtml = newStepHtml.replace("__DELETE_FIELD__", deleteFieldHtml);
-
-            stepFormList.insertAdjacentHTML("beforeend", newStepHtml);
-            totalStepForms.value = formCount + 1;
-            updateStepNumbers();
-
-            const newTextarea = stepFormList.lastElementChild.querySelector("textarea");
-
-            if (newTextarea) {
-                autoResizeTextarea(newTextarea);
-
-                newTextarea.addEventListener("input", function () {
-                    autoResizeTextarea(newTextarea);
-                    updateStepDeleteButtons();
-                });
+        visibleRows.forEach(function (row, index) {
+            const numberLabel = row.querySelector(".step-number");
+            if (numberLabel) {
+                numberLabel.textContent = (index + 1) + "．";
             }
         });
     }
 
-    stepFormList.addEventListener("click", function (event) {
-        const deleteButton = event.target.closest('[data-action="delete-step"]');
+    function bindStepDeleteButton(row) {
+        const deleteButton = row.querySelector(".step-delete-button");
+        if (!deleteButton) return;
 
-        if (!deleteButton) {
-            return;
-        }
+        deleteButton.addEventListener("click", function (event) {
+            event.preventDefault();
 
-        const stepBlock = deleteButton.closest(".step-form-block");
-        const deleteCheckbox = stepBlock.querySelector('input[type="checkbox"][name$="-DELETE"]');
+            const deleteCheckbox = row.querySelector('input[name$="-DELETE"]');
+            const textarea = row.querySelector('textarea[name$="-instruction"]');
 
-        if (deleteCheckbox) {
-            deleteCheckbox.checked = true;
-            stepBlock.style.display = "none";
+            if (deleteCheckbox) {
+                deleteCheckbox.checked = true;
+            }
+
+            if (textarea) {
+                textarea.value = "";
+            }
+
+            row.style.display = "none";
             updateStepNumbers();
-            updateStepDeleteButtons();
-        }
-    });
-    
-    updateStepNumbers();
-    updateStepDeleteButtons();
+            clearError(stepError);
+        });
+    }
+
+    if (addIngredientButton && ingredientFormList && ingredientTotalForms) {
+        addIngredientButton.addEventListener("click", function () {
+            clearError(ingredientError);
+
+            const ingredientRows = ingredientFormList.querySelectorAll(".ingredient-row");
+            const lastRow = ingredientRows[ingredientRows.length - 1];
+
+            if (lastRow && !isIngredientRowFilled(lastRow)) {
+                showError(ingredientError, "材料名と分量を入力してください");
+                return;
+            }
+
+            const formCount = Number(ingredientTotalForms.value);
+            const newForm = lastRow.cloneNode(true);
+
+            const fields = newForm.querySelectorAll("input, select, textarea, label");
+            fields.forEach(function (field) {
+                if (field.name) {
+                    field.name = field.name.replace(/ingredients-\d+-/g, `ingredients-${formCount}-`);
+                }
+                if (field.id) {
+                    field.id = field.id.replace(/ingredients-\d+-/g, `ingredients-${formCount}-`);
+                }
+                if (field.htmlFor) {
+                    field.htmlFor = field.htmlFor.replace(/ingredients-\d+-/g, `ingredients-${formCount}-`);
+                }
+
+                if (field.tagName === "INPUT") {
+                    if (field.type === "text") {
+                        field.value = "";
+                    }
+                    if (field.type === "checkbox") {
+                        field.checked = false;
+                    }
+                    if (field.type === "hidden" && field.name.endsWith("-id")) {
+                        field.value = "";
+                    }
+                }
+
+                if (field.tagName === "SELECT") {
+                    field.selectedIndex = 0;
+                }
+
+                if (field.tagName === "TEXTAREA") {
+                    field.value = "";
+                }
+            });
+
+            ingredientFormList.appendChild(newForm);
+            ingredientTotalForms.value = formCount + 1;
+        });
+    }
+
+    if (addStepButton && stepFormList && stepTotalForms) {
+        Array.from(stepFormList.querySelectorAll(".step-row")).forEach(function (row) {
+            bindStepDeleteButton(row);
+        });
+
+        updateStepNumbers();
+
+        addStepButton.addEventListener("click", function () {
+            clearError(stepError);
+
+            const stepRows = getVisibleStepRows();
+            const lastRow = stepRows[stepRows.length - 1];
+
+            if (lastRow && !isStepRowFilled(lastRow)) {
+                showError(stepError, "作り方を入力してください");
+                return;
+            }
+
+            const formCount = Number(stepTotalForms.value);
+            const baseRow = stepFormList.querySelector(".step-row:last-of-type");
+            const newForm = baseRow.cloneNode(true);
+
+            const fields = newForm.querySelectorAll("input, select, textarea, label");
+            fields.forEach(function (field) {
+                if (field.name) {
+                    field.name = field.name.replace(/steps-\d+-/g, `steps-${formCount}-`);
+                }
+                if (field.id) {
+                    field.id = field.id.replace(/steps-\d+-/g, `steps-${formCount}-`);
+                }
+                if (field.htmlFor) {
+                    field.htmlFor = field.htmlFor.replace(/steps-\d+-/g, `steps-${formCount}-`);
+                }
+
+                if (field.tagName === "INPUT") {
+                    if (field.type === "text") {
+                        field.value = "";
+                    }
+                    if (field.type === "checkbox") {
+                        field.checked = false;
+                    }
+                    if (field.type === "hidden" && field.name.endsWith("-id")) {
+                        field.value = "";
+                    }
+                }
+
+                if (field.tagName === "TEXTAREA") {
+                    field.value = "";
+                }
+            });
+
+            newForm.style.display = "";
+            stepFormList.appendChild(newForm);
+            stepTotalForms.value = formCount + 1;
+
+            bindStepDeleteButton(newForm);
+            updateStepNumbers();
+        });
+    }
 });
 </script>
 
