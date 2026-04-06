@@ -67,7 +67,7 @@ def recipe_list_view(request):
 # 分量換算
 def convert_amount_text(amount_text, scale):
     text = amount_text.strip()
-
+    
     # 全角数字を半角数字に変換
     text = text.translate(str.maketrans("０１２３４５６７８９", "0123456789"))
 
@@ -170,7 +170,6 @@ def convert_amount_text(amount_text, scale):
     # ⑤ 数字がない場合 例: 適量
     return amount_text
 
-
 # レシピ詳細画面
 @login_required
 def recipe_detail_view(request, recipe_id):
@@ -210,48 +209,79 @@ def recipe_detail_view(request, recipe_id):
         }
     )
 
+# 材料未入力で保存できないようにする
+def has_valid_ingredient_input(ingredient_formset):
+    for form in ingredient_formset.forms:
+        if not hasattr(form, "cleaned_data"):
+            continue
+
+        if not form.cleaned_data:
+            continue
+
+        if form.cleaned_data.get("DELETE"):
+            continue
+
+        food_item = form.cleaned_data.get("food_item")
+        amount_text = form.cleaned_data.get("amount_text")
+
+        if food_item and amount_text:
+            return True
+
+    return False
+
 
 # レシピ登録画面
 @login_required
 def recipe_create_view(request):
-    if request.method == 'POST':
+    if request.method == "POST":
         form = RecipeForm(request.POST, request.FILES)
-        ingredient_formset = RecipeIngredientFormSet(request.POST, prefix="ingredients")
-        step_formset = RecipeStepFormSet(request.POST, prefix="steps")
-        
+        ingredient_formset = RecipeIngredientFormSet(
+            request.POST,
+            prefix="ingredients"
+        )
+        step_formset = RecipeStepFormSet(
+            request.POST,
+            prefix="steps"
+        )
+
         if form.is_valid() and ingredient_formset.is_valid() and step_formset.is_valid():
-            recipe = form.save(commit=False)
-            recipe.user = request.user
-            recipe.save()
+            if not has_valid_ingredient_input(ingredient_formset):
+                messages.error(request, "材料を1件以上入力してください")
+            else:
+                recipe = form.save(commit=False)
+                recipe.user = request.user
+                recipe.save()
 
-            ingredient_formset.instance = recipe
-            ingredient_formset.save()
+                ingredient_formset.instance = recipe
+                ingredient_formset.save()
 
-            step_formset.instance = recipe
-            step_objects = step_formset.save(commit=False)
+                step_formset.instance = recipe
+                step_objects = step_formset.save(commit=False)
 
-            for index, step in enumerate(step_objects, start=1):
-                step.recipe = recipe
-                step.step_no = index
-                step.save()
+                for index, step in enumerate(step_objects, start=1):
+                    step.recipe = recipe
+                    step.step_no = index
+                    step.save()
 
-            return redirect("recipes:recipe_detail", recipe_id=recipe.id)     
-            
+                return redirect(
+                    "recipes:recipe_detail",
+                    recipe_id=recipe.id
+                )
     else:
         form = RecipeForm()
         ingredient_formset = RecipeIngredientFormSet(prefix="ingredients")
         step_formset = RecipeStepFormSet(prefix="steps")
-        
+
     return render(
         request,
-        "recipes/recipe_form.html", 
+        "recipes/recipe_form.html",
         {
             "form": form,
             "ingredient_formset": ingredient_formset,
             "step_formset": step_formset,
         }
     )
-
+    
 # レシピ編集画面
 @login_required
 def recipe_update_view(request, recipe_id):
@@ -275,8 +305,43 @@ def recipe_update_view(request, recipe_id):
         )
 
         if form.is_valid() and ingredient_formset.is_valid() and step_formset.is_valid():
-            form.save()
-            ingredient_formset.save()
+            if not has_valid_ingredient_input(ingredient_formset):
+                messages.error(request, "材料を1件以上入力してください")
+            else:
+                form.save()
+                ingredient_formset.save()
+
+                for step_form in step_formset.deleted_forms:
+                    if step_form.instance.pk:
+                        step_form.instance.delete()
+
+                step_number = 1
+
+                for step_form in step_formset.forms:
+                    if step_form in step_formset.deleted_forms:
+                        continue
+
+                    if not hasattr(step_form, "cleaned_data"):
+                        continue
+
+                    if not step_form.cleaned_data:
+                        continue
+
+                    instruction = step_form.cleaned_data.get("instruction")
+                    if not instruction:
+                        continue
+
+                    step = step_form.save(commit=False)
+                    step.recipe = recipe
+                    step.step_no = step_number
+                    step.save()
+
+                    step_number += 1
+
+                return redirect(
+                    "recipes:recipe_detail",
+                    recipe_id=recipe.id
+                )
 
             for step_form in step_formset.deleted_forms:
                 if step_form.instance.pk:

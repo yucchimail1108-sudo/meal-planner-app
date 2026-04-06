@@ -1,5 +1,5 @@
 from django import forms
-from django.forms import inlineformset_factory
+from django.forms import inlineformset_factory, BaseInlineFormSet
 from .models import Recipe, RecipeIngredient, RecipeStep, MenuDay, ShoppingListItem, HomeFoodItem, FoodItem
 
 # レシピ
@@ -92,6 +92,32 @@ class RecipeIngredientForm(forms.ModelForm):
                 raise forms.ValidationError("この食材はすでに登録されています。")
 
         return cleaned_data   
+    
+# 材料用のカスタムFormSet
+class BaseRecipeIngredientFormSet(BaseInlineFormSet):
+    def clean(self):
+        super().clean()
+
+        has_ingredient = False
+
+        for form in self.forms:
+            if not hasattr(form, "cleaned_data"):
+                continue
+
+            if form.cleaned_data.get("DELETE"):
+                continue
+
+            food_item = form.cleaned_data.get("food_item")
+            amount_text = form.cleaned_data.get("amount_text")
+
+            if food_item and amount_text:
+                has_ingredient = True
+
+            if food_item and not amount_text:
+                raise forms.ValidationError("材料の分量を入力してください")
+
+            if amount_text and not food_item:
+                raise forms.ValidationError("材料名を選択してください")
 
 # 作り方
 class RecipeStepForm(forms.ModelForm):
@@ -152,6 +178,7 @@ RecipeIngredientFormSet = inlineformset_factory(
     Recipe,
     RecipeIngredient,
     form=RecipeIngredientForm,
+    formset=BaseRecipeIngredientFormSet,
     extra=1,
     can_delete=True
 )
