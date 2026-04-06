@@ -93,7 +93,7 @@
                     {% for step in recipe.steps.all %}
                         <li>{{ step.instruction }}</li>
                     {% empty %}
-                        <li>作り方はまだ登録されていません</li>
+                        <li class="detail-empty-text">作り方はまだ登録されていません</li>
                     {% endfor %}
                 </ol>
             </div>

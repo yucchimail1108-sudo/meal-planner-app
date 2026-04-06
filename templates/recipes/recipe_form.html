@@ -108,7 +108,7 @@
                         ＋材料欄を追加
                     </button>
 
-                    <a href="{% url 'recipes:home_food_list' %}" class="select-button">
+                    <a href="{% url 'recipes:food_item_create' %}?next={% url 'recipes:recipe_create' %}" class="select-button">
                         ＋新規食材
                     </a>
 

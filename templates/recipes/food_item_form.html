@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="page-container">
+    <div class="page-header">
+        <h1 class="page-title">≪新規食材登録≫</h1>
+    </div>
+
+    <div class="content-card section-block">
+        <p class="section-text">
+            レシピ登録で使う食材候補を追加します
+        </p>
+
+        <form method="post" class="form-block">
+            {% csrf_token %}
+            <input type="hidden" name="next" value="{{ next }}">
+
+            <div class="form-group">
+                <label for="{{ form.ingredient_name.id_for_label }}">食材名<span class="required-mark">＊</span></label>
+                <div class="form-field">
+                    {{ form.ingredient_name }}
+                    {% if form.ingredient_name.errors %}
+                        <div class="error-box">
+                            {{ form.ingredient_name.errors }}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.category.id_for_label }}">カテゴリ<span class="required-mark">＊</span></label>
+                <div class="form-field">
+                    {{ form.category }}
+                    {% if form.category.errors %}
+                        <div class="error-box">
+                            {{ form.category.errors }}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.item_type.id_for_label }}">種別<span class="required-mark">＊</span></label>
+                <div class="form-field">
+                    {{ form.item_type }}
+                    {% if form.item_type.errors %}
+                        <div class="error-box">
+                            {{ form.item_type.errors }}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="save-button">登録</button>
+                <a href="{{ next }}" class="back-button">戻る</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

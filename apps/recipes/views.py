@@ -1434,7 +1434,47 @@ def home_food_list_view(request):
             "search_query": search_query,
         }
     )
-    
+
+# 食材マスタ新規登録（レシピ登録画面から使う用）
+@login_required
+def food_item_create_view(request):
+    next_url = request.GET.get("next") or request.POST.get("next") or "recipes:recipe_create"
+
+    if request.method == "POST":
+        form = FoodItemCreateForm(request.POST)
+
+        if form.is_valid():
+            ingredient_name = form.cleaned_data["ingredient_name"]
+            category = form.cleaned_data["category"]
+            item_type = form.cleaned_data["item_type"]
+
+            food_item, created = FoodItem.objects.get_or_create(
+                ingredient_name=ingredient_name,
+                defaults={
+                    "category": category,
+                    "item_type": item_type,
+                }
+            )
+
+            if created:
+                messages.success(request, f"{food_item.ingredient_name}を食材候補に追加しました")
+            else:
+                messages.info(request, "この食材はすでに登録されています")
+
+            return redirect(next_url)
+
+    else:
+        form = FoodItemCreateForm()
+
+    return render(
+        request,
+        "recipes/food_item_form.html",
+        {
+            "form": form,
+            "next": next_url,
+        }
+    )
+
     
 # おうち食材1件を削除する画面処理
 @login_required
