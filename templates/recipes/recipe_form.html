@@ -87,15 +87,27 @@
                     <div id="ingredient-form-list">
                         {% for ingredient_form in ingredient_formset %}
                             <div class="ingredient-row">
-
                                 <div class="ingredient-col ingredient-food">
-                                        {{ ingredient_form.food_item }}
+                                    {{ ingredient_form.food_item }}
                                 </div>
-                                
+
                                 <div class="ingredient-col ingredient-amount">
                                     {{ ingredient_form.amount_text }}
                                 </div>
 
+                                <div class="ingredient-col ingredient-delete">
+                                    <button
+                                        type="button"
+                                        class="delete-button ingredient-delete-button"
+                                    >
+                                        削除
+                                    </button>
+                                </div>
+                                
+                                <div style="display: none;">
+                                    {{ ingredient_form.DELETE }}
+                                </div>
+                                
                                 {% for hidden_field in ingredient_form.hidden_fields %}
                                     {{ hidden_field }}
                                 {% endfor %}
@@ -122,10 +134,22 @@
                                 {{ ingredient_formset.empty_form.amount_text }}
                             </div>
 
-                            {% for hidden_field in ingredient_formset.empty_form.hidden_fields %}
-                                {{ hidden_field }}
-                            {% endfor %}
+                        <div class="ingredient-col ingredient-delete">
+                            <button
+                                type="button"
+                                class="delete-button ingredient-delete-button"
+                            >
+                                削除
+                            </button>
                         </div>
+
+                        <div style="display: none;">
+                            {{ ingredient_formset.empty_form.DELETE }}
+                        </div>
+                        
+                        {% for hidden_field in ingredient_formset.empty_form.hidden_fields %}
+                            {{ hidden_field }}
+                        {% endfor %}
                     </div>
                 </div>
             </div>
@@ -425,6 +449,25 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 });
+
+document.addEventListener("click", function (e) {
+    if (e.target.classList.contains("ingredient-delete-button")) {
+
+        const row = e.target.closest(".ingredient-row");
+
+        if (!row) return;
+
+        // DELETEチェックをON
+        const deleteInput = row.querySelector('input[name$="-DELETE"]');
+        if (deleteInput) {
+            deleteInput.checked = true;
+        }
+
+        // 行を非表示
+        row.style.display = "none";
+    }
+});
+
 </script>
 
 {% endblock %}
