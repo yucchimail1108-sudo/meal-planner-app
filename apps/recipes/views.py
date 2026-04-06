@@ -79,7 +79,54 @@ def convert_amount_text(amount_text, scale):
             return str(int(value))
         return str(value.normalize())
 
-    # ① 分数が先頭にある場合 例: 1/2個
+    def format_mixed_fraction(value):
+        integer_part = int(value)
+        fraction_part = value - Decimal(integer_part)
+
+        if fraction_part == 0:
+            return str(integer_part)
+
+        fraction_map = {
+            Decimal("0.25"): "1/4",
+            Decimal("0.3333333333"): "1/3",
+            Decimal("0.5"): "1/2",
+            Decimal("0.6666666667"): "2/3",
+            Decimal("0.75"): "3/4",
+        }
+
+        rounded_fraction = fraction_part.quantize(Decimal("0.0000000001"))
+
+        matched_fraction = None
+        for decimal_value, fraction_text in fraction_map.items():
+            if rounded_fraction == decimal_value:
+                matched_fraction = fraction_text
+                break
+
+        if matched_fraction:
+            if integer_part == 0:
+                return matched_fraction
+            return f"{integer_part}と{matched_fraction}"
+
+        if integer_part == 0:
+            return format_decimal(value)
+        return format_decimal(value)
+
+    # ① 単位 + 分数付き 例: 大さじ1/2
+    unit_fraction_match = re.match(r"^(.*?)(\d+)\s*/\s*(\d+)$", text)
+    if unit_fraction_match:
+        prefix_text = unit_fraction_match.group(1)
+        numerator = Decimal(unit_fraction_match.group(2))
+        denominator = Decimal(unit_fraction_match.group(3))
+
+        try:
+            base_value = numerator / denominator
+            converted = base_value * scale
+        except (InvalidOperation, ZeroDivisionError):
+            return amount_text
+
+        return f"{prefix_text}{format_mixed_fraction(converted)}"
+
+    # ② 分数が先頭にある場合 例: 1/2個
     fraction_match = re.match(r"^(\d+)\s*/\s*(\d+)(.*)$", text)
     if fraction_match:
         numerator = Decimal(fraction_match.group(1))
@@ -92,9 +139,9 @@ def convert_amount_text(amount_text, scale):
         except (InvalidOperation, ZeroDivisionError):
             return amount_text
 
-        return f"{format_decimal(converted)}{unit_text}"
+        return f"{format_mixed_fraction(converted)}{unit_text}"
 
-    # ② 数字が末尾にある場合 例: 大さじ1 / 小さじ2
+    # ③ 数字が末尾にある場合 例: 大さじ1 / 小さじ2
     suffix_number_match = re.match(r"^(.*?)(\d+(?:\.\d+)?)$", text)
     if suffix_number_match:
         prefix_text = suffix_number_match.group(1)
@@ -107,7 +154,7 @@ def convert_amount_text(amount_text, scale):
 
         return f"{prefix_text}{format_decimal(converted)}"
 
-    # ③ 数字が先頭にある場合 例: 500cc / 150g
+    # ④ 数字が先頭にある場合 例: 500cc / 150g
     prefix_number_match = re.match(r"^(\d+(?:\.\d+)?)(.*)$", text)
     if prefix_number_match:
         number_text = prefix_number_match.group(1)
@@ -120,7 +167,7 @@ def convert_amount_text(amount_text, scale):
 
         return f"{format_decimal(converted)}{unit_text}"
 
-    # ④ 数字がない場合 例: 適量
+    # ⑤ 数字がない場合 例: 適量
     return amount_text
 
 
