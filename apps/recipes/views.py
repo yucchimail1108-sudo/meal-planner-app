@@ -1213,48 +1213,37 @@ def shopping_list_delete_view(request, item_id):
 def home_food_list_view(request):
     # おうち食材の追加処理
     if request.method == "POST":
-        print("=== shopping_list_view POST start ===")
-        print("POST data:", request.POST)
         action = request.POST.get("action")
-        print("action:", action)
 
         # 既存食材を選んで追加する処理
         if action == "add_existing_food":
             form = HomeFoodItemForm(request.POST)
             create_form = FoodItemCreateForm()
 
-        # 手動追加処理
-        elif action == "manual_add":
-            print("=== manual add form check ===")
-            is_valid = form.is_valid()
-            print("form valid:", is_valid)
+            if form.is_valid():
+                home_food_item = form.save(commit=False)
+                home_food_item.user = request.user
 
-            if is_valid:
-                shopping_item = form.save(commit=False)
-                shopping_item.user = request.user
-
-                exists = ShoppingListItem.objects.filter(
+                exists = HomeFoodItem.objects.filter(
                     user=request.user,
-                    food_item=shopping_item.food_item
+                    food_item=home_food_item.food_item
                 ).exists()
 
                 if not exists:
-                    shopping_item.save()
+                    home_food_item.save()
                     messages.success(
                         request,
-                        f"{shopping_item.food_item.ingredient_name}を買い物リストに追加しました"
+                        f"{home_food_item.food_item.ingredient_name}をおうち食材に追加しました"
                     )
                 else:
                     messages.info(
                         request,
-                        "すでに登録されている食材です"
+                        "この食材はすでにおうち食材に登録されています。"
                     )
 
-                return redirect("recipes:shopping_list")
-            else:
-                print("=== ShoppingListItemForm errors ===")
-                print(form.errors)
-                messages.error(request, "手動追加フォームの入力内容を確認してください")
+                return redirect("recipes:home_food_list")
+
+            messages.error(request, "入力内容を確認してください")
 
         # 新規食材を作成して追加する処理
         elif action == "add_new_food":
@@ -1290,16 +1279,18 @@ def home_food_list_view(request):
 
                 return redirect("recipes:home_food_list")
 
+            messages.error(request, "新規食材の入力内容を確認してください")
+
         else:
             form = HomeFoodItemForm()
             create_form = FoodItemCreateForm()
+            messages.error(request, "不正な操作です")
 
     else:
         form = HomeFoodItemForm()
         create_form = FoodItemCreateForm()
 
     selected_category = request.GET.get("category")
-    
     search_query = request.GET.get("q", "").strip()
 
     # ログインユーザーのおうち食材を取得
@@ -1314,7 +1305,7 @@ def home_food_list_view(request):
         home_food_items = home_food_items.filter(
             food_item__ingredient_name__icontains=search_query
         )
-    
+
     if selected_category:
         home_food_items = home_food_items.filter(
             food_item__category=int(selected_category)
