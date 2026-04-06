@@ -80,7 +80,7 @@ class FoodItem(models.Model):
     
     ITEM_TYPE_CHOICES = [
         (1, "食材"),
-        (2, "調味料"),
+        (2, "調味料ほか"),
     ]
     
     ingredient_name = models.CharField(
