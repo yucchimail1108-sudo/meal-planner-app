@@ -46,6 +46,21 @@ class RecipeIngredientForm(forms.ModelForm):
     class Meta:
         model = RecipeIngredient
         fields = ["food_item", "amount_text"]
+        
+    def clean_amount_text(self):
+        amount_text = self.cleaned_data.get("amount_text", "")
+
+        if not amount_text:
+            return amount_text
+
+        translated_text = amount_text.translate(
+            str.maketrans(
+                "０１２３４５６７８９／　",
+                "0123456789/ "
+            )
+        )
+
+        return translated_text.strip()
 
     def __init__(self, *args, **kwargs):
         self.recipe = kwargs.pop("recipe", None)
