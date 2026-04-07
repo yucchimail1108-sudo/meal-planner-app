@@ -73,6 +73,7 @@ class RecipeIngredientForm(forms.ModelForm):
 
         self.fields["amount_text"].widget.attrs["placeholder"] = "分量入力"
         self.fields["food_item"].empty_label = "材料選択"
+        self.fields["food_item"].widget.attrs["class"] = "ingredient-select"
         
         self.fields["food_item"].queryset = FoodItem.objects.order_by("ingredient_name")
 

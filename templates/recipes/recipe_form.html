@@ -327,6 +327,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const ingredientFormList = document.getElementById("ingredient-form-list");
     const ingredientTotalForms = document.getElementById("id_ingredients-TOTAL_FORMS");
     const ingredientError = document.getElementById("ingredient-add-error");
+    const emptyIngredientForm = document.getElementById("empty-ingredient-form");
 
     const addStepButton = document.getElementById("add-step-button");
     const stepFormList = document.getElementById("step-form-list");
@@ -479,6 +480,16 @@ document.addEventListener("DOMContentLoaded", function () {
         return foodValue !== "" && amountValue !== "";
     }
 
+    function initIngredientSelect(select) {
+        if (!select) return;
+
+        new Choices(select, {
+            searchEnabled: true,
+            itemSelectText: "",
+            shouldSort: false,
+        });
+}
+
     function isStepRowFilled(row) {
         const stepTextarea = row.querySelector('textarea[name$="-instruction"]');
         const stepValue = stepTextarea ? stepTextarea.value.trim() : "";
@@ -546,7 +557,7 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-    if (addIngredientButton && ingredientFormList && ingredientTotalForms) {
+    if (addIngredientButton && ingredientFormList && ingredientTotalForms && emptyIngredientForm) {
         addIngredientButton.addEventListener("click", function () {
             clearError(ingredientError);
 
@@ -559,43 +570,18 @@ document.addEventListener("DOMContentLoaded", function () {
             }
 
             const formCount = Number(ingredientTotalForms.value);
-            const newForm = lastRow.cloneNode(true);
 
-            const fields = newForm.querySelectorAll("input, select, textarea, label");
-            fields.forEach(function (field) {
-                if (field.name) {
-                    field.name = field.name.replace(/ingredients-\d+-/g, `ingredients-${formCount}-`);
-                }
-                if (field.id) {
-                    field.id = field.id.replace(/ingredients-\d+-/g, `ingredients-${formCount}-`);
-                }
-                if (field.htmlFor) {
-                    field.htmlFor = field.htmlFor.replace(/ingredients-\d+-/g, `ingredients-${formCount}-`);
-                }
+            let newFormHtml = emptyIngredientForm.innerHTML;
+            newFormHtml = newFormHtml.replace(/__prefix__/g, formCount);
 
-                if (field.tagName === "INPUT") {
-                    if (field.type === "text") {
-                        field.value = "";
-                    }
-                    if (field.type === "checkbox") {
-                        field.checked = false;
-                    }
-                    if (field.type === "hidden" && field.name.endsWith("-id")) {
-                        field.value = "";
-                    }
-                }
-
-                if (field.tagName === "SELECT") {
-                    field.selectedIndex = 0;
-                }
-
-                if (field.tagName === "TEXTAREA") {
-                    field.value = "";
-                }
-            });
-
-            ingredientFormList.appendChild(newForm);
+            ingredientFormList.insertAdjacentHTML("beforeend", newFormHtml);
             ingredientTotalForms.value = formCount + 1;
+
+            const ingredientRowsAfterAdd = ingredientFormList.querySelectorAll(".ingredient-row");
+            const newRow = ingredientRowsAfterAdd[ingredientRowsAfterAdd.length - 1];
+            const select = newRow.querySelector('select[name$="-food_item"]');
+
+            initIngredientSelect(select);
         });
     }
 
@@ -603,7 +589,7 @@ document.addEventListener("DOMContentLoaded", function () {
         Array.from(stepFormList.querySelectorAll(".step-row")).forEach(function (row) {
             bindStepDeleteButton(row);
             bindStepTextareaAutoResize(row);
-        });
+    });
 
         updateStepNumbers();
 
@@ -660,6 +646,10 @@ document.addEventListener("DOMContentLoaded", function () {
             updateStepNumbers();
         });
     }
+
+    ingredientFormList.querySelectorAll('select[name$="-food_item"]').forEach(function (select) {
+        initIngredientSelect(select);
+    });
 });
 
 document.addEventListener("click", function (e) {

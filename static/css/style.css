@@ -954,6 +954,27 @@ body {
     font-size: 14px;
 }
 
+.ingredient-food .choices {
+    width: 100%;
+    margin: 0;
+}
+
+.ingredient-food .choices__inner {
+    min-height: 38px;
+    width: 100%;
+    box-sizing: border-box;
+    font-size: 14px;
+}
+
+.ingredient-food .choices__list--single {
+    padding: 4px 24px 4px 8px;
+}
+
+.ingredient-food .choices[data-type*="select-one"]::after {
+    right: 11px;
+}
+
+
 /* 作り方欄 */
 .recipe-steps-section {
     margin-top: 0;
