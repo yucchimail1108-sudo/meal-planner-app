@@ -561,15 +561,23 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
+    function getVisibleIngredientRows() {
+        return Array.from(
+            ingredientFormList.querySelectorAll(".ingredient-row")
+        ).filter(function (row) {
+            return row.style.display !== "none";
+        });
+    }
+
     if (addIngredientButton && ingredientFormList && ingredientTotalForms && emptyIngredientForm) {
         addIngredientButton.addEventListener("click", function () {
             clearError(ingredientError);
 
-            const ingredientRows = ingredientFormList.querySelectorAll(".ingredient-row");
+            const ingredientRows = getVisibleIngredientRows();
             const lastRow = ingredientRows[ingredientRows.length - 1];
 
             if (lastRow && !isIngredientRowFilled(lastRow)) {
-                showError(ingredientError, "材料名と分量を入力してください");
+                showError(ingredientError, "材料名／分量を入力してください");
                 return;
             }
 
