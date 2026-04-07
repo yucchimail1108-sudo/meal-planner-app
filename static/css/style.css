@@ -1185,6 +1185,29 @@ body {
     line-height: 1.6;
 }
 
+.home-food-select + .choices,
+.home-food-card .choices {
+    width: 100%;
+    margin: 0;
+}
+
+.home-food-card .choices__inner {
+    min-height: 38px;
+    width: 100%;
+    box-sizing: border-box;
+    font-size: 14px;
+}
+
+.home-food-card .choices__list--single {
+    padding: 4px 24px 4px 8px;
+}
+
+.home-food-card .choices[data-type*="select-one"]::after {
+    right: 11px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
 .home-food-category-block {
     margin-bottom: 20px;
 }
@@ -1195,6 +1218,15 @@ body {
     font-weight: bold;
     padding-bottom: 6px;
     border-bottom: 1px solid #eeeeee;
+}
+
+.home-food-card .form-group {
+    width: 100%;
+}
+
+.home-food-card .form-field {
+    flex: 1;
+    width: 100%;
 }
 
 .empty-box {

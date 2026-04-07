@@ -194,6 +194,21 @@ class HomeFoodItemForm(forms.ModelForm):
     class Meta:
         model = HomeFoodItem
         fields = ["food_item"]
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.fields["food_item"].empty_label = "食材選択"
+        self.fields["food_item"].queryset = FoodItem.objects.order_by("ingredient_name")
+        self.fields["food_item"].widget.attrs["class"] = "home-food-select"
+
+        self.fields["food_item"].label_from_instance = (
+            lambda obj: (
+                f"{obj.ingredient_name}｜{obj.get_category_display()}｜{obj.reading_kana}"
+                if obj.reading_kana
+                else f"{obj.ingredient_name}｜{obj.get_category_display()}"
+            )
+        )
         
         
 # 食材マスタへの新規食材追加フォーム

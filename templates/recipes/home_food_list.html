@@ -46,7 +46,9 @@
             <div class="form-row">
                 <div class="form-group">
                     <label for="{{ form.food_item.id_for_label }}">食材名</label>
-                    {{ form.food_item }}
+                     <div class="form-field">
+                        {{ form.food_item }}
+                    </div>
                 </div>
             </div>
 
@@ -131,4 +133,24 @@
     </div>
 
 </div>
-{% endblock %}                       
+{% endblock %} 
+
+{% block extra_js %}
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const selects = document.querySelectorAll(".home-food-select");
+
+    selects.forEach(function(select) {
+        new Choices(select, {
+            searchEnabled: true,
+            searchFloor: 1,
+            searchResultLimit: -1,
+            itemSelectText: "",
+            shouldSort: false,
+            noResultsText: "該当する食材がありません",
+            noChoicesText: "選択できる食材がありません",
+        });
+    });
+});
+</script>
+{% endblock %}
