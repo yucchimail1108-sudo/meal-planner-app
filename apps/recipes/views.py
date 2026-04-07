@@ -1370,8 +1370,8 @@ def home_food_list_view(request):
 
                 food_item, created = FoodItem.objects.get_or_create(
                     ingredient_name=ingredient_name,
+                    category=category,
                     defaults={
-                        "category": category,
                         "item_type": item_type,
                     }
                 )

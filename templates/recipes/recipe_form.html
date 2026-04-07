@@ -457,8 +457,6 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-
-
     function showError(target, message) {
         if (!target) return;
         target.textContent = message;
@@ -504,6 +502,23 @@ document.addEventListener("DOMContentLoaded", function () {
             if (numberLabel) {
                 numberLabel.textContent = (index + 1) + "．";
             }
+        });
+    }
+
+    function autoResizeTextarea(textarea) {
+        if (!textarea) return;
+        textarea.style.height = "auto";
+        textarea.style.height = textarea.scrollHeight + "px";
+    }
+
+    function bindStepTextareaAutoResize(row) {
+        const textarea = row.querySelector('textarea[name$="-instruction"]');
+        if (!textarea) return;
+
+        autoResizeTextarea(textarea);
+
+        textarea.addEventListener("input", function () {
+            autoResizeTextarea(textarea);
         });
     }
 
@@ -587,6 +602,7 @@ document.addEventListener("DOMContentLoaded", function () {
     if (addStepButton && stepFormList && stepTotalForms) {
         Array.from(stepFormList.querySelectorAll(".step-row")).forEach(function (row) {
             bindStepDeleteButton(row);
+            bindStepTextareaAutoResize(row);
         });
 
         updateStepNumbers();
@@ -640,6 +656,7 @@ document.addEventListener("DOMContentLoaded", function () {
             stepTotalForms.value = formCount + 1;
 
             bindStepDeleteButton(newForm);
+            bindStepTextareaAutoResize(newForm);
             updateStepNumbers();
         });
     }

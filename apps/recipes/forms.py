@@ -73,6 +73,12 @@ class RecipeIngredientForm(forms.ModelForm):
 
         self.fields["amount_text"].widget.attrs["placeholder"] = "分量入力"
         self.fields["food_item"].empty_label = "材料選択"
+        
+        self.fields["food_item"].queryset = FoodItem.objects.order_by("ingredient_name")
+
+        self.fields["food_item"].label_from_instance = (
+            lambda obj: f"{obj.ingredient_name}｜{obj.get_category_display()}"
+        )
 
     def clean(self):
         cleaned_data = super().clean()
@@ -128,7 +134,7 @@ class RecipeStepForm(forms.ModelForm):
             "instruction": forms.Textarea(
                 attrs={
                     "placeholder": "作り方を入力してください",
-                    "rows": 1,
+                    "rows": 3,
                     "class": "step-textarea",
                 }
             ),
