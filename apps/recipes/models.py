@@ -88,6 +88,12 @@ class FoodItem(models.Model):
         verbose_name="食材名",
     )
 
+    reading_kana = models.CharField(
+        max_length=50,
+        blank=True,
+        verbose_name="よみがな"
+    )
+
     category = models.IntegerField(
         choices=CATEGORY_CHOICES,
         verbose_name="カテゴリ",

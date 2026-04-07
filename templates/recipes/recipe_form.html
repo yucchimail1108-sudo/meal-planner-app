@@ -485,10 +485,14 @@ document.addEventListener("DOMContentLoaded", function () {
 
         new Choices(select, {
             searchEnabled: true,
+            searchFloor: 1,
+            searchResultLimit: -1,
             itemSelectText: "",
             shouldSort: false,
+            noResultsText: "該当する食材がありません",
+            noChoicesText: "選択できる食材がありません",
         });
-}
+    }
 
     function isStepRowFilled(row) {
         const stepTextarea = row.querySelector('textarea[name$="-instruction"]');

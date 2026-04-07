@@ -904,7 +904,11 @@ def menu_slot_update_view(request, slot_id):
     )
 
     if q:
-        recipes = recipes.filter(recipe_name__icontains=q)
+        recipes = recipes.filter(
+            Q(recipe_name__icontains=q) |
+            Q(ingredients__food_item__ingredient_name__icontains=q) |
+            Q(ingredients__food_item__reading_kana__icontains=q)
+        ).distinct()
 
     recipes = recipes.order_by("-id")
 

@@ -954,6 +954,23 @@ body {
     font-size: 14px;
 }
 
+.ingredient-col input {
+    padding: 8px 10px;
+}
+
+.ingredient-food .choices__inner {
+    padding: 3px 10px;
+}
+
+.ingredient-food .choices__list--single {
+    padding: 4px 24px 4px 0;
+}
+
+.ingredient-food .choices[data-type*="select-one"]::after {
+    top: 50%;
+    transform: translateY(-50%);
+}
+
 .ingredient-food .choices {
     width: 100%;
     margin: 0;
@@ -974,6 +991,12 @@ body {
     right: 11px;
 }
 
+.ingredient-col input,
+.ingredient-food .choices__inner {
+    min-height: 38px;
+    font-size: 14px;
+    box-sizing: border-box;
+}
 
 /* 作り方欄 */
 .recipe-steps-section {

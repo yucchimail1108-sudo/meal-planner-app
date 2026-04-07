@@ -51,6 +51,24 @@ class RecipeIngredientForm(forms.ModelForm):
     class Meta:
         model = RecipeIngredient
         fields = ["food_item", "amount_text"]
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        queryset = self.fields["food_item"].queryset
+
+        # 表示ラベルを書き換える
+        choices = []
+        for item in queryset:
+            label = item.ingredient_name
+
+            # よみがながあれば追加
+            if item.reading_kana:
+                label = f"{item.ingredient_name}"
+
+            choices.append((item.id, label))
+
+        self.fields["food_item"].choices = choices
         
     def clean_amount_text(self):
         amount_text = self.cleaned_data.get("amount_text", "")
@@ -78,7 +96,11 @@ class RecipeIngredientForm(forms.ModelForm):
         self.fields["food_item"].queryset = FoodItem.objects.order_by("ingredient_name")
 
         self.fields["food_item"].label_from_instance = (
-            lambda obj: f"{obj.ingredient_name}｜{obj.get_category_display()}"
+            lambda obj: (
+                f"{obj.ingredient_name}｜{obj.get_category_display()}｜{obj.reading_kana}"
+                if obj.reading_kana
+                else f"{obj.ingredient_name}｜{obj.get_category_display()}"
+            )
         )
 
     def clean(self):
