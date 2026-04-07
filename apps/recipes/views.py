@@ -4,6 +4,7 @@ import re
 from decimal import Decimal, InvalidOperation
 
 from django.shortcuts import render, get_object_or_404,redirect
+from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
 from .models import Recipe, RecipeIngredient, RecipeStep, Favorite, MenuDay, MenuSlot, ShoppingListItem, HomeFoodItem, FoodItem
 from .forms import RecipeForm, RecipeIngredientForm, RecipeStepForm, MenuDayForm, ShoppingListItemForm, ShoppingListExtractForm, HomeFoodItemForm, FoodItemCreateForm, RecipeIngredientFormSet, RecipeStepFormSet
@@ -1439,6 +1440,9 @@ def home_food_list_view(request):
 @login_required
 def food_item_create_view(request):
     next_url = request.GET.get("next") or request.POST.get("next") or "recipes:recipe_create"
+    
+    # モーダルのfetchから来た通信かどうか判定
+    is_ajax = request.headers.get("x-requested-with") == "XMLHttpRequest"
 
     if request.method == "POST":
         form = FoodItemCreateForm(request.POST)
@@ -1455,14 +1459,45 @@ def food_item_create_view(request):
                     "item_type": item_type,
                 }
             )
+            
+            # モーダル追加ならJSONで返す
+            if is_ajax:
+                category_label = food_item.get_category_display()
+                label = f"{food_item.ingredient_name}｜{category_label}"
 
+                return JsonResponse(
+                    {
+                        "success": True,
+                        "food_item": {
+                            "id": food_item.id,
+                            "name": food_item.ingredient_name,
+                            "label": label,
+                        },
+                    }
+                )
+
+            # 画面遷移版は今まで通り
             if created:
-                messages.success(request, f"{food_item.ingredient_name}を食材候補に追加しました")
+                messages.success(request, f"{food_item.ingredient_name}を食材マスタに追加しました")
             else:
                 messages.info(request, "この食材はすでに登録されています")
 
             return redirect(next_url)
+ 
+        # モーダル追加でエラーならJSONで返す   
+        if is_ajax:
+            error_messages = []
+            for field_errors in form.errors.values():
+                error_messages.extend(field_errors)
 
+            return JsonResponse(
+                {
+                    "success": False,
+                    "error": " / ".join(error_messages) if error_messages else "入力内容を確認してください",
+                },
+                status=400,
+            )
+                
     else:
         form = FoodItemCreateForm()
 

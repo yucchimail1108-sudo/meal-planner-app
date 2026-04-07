@@ -120,9 +120,9 @@
                         ＋材料欄を追加
                     </button>
 
-                    <a href="{% url 'recipes:food_item_create' %}?next={% url 'recipes:recipe_create' %}" class="select-button">
+                    <button type="button" class="select-button" id="open-food-item-modal">
                         ＋新規食材
-                    </a>
+                    </button>
 
                     <div id="empty-ingredient-form" style="display: none;">
                         <div class="ingredient-row">
@@ -225,6 +225,64 @@
 
 </div>
 
+<div class="modal-overlay" id="food-item-modal">
+    <div class="modal-content">
+        <div class="page-header">
+            <h2 class="page-title">新規食材登録</h2>
+        </div>
+
+        <div class="form-block">
+            <input type="hidden" id="food-item-csrf-token" value="{{ csrf_token }}">
+
+            <div class="form-group form-group-vertical">
+                <label for="modal-ingredient-name">食材名<span class="required-mark">＊</span></label>
+                <div class="form-field">
+                    <input
+                        type="text"
+                        id="modal-ingredient-name"
+                        name="ingredient_name"
+                        placeholder="食材名を入力"
+                    >
+                </div>
+            </div>
+
+            <div class="form-group form-group-vertical">
+                <label for="modal-category">カテゴリ<span class="required-mark">＊</span></label>
+                <div class="form-field">
+                    <select id="modal-category" name="category">
+                        <option value="">選択してください</option>
+                        <option value="1">青果</option>
+                        <option value="2">魚・肉</option>
+                        <option value="3">常温</option>
+                        <option value="4">冷蔵</option>
+                        <option value="5">主食</option>
+                        <option value="6">冷凍</option>
+                        <option value="7">その他</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group form-group-vertical">
+                <label for="modal-item-type">種類<span class="required-mark">＊</span></label>
+                <div class="form-field">
+                    <select id="modal-item-type" name="item_type">
+                        <option value="">選択してください</option>
+                        <option value="1">食材</option>
+                        <option value="2">調味料ほか</option>
+                    </select>
+                </div>
+            </div>
+
+            <p id="food-item-modal-error" class="form-error-message" style="display: none;"></p>
+
+            <div class="form-actions">
+                <button type="button" class="save-button" id="save-food-item-button">追加</button>
+                <button type="button" class="back-button" id="close-food-item-modal">閉じる</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <template id="empty-step-template">
     <div class="step-form-block">
         __ID_FIELD__
@@ -254,6 +312,17 @@
 
 <script>
 document.addEventListener("DOMContentLoaded", function () {
+    const openFoodItemModalButton = document.getElementById("open-food-item-modal");
+    const closeFoodItemModalButton = document.getElementById("close-food-item-modal");
+    const foodItemModal = document.getElementById("food-item-modal");
+
+    const saveFoodItemButton = document.getElementById("save-food-item-button");
+    const foodItemModalError = document.getElementById("food-item-modal-error");
+    const modalIngredientNameInput = document.getElementById("modal-ingredient-name");
+    const modalCategorySelect = document.getElementById("modal-category");
+    const modalItemTypeSelect = document.getElementById("modal-item-type");
+    const foodItemCsrfToken = document.getElementById("food-item-csrf-token");
+
     const addIngredientButton = document.getElementById("add-ingredient-button");
     const ingredientFormList = document.getElementById("ingredient-form-list");
     const ingredientTotalForms = document.getElementById("id_ingredients-TOTAL_FORMS");
@@ -263,6 +332,132 @@ document.addEventListener("DOMContentLoaded", function () {
     const stepFormList = document.getElementById("step-form-list");
     const stepTotalForms = document.getElementById("id_steps-TOTAL_FORMS");
     const stepError = document.getElementById("step-add-error");
+
+    function openFoodItemModal() {
+        if (!foodItemModal) return;
+        foodItemModal.classList.add("active");
+    }
+
+    function closeFoodItemModal() {
+        if (!foodItemModal) return;
+
+        foodItemModal.classList.remove("active");
+
+        if (modalIngredientNameInput) {
+            modalIngredientNameInput.value = "";
+        }
+        if (modalCategorySelect) {
+            modalCategorySelect.value = "";
+        }
+        if (modalItemTypeSelect) {
+            modalItemTypeSelect.value = "";
+        }
+        clearError(foodItemModalError);
+    }
+
+    if (openFoodItemModalButton) {
+        openFoodItemModalButton.addEventListener("click", function () {
+            openFoodItemModal();
+        });
+    }
+
+    if (closeFoodItemModalButton) {
+        closeFoodItemModalButton.addEventListener("click", function () {
+            closeFoodItemModal();
+        });
+    }
+
+    if (foodItemModal) {
+        foodItemModal.addEventListener("click", function (event) {
+            if (event.target === foodItemModal) {
+                closeFoodItemModal();
+            }
+        });
+    }
+
+    if (saveFoodItemButton) {
+        saveFoodItemButton.addEventListener("click", function () {
+            clearError(foodItemModalError);
+
+            const ingredientName = modalIngredientNameInput ? modalIngredientNameInput.value.trim() : "";
+            const category = modalCategorySelect ? modalCategorySelect.value : "";
+            const itemType = modalItemTypeSelect ? modalItemTypeSelect.value : "";
+
+            if (!ingredientName) {
+                showError(foodItemModalError, "食材名を入力してください");
+                return;
+            }
+
+            if (!category) {
+                showError(foodItemModalError, "カテゴリを選択してください");
+                return;
+            }
+
+            if (!itemType) {
+                showError(foodItemModalError, "種類を選択してください");
+                return;
+            }
+
+            fetch("{% url 'recipes:food_item_create' %}", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8",
+                    "X-CSRFToken": foodItemCsrfToken.value,
+                    "X-Requested-With": "XMLHttpRequest",
+                },
+                body: new URLSearchParams({
+                    ingredient_name: ingredientName,
+                    category: category,
+                    item_type: itemType,
+                }),
+            })
+            .then(function (response) {
+                return response.json();
+            })
+            .then(function (data) {
+                if (!data.success) {
+                    const select = document.querySelector(".ingredient-food:last-of-type");
+
+                    const option = document.createElement("option");
+                    option.value = data.food_item.id;
+                    option.textContent = data.food_item.label;
+                    option.selected = true;
+
+                    select.appendChild(option);
+                    showError(foodItemModalError, data.error || "食材の追加に失敗しました");
+                    return;
+                }
+
+                const ingredientRows = ingredientFormList.querySelectorAll(".ingredient-row");
+                const targetRow = ingredientRows[ingredientRows.length - 1];
+                const targetSelect = targetRow ? targetRow.querySelector('select[name$="-food_item"]') : null;
+
+                if (!targetSelect) {
+                    showError(foodItemModalError, "材料欄が見つかりません");
+                    return;
+                }
+
+                const exists = Array.from(targetSelect.options).some(function (option) {
+                    return option.value === String(data.food_item.id);
+                });
+
+                if (!exists) {
+                    const newOption = document.createElement("option");
+                    newOption.value = data.food_item.id;
+                    newOption.textContent = data.food_item.label;
+                    targetSelect.appendChild(newOption);
+                }
+
+                targetSelect.value = String(data.food_item.id);
+                closeFoodItemModal();
+            })
+            .catch(function () {
+                showError(foodItemModalError, "通信に失敗しました");
+            });
+        });
+    }
+
+
 
     function showError(target, message) {
         if (!target) return;
