@@ -334,6 +334,10 @@ document.addEventListener("DOMContentLoaded", function () {
     const stepTotalForms = document.getElementById("id_steps-TOTAL_FORMS");
     const stepError = document.getElementById("step-add-error");
 
+    const imageInput = document.getElementById("id_image");
+    const imagePreview = document.getElementById("image-preview");
+    const noImageText = document.getElementById("no-image-text");
+
     function openFoodItemModal() {
         if (!foodItemModal) return;
         foodItemModal.classList.add("active");
@@ -577,7 +581,7 @@ document.addEventListener("DOMContentLoaded", function () {
             const lastRow = ingredientRows[ingredientRows.length - 1];
 
             if (lastRow && !isIngredientRowFilled(lastRow)) {
-                showError(ingredientError, "材料名／分量を入力してください");
+                showError(ingredientError, "材料名と分量の両方を入力してください");
                 return;
             }
 
@@ -662,6 +666,29 @@ document.addEventListener("DOMContentLoaded", function () {
     ingredientFormList.querySelectorAll('select[name$="-food_item"]').forEach(function (select) {
         initIngredientSelect(select);
     });
+
+    if (imageInput && imagePreview && noImageText) {
+        imageInput.addEventListener("change", function () {
+            const file = this.files[0];
+
+            if (!file) {
+                imagePreview.src = "";
+                imagePreview.style.display = "none";
+                noImageText.style.display = "flex";
+                return;
+            }
+
+            const reader = new FileReader();
+
+            reader.onload = function (e) {
+                imagePreview.src = e.target.result;
+                imagePreview.style.display = "block";
+                noImageText.style.display = "none";
+            };
+
+            reader.readAsDataURL(file);
+        });
+    }
 });
 
 document.addEventListener("click", function (e) {
