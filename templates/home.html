@@ -250,32 +250,153 @@
 {% block extra_js %}
 <script>
 document.addEventListener("DOMContentLoaded", function () {
-
     const modal = document.getElementById("slot-search-modal");
     const openButtons = document.querySelectorAll(".open-slot-search-modal");
     const closeButton = document.getElementById("close-slot-search-modal");
+    const modalBody = modal.querySelector(".slot-search-modal-body");
+    const modalTitle = document.getElementById("slot-search-modal-title");
 
-    // 開く
-    openButtons.forEach(button => {
-        button.addEventListener("click", function (e) {
-            e.preventDefault(); // ← 画面遷移止める
+    let currentModalUrl = "";
 
+    function bindRecipeSelectEvents() {
+        const items = modalBody.querySelectorAll(".recipe-select-item");
+        const hiddenInput = modalBody.querySelector("#selected-recipe-id");
+
+        if (!items.length || !hiddenInput) {
+            return;
+        }
+
+        items.forEach(function(item) {
+            item.addEventListener("click", function() {
+                items.forEach(function(i) {
+                    i.classList.remove("selected");
+                });
+
+                item.classList.add("selected");
+                hiddenInput.value = item.dataset.recipeId;
+            });
+        });
+    }
+
+    function bindModalEvents() {
+        const getForm = modalBody.querySelector('form[method="get"]');
+        const postForm = modalBody.querySelector('form[method="post"]');
+        const backLinks = modalBody.querySelectorAll("a");
+
+        backLinks.forEach(function(link) {
+            if (link.textContent.trim() === "戻る") {
+                link.style.display = "none";
+            }
+        });
+
+        if (getForm) {
+            getForm.addEventListener("submit", function(e) {
+                e.preventDefault();
+
+                const formData = new FormData(getForm);
+                const queryString = new URLSearchParams(formData).toString();
+                const baseUrl = currentModalUrl.split("?")[0];
+                const fetchUrl = queryString ? baseUrl + "?" + queryString : baseUrl;
+
+                loadModalContent(fetchUrl);
+            });
+        }
+
+        if (postForm) {
+            postForm.addEventListener("submit", function(e) {
+                e.preventDefault();
+
+                const formData = new FormData(postForm);
+                const postUrl = currentModalUrl.split("?")[0];
+
+                fetch(postUrl, {
+                    method: "POST",
+                    body: formData,
+                    headers: {
+                        "X-Requested-With": "XMLHttpRequest"
+                    }
+                })
+                .then(function(response) {
+                    if (response.redirected) {
+                        modal.style.display = "none";
+                        window.location.href = response.url;
+                        return null;
+                    }
+                    return response.text();
+                })
+                .then(function(html) {
+                    if (!html) {
+                        return;
+                    }
+
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(html, "text/html");
+                    const content = doc.querySelector("main");
+
+                    if (content) {
+                        modalBody.innerHTML = content.innerHTML;
+                        bindModalEvents();
+                    } else {
+                        modalBody.innerHTML = "<p>保存に失敗しました</p>";
+                    }
+                })
+                .catch(function() {
+                    modalBody.innerHTML = "<p>保存時にエラーが発生しました</p>";
+                });
+            });
+        }
+
+        bindRecipeSelectEvents();
+    }
+
+    function loadModalContent(url) {
+        currentModalUrl = url;
+        modalBody.innerHTML = "<p>読み込み中...</p>";
+
+        fetch(url)
+            .then(function(response) {
+                return response.text();
+            })
+            .then(function(html) {
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, "text/html");
+                const content = doc.querySelector("main");
+
+                if (content) {
+                    modalBody.innerHTML = content.innerHTML;
+                    bindModalEvents();
+                } else {
+                    modalBody.innerHTML = "<p>表示に失敗しました</p>";
+                }
+            })
+            .catch(function() {
+                modalBody.innerHTML = "<p>エラーが発生しました</p>";
+            });
+    }
+
+    openButtons.forEach(function(button) {
+        button.addEventListener("click", function(e) {
+            e.preventDefault();
+
+            const url = this.getAttribute("href");
+            const mealLabel = this.dataset.mealLabel;
+
+            modalTitle.textContent = mealLabel + "のレシピを選択";
             modal.style.display = "flex";
+
+            loadModalContent(url);
         });
     });
 
-    // 閉じる
-    closeButton.addEventListener("click", function () {
+    closeButton.addEventListener("click", function() {
         modal.style.display = "none";
     });
 
-    // 背景クリックで閉じる
-    modal.addEventListener("click", function (e) {
+    modal.addEventListener("click", function(e) {
         if (e.target === modal) {
             modal.style.display = "none";
         }
     });
-
 });
 </script>
 {% endblock %}
