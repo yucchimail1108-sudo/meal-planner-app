@@ -10,7 +10,13 @@
 
     <div class="form-actions recipe-detail-actions">
         <a href="{% url 'recipes:recipe_update' recipe.id %}" class="edit-button">編集</a>
-        <a href="{% url 'recipes:recipe_delete' recipe.id %}" class="delete-button">削除</a>
+        <button
+            type="button"
+            class="delete-button"
+            id="open-recipe-delete-modal"
+        >
+            削除
+        </button>
     </div>
 
     <div class="content-card">
@@ -115,4 +121,47 @@
     </div>
 </div>
 
+<!-- レシピ削除確認モーダル -->
+<div id="recipe-delete-modal" class="modal-overlay">
+    <div class="modal-content recipe-delete-modal-content">
+        <p class="modal-message">
+            「{{ recipe.recipe_name }}」を削除しますか？
+        </p>
+
+        <form method="post" action="{% url 'recipes:recipe_delete' recipe.id %}">
+            {% csrf_token %}
+            <div class="form-actions modal-actions">
+                <button type="submit" class="delete-button">はい</button>
+                <button type="button" id="close-recipe-delete-modal" class="back-button">いいえ</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const openButton = document.getElementById("open-recipe-delete-modal");
+    const closeButton = document.getElementById("close-recipe-delete-modal");
+    const modal = document.getElementById("recipe-delete-modal");
+
+    if (openButton && closeButton && modal) {
+        openButton.addEventListener("click", function () {
+            modal.classList.add("active");
+        });
+
+        closeButton.addEventListener("click", function () {
+            modal.classList.remove("active");
+        });
+
+        modal.addEventListener("click", function (event) {
+            if (event.target === modal) {
+                modal.classList.remove("active");
+            }
+        });
+    }
+});
+</script>
 {% endblock %}

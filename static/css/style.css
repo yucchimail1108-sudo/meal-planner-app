@@ -637,6 +637,23 @@ body {
     margin-bottom: 8px;
 }
 
+.recipe-delete-modal-content {
+    max-width: 360px;
+    text-align: center;
+}
+
+/* レシピ削除モーダル */
+.modal-message {
+    margin: 0 0 20px;
+    line-height: 1.6;
+    word-break: break-word;
+}
+
+.modal-actions {
+    justify-content: center;
+}
+
+
 /* ナビの文字を小さくする */
 .nav-link,
 .logout-button {
