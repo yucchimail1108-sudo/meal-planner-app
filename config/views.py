@@ -114,6 +114,24 @@ def home_view(request):
             temp_recipe_map[slot_name] = None
 
 
+    has_saved_recipe = any(
+        slot and slot.recipe
+        for slot in slot_dict.values()
+    )
+
+    has_temp_recipe = any(
+        recipe is not None
+        for recipe in temp_recipe_map.values()
+    )
+
+    has_today_menu = (
+        has_saved_recipe
+        or has_temp_recipe
+        or (menu_day and menu_day.eat_out)
+        or (menu_day and menu_day.deli)
+    )
+
+    
     context = {
         "today": today,
         "menu_day": menu_day,
@@ -125,6 +143,7 @@ def home_view(request):
         "temp_main_recipe": temp_recipe_map.get("main"),
         "temp_side_recipe": temp_recipe_map.get("side"),
         "temp_soup_recipe": temp_recipe_map.get("soup"),
+        "has_today_menu": has_today_menu,
     }
 
     return render(request, "home.html", context)

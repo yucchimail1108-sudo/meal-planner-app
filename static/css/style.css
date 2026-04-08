@@ -1173,6 +1173,46 @@ body {
     font-size: 14px;
 }
 
+.home-empty-message {
+    margin: 0 0 16px;
+    padding: 12px 16px;
+    background-color: #fff8e1;
+    border: 1px solid #f0d98c;
+    border-radius: 8px;
+    color: #7a5c00;
+    text-align: center;
+    font-weight: bold;
+}
+
+.slot-search-modal-content {
+    max-width: 640px;
+}
+
+.slot-search-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+}
+
+.slot-search-modal-title {
+    margin: 0;
+    font-size: 18px;
+}
+
+.slot-search-modal-body {
+    min-height: 120px;
+}
+
+.slot-search-placeholder {
+    margin: 0;
+    color: #666666;
+    text-align: center;
+    padding: 32px 0;
+}
+
 /* =========================
    おうち食材画面
 ========================= */

@@ -6,6 +6,10 @@
 <h2>こんにちは！{{ user.first_name }}さん</h2>
 <h2>献立をつくりましょう！</h2>
 
+{% if not has_today_menu %}
+    <p class="home-empty-message">今日はまだ献立がありません</p>
+{% endif %}
+
 <section class="home-menu-section">
     <h3 class="menu-date-title">{{ today|date:"Y年n月j日" }} の献立</h3>
 
@@ -45,7 +49,12 @@
                                 </div>
                             {% else %}
                                 <div class="home-search-button">
-                                    <a href="{% url 'recipes:menu_slot_update' slot_id=staple_slot.id %}" class="select-button">
+                                    <a
+                                        href="{% url 'recipes:menu_slot_update' slot_id=staple_slot.id %}"
+                                        class="select-button open-slot-search-modal"
+                                        data-slot-id="{{ staple_slot.id }}"
+                                        data-meal-label="主食"
+                                    >
                                         探す
                                     </a>
                                 </div>
@@ -79,7 +88,12 @@
                                 </div>
                             {% else %}
                                 <div class="home-search-button">
-                                    <a href="{% url 'recipes:menu_slot_update' slot_id=main_slot.id %}" class="select-button">
+                                    <a
+                                        href="{% url 'recipes:menu_slot_update' slot_id=main_slot.id %}"
+                                        class="select-button open-slot-search-modal"
+                                        data-slot-id="{{ main_slot.id }}"
+                                        data-meal-label="主菜"
+                                    >
                                         探す
                                     </a>
                                 </div>
@@ -112,10 +126,15 @@
                                 </div>  
                             {% else %}
                                 <div class="home-search-button">
-                                    <a href="{% url 'recipes:menu_slot_update' slot_id=side_slot.id %}" class="select-button">
+                                    <a
+                                        href="{% url 'recipes:menu_slot_update' slot_id=side_slot.id %}"
+                                        class="select-button open-slot-search-modal"
+                                        data-slot-id="{{ side_slot.id }}"
+                                        data-meal-label="副菜"
+                                    >
                                         探す
                                     </a>
-                                </div>
+                                                                    </div>
                             {% endif %}
                         {% else %}
                             <p class="home-menu-disabled-text">選択不可</p>
@@ -146,7 +165,12 @@
                                 </div>
                             {% else %}
                                 <div class="home-search-button">
-                                    <a href="{% url 'recipes:menu_slot_update' slot_id=soup_slot.id %}" class="select-button">
+                                    <a
+                                        href="{% url 'recipes:menu_slot_update' slot_id=soup_slot.id %}"
+                                        class="select-button open-slot-search-modal"
+                                        data-slot-id="{{ soup_slot.id }}"
+                                        data-meal-label="汁物"
+                                    >
                                         探す
                                     </a>
                                 </div>
@@ -185,4 +209,21 @@
     {% endif %}
 
 </section>
+
+<!-- 献立レシピ検索モーダル -->
+<div id="slot-search-modal" class="modal-overlay">
+    <div class="modal-content slot-search-modal-content">
+        <div class="slot-search-modal-header">
+            <h3 id="slot-search-modal-title" class="slot-search-modal-title">レシピを選択</h3>
+            <button type="button" id="close-slot-search-modal" class="back-button">閉じる</button>
+        </div>
+
+        <div class="slot-search-modal-body">
+            <p class="slot-search-placeholder">
+                ここにレシピ検索エリアを表示します
+            </p>
+        </div>
+    </div>
+</div>
+
 {% endblock %}
