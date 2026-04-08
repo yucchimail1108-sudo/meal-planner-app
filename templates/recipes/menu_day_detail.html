@@ -2,10 +2,29 @@
 
 {% block title %}献立詳細 | うちごはんプランナー{% endblock %}
 
-{% block content %}
-<h2 class="menu-detail-page-title">≪献立詳細≫</h2>
+{% block content %}<div class="page-container">
 
-<div class="menu-detail-date-nav">
+    <div class="page-header">
+        <h2 class="page-title">≪献立詳細≫</h2>
+
+        <div class="page-header-actions">
+            <a href="{% url 'home' %}?date={{ target_date|date:'Y-m-d' }}" class="edit-button">
+                編集
+            </a>
+
+            {% if can_delete_menu %}
+            <button
+                type="button"
+                class="delete-button"
+                id="open-menu-delete-modal"
+            >
+                削除
+            </button>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="menu-detail-date-nav">
     <a href="{% url 'recipes:menu_detail' plan_date=prev_date|date:'Y-m-d' %}" class="menu-detail-arrow">◀</a>
     <p class="menu-detail-date-title">{{ target_date }}の献立</p>
     <a href="{% url 'recipes:menu_detail' plan_date=next_date|date:'Y-m-d' %}" class="menu-detail-arrow">▶</a>
@@ -13,14 +32,19 @@
 
 
 
-{% if is_empty_menu_day %}
-<p class="menu-detail-empty-message">この日はまだ献立が登録されていません</p>
-{% else %}
-<div class="menu-detail-status">
-    <p>外食：{% if menu_day.eat_out %}あり{% else %}なし{% endif %}</p>
-    <p>惣菜：{% if menu_day.deli %}あり{% else %}なし{% endif %}</p>
+<div class="content-card">
+
+    {% if is_empty_menu_day %}
+        <p class="menu-detail-empty-message">
+            この日はまだ献立が登録されていません
+        </p>
+    {% else %}
+        <div class="menu-detail-status">
+            <p>外食：{% if menu_day.eat_out %}あり{% else %}なし{% endif %}</p>
+            <p>惣菜：{% if menu_day.deli %}あり{% else %}なし{% endif %}</p>
+        </div>
+    {% endif %}
 </div>
-{% endif %}
 
 <div class="menu-detail-grid">
     <div class="menu-detail-card">
@@ -94,23 +118,6 @@
         <p class="menu-detail-empty-text">未登録</p>
         {% endif %}
     </div>
-</div>
-
-<div class="menu-detail-bottom-actions">
-
-    <a href="{% url 'home' %}?date={{ target_date|date:'Y-m-d' }}" class="edit-button">
-        この日の献立を編集
-    </a>
-
-    {% if can_delete_menu %}
-    <button
-        type="button"
-        class="delete-button"
-        id="open-menu-delete-modal"
-    >
-        削除
-    </button>
-    {% endif %} 
 </div>
 
 <!-- 献立削除確認モーダル -->
