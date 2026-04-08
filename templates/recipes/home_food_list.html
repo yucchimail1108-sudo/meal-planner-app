@@ -9,12 +9,14 @@
     </div>
 
     <!-- おうち食材を追加する際の検索 -->
+    <h2 class="section-title">おうち食材を探す（一覧絞り込み）</h2>
+
     <form method="get" class="search-form home-food-search-form">
         <input
             type="text"
             name="q"
             value="{{ search_query }}"
-            placeholder="食材名で検索"
+            placeholder="一覧を絞り込む（例：にんじん）"
         >
 
         <select name="category">
@@ -28,69 +30,80 @@
             <option value="7" {% if selected_category == "7" %}selected{% endif %}>その他</option>
         </select>
 
-        <button type="submit" class="save-button">検索</button>
+        <button type="submit" class="save-button">絞り込む</button>
         <a href="{% url 'recipes:home_food_list' %}" class="back-button">リセット</a>
     </form>
 
-    <!-- おうち食材を追加するフォーム -->
+        <!-- おうち食材を追加するフォーム -->
     <div class="content-card section-block home-food-card">
         <h2 class="section-title">おうち食材に追加</h2>
         <p class="section-text">
-            食材を選んで、おうち食材一覧に追加します
+            まずは登録済みの食材から追加します
         </p>
 
-        <form method="post" class="form-block">
-            {% csrf_token %}
-            <input type="hidden" name="action" value="add_existing_food">
+        <div class="form-sub-block">
+            <h3 class="category-title">既存の食材から追加</h3>
 
-            <div class="form-row">
-                <div class="form-group">
-                    <label for="{{ form.food_item.id_for_label }}">食材名</label>
-                     <div class="form-field">
-                        {{ form.food_item }}
+            <form method="post" class="form-block">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="add_existing_food">
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="{{ form.food_item.id_for_label }}">食材名</label>
+                        <div class="form-field">
+                            {{ form.food_item }}
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <div class="form-actions">
-                <button type="submit" class="save-button">追加</button>
-                <a href="{% url 'recipes:shopping_list' %}" class="back-button">買い物リストへ戻る</a>
-            </div>
-        </form>
-    </div>
+                <div class="form-actions">
+                    <button type="submit" class="save-button">追加</button>
+                    <a href="{% url 'recipes:shopping_list' %}" class="back-button">買い物リストへ戻る</a>
+                </div>
+            </form>
+        </div>
 
-    <!-- 新しい食材を作成して追加するフォーム -->
-    <div class="content-card section-block home-food-card">
-        <h2 class="section-title">新しい食材を追加</h2>
-        <p class="section-text">
-            食材マスタにない食材は、こちらから追加できます
-        </p>
+        <div class="form-sub-block">
+            <h3 class="category-title">食材が見つからない場合</h3>
+            <p class="section-text">
+                食材マスタにない食材は、こちらから追加できます
+            </p>
 
-        <form method="post" class="form-block">
-            {% csrf_token %}
-            <input type="hidden" name="action" value="add_new_food">
+            <form method="post" class="form-block">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="add_new_food">
 
-            <div class="form-row">
-                <div class="form-group">
-                    <label for="{{ create_form.ingredient_name.id_for_label }}">食材名</label>
-                    {{ create_form.ingredient_name }}
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="{{ create_form.ingredient_name.id_for_label }}">食材名</label>
+                        <div class="form-field">
+                            {{ create_form.ingredient_name }}
+                        </div>
+                    </div>
                 </div>
 
-                <div class="form-group">
-                    <label for="{{ create_form.category.id_for_label }}">カテゴリ</label>
-                    {{ create_form.category }}
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="{{ create_form.category.id_for_label }}">カテゴリ</label>
+                        <div class="form-field">
+                            {{ create_form.category }}
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="{{ create_form.item_type.id_for_label }}">種別</label>
+                        <div class="form-field">
+                            {{ create_form.item_type }}
+                        </div>
+                    </div>
                 </div>
 
-                <div class="form-group">
-                    <label for="{{ create_form.item_type.id_for_label }}">種別</label>
-                    {{ create_form.item_type }}
+                <div class="form-actions">
+                    <button type="submit" class="save-button">新規追加</button>
                 </div>
-            </div>
-
-            <div class="form-actions">
-                <button type="submit" class="save-button">新規追加</button>
-            </div>
-        </form>
+            </form>
+        </div>
     </div>
 
     <!-- 一覧 -->
