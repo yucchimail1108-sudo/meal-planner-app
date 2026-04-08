@@ -1229,6 +1229,47 @@ body {
     width: 100%;
 }
 
+.home-food-filter-form {
+    background-color: #ffffff;
+    border: 1px solid #dddddd;
+    border-radius: 10px;
+    padding: 16px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.home-food-table-wrap {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.home-food-table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #ffffff;
+}
+
+.home-food-table th,
+.home-food-table td {
+    border: 1px solid #dddddd;
+    padding: 10px 12px;
+    text-align: left;
+    vertical-align: middle;
+}
+
+.home-food-table th {
+    background-color: #f5f5f5;
+    font-weight: bold;
+}
+
+.home-food-table td form {
+    margin: 0;
+}
+
+.home-food-table td:last-child {
+    width: 90px;
+}
+
 .empty-box {
     padding: 20px;
     text-align: center;
