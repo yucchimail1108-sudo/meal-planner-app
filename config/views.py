@@ -1,4 +1,4 @@
-from datetime import date
+from datetime import date, datetime
 
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
@@ -15,20 +15,25 @@ def top_view(request):
 # ホーム画面
 @login_required
 def home_view(request):
-    today = date.today()
+    selected_date_str = request.GET.get("date")
+
+    if selected_date_str:
+        selected_date = datetime.strptime(selected_date_str, "%Y-%m-%d").date()
+    else:
+        selected_date = date.today()
 
     if request.method == "POST":
         clear_menu_mode = request.POST.get("clear_menu_mode")
 
         if clear_menu_mode:
-            menu_day = get_or_create_menu_day_with_slots(request.user, today)
+            menu_day = get_or_create_menu_day_with_slots(request.user, selected_date)
             menu_day.eat_out = False
             menu_day.deli = False
             menu_day.save()
 
             messages.success(request, "外食・惣菜の設定を解除しました")
             return redirect("home")
-        
+
         delete_slot_id = request.POST.get("delete_slot_id")
 
         if delete_slot_id:
@@ -56,7 +61,7 @@ def home_view(request):
             messages.error(request, "外食と惣菜は同時に選択できません")
             return redirect("home")
 
-        menu_day = get_or_create_menu_day_with_slots(request.user, today)
+        menu_day = get_or_create_menu_day_with_slots(request.user, selected_date)
 
         slots = list(menu_day.slots.all())
 
@@ -93,7 +98,7 @@ def home_view(request):
         messages.success(request, "献立を保存しました")
         return redirect("home")
 
-    menu_day = get_or_create_menu_day_with_slots(request.user, today)
+    menu_day = get_or_create_menu_day_with_slots(request.user, selected_date)
 
     slot_dict = {}
 
@@ -124,7 +129,6 @@ def home_view(request):
         else:
             temp_recipe_map[slot_name] = None
 
-
     has_saved_recipe = any(
         slot and slot.recipe
         for slot in slot_dict.values()
@@ -142,9 +146,8 @@ def home_view(request):
         or (menu_day and menu_day.deli)
     )
 
-    
     context = {
-        "today": today,
+        "today": selected_date,
         "menu_day": menu_day,
         "staple_slot": slot_dict.get("staple"),
         "main_slot": slot_dict.get("main"),

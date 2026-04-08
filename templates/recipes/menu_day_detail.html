@@ -97,7 +97,10 @@
 </div>
 
 <div class="menu-detail-bottom-actions">
-    <a href="{% url 'recipes:menu_update' plan_date=target_date|date:'Y-m-d' %}" class="edit-button">編集</a>
+
+    <a href="{% url 'home' %}?date={{ target_date|date:'Y-m-d' }}" class="edit-button">
+        この日の献立を編集
+    </a>
 
     {% if can_delete_menu %}
     <button
