@@ -1,4 +1,4 @@
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
 
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
@@ -158,6 +158,8 @@ def home_view(request):
         "temp_side_recipe": temp_recipe_map.get("side"),
         "temp_soup_recipe": temp_recipe_map.get("soup"),
         "has_today_menu": has_today_menu,
+        "prev_date": selected_date - timedelta(days=1),
+        "next_date": selected_date + timedelta(days=1),
     }
 
     return render(request, "home.html", context)

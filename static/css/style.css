@@ -1209,6 +1209,30 @@ body {
     font-weight: bold;
 }
 
+.home-date-nav {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 16px;
+}
+
+.home-date-nav .menu-date-title {
+    margin: 0;
+    font-size: 20px;
+    font-weight: bold;
+    text-align: center;
+}
+
+.home-date-arrow {
+    text-decoration: none;
+    color: #333333;
+    font-size: 20px;
+    font-weight: bold;
+    padding: 4px 8px;
+    line-height: 1;
+}
+
 .slot-search-modal-content {
     max-width: 640px;
 }

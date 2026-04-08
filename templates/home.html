@@ -11,7 +11,11 @@
 {% endif %}
 
 <section class="home-menu-section">
-    <h3 class="menu-date-title">{{ today|date:"Y年n月j日" }} の献立</h3>
+    <div class="home-date-nav">
+        <a href="{% url 'home' %}?date={{ prev_date|date:'Y-m-d' }}" class="home-date-arrow">◀</a>
+        <h3 class="menu-date-title">{{ today|date:"Y年n月j日" }} の献立</h3>
+        <a href="{% url 'home' %}?date={{ next_date|date:'Y-m-d' }}" class="home-date-arrow">▶</a>
+    </div>
 
     {% if menu_day %}
         <form method="post">
