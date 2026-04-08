@@ -1239,6 +1239,78 @@ body {
 }
 
 /* =========================
+   献立レシピ検索モーダル
+========================= */
+.slot-search-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.slot-search-form {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.slot-search-form input[type="text"] {
+    flex: 1;
+    min-width: 180px;
+    padding: 8px 10px;
+    border: 1px solid #cccccc;
+    border-radius: 6px;
+    font-size: 14px;
+    box-sizing: border-box;
+    background-color: #ffffff;
+}
+
+.slot-search-form .save-button {
+    margin: 0;
+}
+
+.recipe-select-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.recipe-select-item {
+    padding: 12px 14px;
+    border: 1px solid #cccccc;
+    border-radius: 8px;
+    background-color: #ffffff;
+    cursor: pointer;
+    transition: background-color 0.2s, border-color 0.2s;
+    word-break: break-word;
+}
+
+.recipe-select-item:hover {
+    background-color: #f5f9ff;
+    border-color: #90caf9;
+}
+
+.recipe-select-item.selected {
+    background-color: #e3f2fd;
+    border-color: #2196f3;
+    font-weight: bold;
+}
+
+.slot-search-empty {
+    margin: 0;
+    padding: 16px;
+    text-align: center;
+    color: #666666;
+    border: 1px dashed #cccccc;
+    border-radius: 8px;
+    background-color: #fafafa;
+}
+
+
+/* =========================
    おうち食材画面
 ========================= */
 .home-food-page {
