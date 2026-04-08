@@ -29,7 +29,23 @@
                 <div class="home-menu-card">
                     <p class="home-menu-label">主食</p>
             
-                    <div class="home-menu-image-box">NO IMAGE</div>
+                    <div class="home-menu-image-box">
+                        {% if temp_staple_recipe and temp_staple_recipe.image %}
+                            <img
+                                src="{{ temp_staple_recipe.image.url }}"
+                                alt="{{ temp_staple_recipe.recipe_name }}"
+                                class="home-menu-image"
+                            >
+                        {% elif staple_slot and staple_slot.recipe and staple_slot.recipe.image %}
+                            <img
+                                src="{{ staple_slot.recipe.image.url }}"
+                                alt="{{ staple_slot.recipe.recipe_name }}"
+                                class="home-menu-image"
+                            >
+                        {% else %}
+                            NO IMAGE
+                        {% endif %}
+                    </div>
 
                     <p class="home-menu-value">
                         {% if temp_staple_recipe %}
@@ -68,7 +84,23 @@
                 <div class="home-menu-card">
                     <p class="home-menu-label">主菜</p>
 
-                    <div class="home-menu-image-box">NO IMAGE</div>
+                    <div class="home-menu-image-box">
+                        {% if temp_main_recipe and temp_main_recipe.image %}
+                            <img
+                                src="{{ temp_main_recipe.image.url }}"
+                                alt="{{ temp_main_recipe.recipe_name }}"
+                                class="home-menu-image"
+                            >
+                        {% elif main_slot and main_slot.recipe and main_slot.recipe.image %}
+                            <img
+                                src="{{ main_slot.recipe.image.url }}"
+                                alt="{{ main_slot.recipe.recipe_name }}"
+                                class="home-menu-image"
+                            >
+                        {% else %}
+                            NO IMAGE
+                        {% endif %}
+                    </div>
 
                     <p class="home-menu-value">
                         {% if temp_main_recipe %}
@@ -107,7 +139,23 @@
                 <div class="home-menu-card">
                     <p class="home-menu-label">副菜</p>
 
-                    <div class="home-menu-image-box">NO IMAGE</div>
+                    <div class="home-menu-image-box">
+                        {% if temp_side_recipe and temp_side_recipe.image %}
+                            <img
+                                src="{{ temp_side_recipe.image.url }}"
+                                alt="{{ temp_side_recipe.recipe_name }}"
+                                class="home-menu-image"
+                            >
+                        {% elif side_slot and side_slot.recipe and side_slot.recipe.image %}
+                            <img
+                                src="{{ side_slot.recipe.image.url }}"
+                                alt="{{ side_slot.recipe.recipe_name }}"
+                                class="home-menu-image"
+                            >
+                        {% else %}
+                            NO IMAGE
+                        {% endif %}
+                    </div>
 
                     <p class="home-menu-value">
                         {% if temp_side_recipe %}
@@ -145,7 +193,23 @@
                 <div class="home-menu-card">
                     <p class="home-menu-label">汁物</p>
 
-                    <div class="home-menu-image-box">NO IMAGE</div>
+                <div class="home-menu-image-box">
+                    {% if temp_soup_recipe and temp_soup_recipe.image %}
+                        <img
+                            src="{{ temp_soup_recipe.image.url }}"
+                            alt="{{ temp_soup_recipe.recipe_name }}"
+                            class="home-menu-image"
+                        >
+                    {% elif soup_slot and soup_slot.recipe and soup_slot.recipe.image %}
+                        <img
+                            src="{{ soup_slot.recipe.image.url }}"
+                            alt="{{ soup_slot.recipe.recipe_name }}"
+                            class="home-menu-image"
+                        >
+                    {% else %}
+                        NO IMAGE
+                    {% endif %}
+                </div>
 
                     <p class="home-menu-value">
                         {% if temp_soup_recipe %}
