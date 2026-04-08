@@ -185,12 +185,30 @@
             <!-- 外食＆惣菜チェック -->   
             <div class="home-flags">
                 <label>
-                    <input type="checkbox" name="eat_out"> 外食
+                    <input
+                        type="checkbox"
+                        name="eat_out"
+                        {% if menu_day and menu_day.eat_out %}checked{% endif %}
+                    >
+                    外食
                 </label>
                 <label>
-                    <input type="checkbox" name="deli"> 惣菜
+                    <input
+                        type="checkbox"
+                        name="deli"
+                        {% if menu_day and menu_day.deli %}checked{% endif %}
+                    >
+                    惣菜
                 </label>
             </div>
+
+            {% if menu_day and menu_day.eat_out or menu_day and menu_day.deli %}
+                <div class="home-save-area">
+                    <button type="submit" name="clear_menu_mode" value="1" class="back-button">
+                        通常の献立に戻す
+                    </button>
+                </div>
+            {% endif %}
 
              <!-- 保存 -->
             <div class="home-save-area">
@@ -200,7 +218,7 @@
         </form>
 
     {% else %}
-        <p>今日はまだ献立が登録されていません。</p>
+        <p>今日はまだ献立が登録されていません</p>
         <p>
             <a href="{% url 'recipes:menu_create' %}?plan_date={{ today|date:'Y-m-d' }}" class="select-button">
                 今日の献立を作成する

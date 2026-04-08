@@ -18,6 +18,17 @@ def home_view(request):
     today = date.today()
 
     if request.method == "POST":
+        clear_menu_mode = request.POST.get("clear_menu_mode")
+
+        if clear_menu_mode:
+            menu_day = get_or_create_menu_day_with_slots(request.user, today)
+            menu_day.eat_out = False
+            menu_day.deli = False
+            menu_day.save()
+
+            messages.success(request, "外食・惣菜の設定を解除しました")
+            return redirect("home")
+        
         delete_slot_id = request.POST.get("delete_slot_id")
 
         if delete_slot_id:
