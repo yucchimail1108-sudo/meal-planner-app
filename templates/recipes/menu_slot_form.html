@@ -26,7 +26,7 @@
     のレシピ設定
 </h3>
 
-<form method="post" action="">>
+<form method="post" action="" id="recipe-select-form">
     <input type="hidden" name="source" value="{{ source }}">
     <input type="hidden" name="plan_date" value="{{ plan_date }}">
     {% csrf_token %}
@@ -50,8 +50,6 @@
             </li>
         {% endfor %}
     </ul>
-
-    <button type="submit" class="save-button">保存</button>
     
     {% else %}
         <p>該当するレシピがありません</p>

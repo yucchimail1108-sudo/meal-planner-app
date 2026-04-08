@@ -261,8 +261,9 @@ document.addEventListener("DOMContentLoaded", function () {
     function bindRecipeSelectEvents() {
         const items = modalBody.querySelectorAll(".recipe-select-item");
         const hiddenInput = modalBody.querySelector("#selected-recipe-id");
+        const postForm = modalBody.querySelector('#recipe-select-form');
 
-        if (!items.length || !hiddenInput) {
+        if (!items.length || !hiddenInput || !postForm) {
             return;
         }
 
@@ -274,13 +275,54 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 item.classList.add("selected");
                 hiddenInput.value = item.dataset.recipeId;
+
+                submitRecipeSelectForm(postForm);
             });
+        });
+    }
+
+    function submitRecipeSelectForm(postForm) {
+        const formData = new FormData(postForm);
+        const postUrl = currentModalUrl.split("?")[0];
+
+        fetch(postUrl, {
+            method: "POST",
+            body: formData,
+            headers: {
+                "X-Requested-With": "XMLHttpRequest"
+            }
+        })
+        .then(function(response) {
+            if (response.redirected) {
+                modal.style.display = "none";
+                window.location.href = response.url;
+                return null;
+            }
+            return response.text();
+        })
+        .then(function(html) {
+            if (!html) {
+                return;
+            }
+
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(html, "text/html");
+            const content = doc.querySelector("main");
+
+            if (content) {
+                modalBody.innerHTML = content.innerHTML;
+                bindModalEvents();
+            } else {
+                modalBody.innerHTML = "<p>保存に失敗しました</p>";
+            }
+        })
+        .catch(function() {
+            modalBody.innerHTML = "<p>保存時にエラーが発生しました</p>";
         });
     }
 
     function bindModalEvents() {
         const getForm = modalBody.querySelector('form[method="get"]');
-        const postForm = modalBody.querySelector('form[method="post"]');
         const backLinks = modalBody.querySelectorAll("a");
 
         backLinks.forEach(function(link) {
@@ -299,50 +341,6 @@ document.addEventListener("DOMContentLoaded", function () {
                 const fetchUrl = queryString ? baseUrl + "?" + queryString : baseUrl;
 
                 loadModalContent(fetchUrl);
-            });
-        }
-
-        if (postForm) {
-            postForm.addEventListener("submit", function(e) {
-                e.preventDefault();
-
-                const formData = new FormData(postForm);
-                const postUrl = currentModalUrl.split("?")[0];
-
-                fetch(postUrl, {
-                    method: "POST",
-                    body: formData,
-                    headers: {
-                        "X-Requested-With": "XMLHttpRequest"
-                    }
-                })
-                .then(function(response) {
-                    if (response.redirected) {
-                        modal.style.display = "none";
-                        window.location.href = response.url;
-                        return null;
-                    }
-                    return response.text();
-                })
-                .then(function(html) {
-                    if (!html) {
-                        return;
-                    }
-
-                    const parser = new DOMParser();
-                    const doc = parser.parseFromString(html, "text/html");
-                    const content = doc.querySelector("main");
-
-                    if (content) {
-                        modalBody.innerHTML = content.innerHTML;
-                        bindModalEvents();
-                    } else {
-                        modalBody.innerHTML = "<p>保存に失敗しました</p>";
-                    }
-                })
-                .catch(function() {
-                    modalBody.innerHTML = "<p>保存時にエラーが発生しました</p>";
-                });
             });
         }
 
