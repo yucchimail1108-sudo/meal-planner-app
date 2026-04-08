@@ -333,11 +333,49 @@ body {
     width: fit-content;
 }
 
-/* 献立カレンダーに献立表示 */
+/* 献立カレンダー */
 .calendar-meal-item {
     font-size: 12px;
     line-height: 1.4;
     word-break: break-word;
+}
+
+.calendar-day-link {
+    text-decoration: none;
+    color: #1976d2;
+    font-weight: bold;
+}
+
+.calendar-day-link:hover {
+    text-decoration: underline;
+}
+
+.calendar-create-button {
+    margin-top: 6px;
+    text-align: center;
+}
+
+.calendar-cooked-card {
+    margin-top: 0;
+}
+
+.calendar-cooked-form {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.calendar-cooked-label {
+    font-weight: bold;
+}
+
+.calendar-cooked-form input[type="date"] {
+    padding: 8px 10px;
+    border: 1px solid #cccccc;
+    border-radius: 6px;
+    font-size: 14px;
+    background-color: #ffffff;
 }
 
 /* 献立の見た目変更 */
