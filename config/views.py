@@ -32,7 +32,7 @@ def home_view(request):
             menu_day.save()
 
             messages.success(request, "外食・惣菜の設定を解除しました")
-            return redirect("home")
+            return redirect(f"/home/?date={selected_date}")
 
         delete_slot_id = request.POST.get("delete_slot_id")
 
@@ -52,14 +52,14 @@ def home_view(request):
 
                 messages.success(request, "献立からレシピを削除しました")
 
-            return redirect("home")
+            return redirect(f"/home/?date={selected_date}")
 
         eat_out = "eat_out" in request.POST
         deli = "deli" in request.POST
 
         if eat_out and deli:
             messages.error(request, "外食と惣菜は同時に選択できません")
-            return redirect("home")
+            return redirect(f"/home/?date={selected_date}")
 
         menu_day = get_or_create_menu_day_with_slots(request.user, selected_date)
 
@@ -75,7 +75,7 @@ def home_view(request):
                 request,
                 "外食または惣菜を選択する場合は献立をすべて削除してください"
             )
-            return redirect("home")
+            return redirect(f"/home/?date={selected_date}")
 
         menu_day.eat_out = eat_out
         menu_day.deli = deli
@@ -96,7 +96,7 @@ def home_view(request):
         request.session["temp_menu"] = {}
 
         messages.success(request, "献立を保存しました")
-        return redirect("home")
+        return redirect(f"/home/?date={selected_date}")
 
     menu_day = get_or_create_menu_day_with_slots(request.user, selected_date)
 
