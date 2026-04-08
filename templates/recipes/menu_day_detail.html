@@ -100,9 +100,57 @@
     <a href="{% url 'recipes:menu_update' plan_date=target_date|date:'Y-m-d' %}" class="edit-button">編集</a>
 
     {% if can_delete_menu %}
-    <a href="{% url 'recipes:menu_delete' plan_date=target_date|date:'Y-m-d' %}" class="delete-button">削除</a>
-    {% endif %}
+    <button
+        type="button"
+        class="delete-button"
+        id="open-menu-delete-modal"
+    >
+        削除
+    </button>
+    {% endif %} 
 </div>
 
+<!-- 献立削除確認モーダル -->
+<div id="menu-delete-modal" class="modal-overlay">
+    <div class="modal-content menu-delete-modal-content">
+        <p class="modal-message">
+            {{ target_date }}の献立を削除しますか？
+        </p>
 
+        <form method="post" action="{% url 'recipes:menu_delete' plan_date=target_date|date:'Y-m-d' %}">
+            {% csrf_token %}
+            <div class="form-actions modal-actions">
+                <button type="submit" class="delete-button">はい</button>
+                <button type="button" id="close-menu-delete-modal" class="back-button">いいえ</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+
+{% block extra_js %}
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const openButton = document.getElementById("open-menu-delete-modal");
+    const closeButton = document.getElementById("close-menu-delete-modal");
+    const modal = document.getElementById("menu-delete-modal");
+
+    if (openButton && closeButton && modal) {
+        openButton.addEventListener("click", function () {
+            modal.classList.add("active");
+        });
+
+        closeButton.addEventListener("click", function () {
+            modal.classList.remove("active");
+        });
+
+        modal.addEventListener("click", function (event) {
+            if (event.target === modal) {
+                modal.classList.remove("active");
+            }
+        });
+    }
+});
+</script>
 {% endblock %}

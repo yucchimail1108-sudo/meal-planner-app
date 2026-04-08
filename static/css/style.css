@@ -505,6 +505,12 @@ body {
     margin-top: 16px;
 }
 
+/* 献立詳細での削除ボタンモーダル */
+.menu-delete-modal-content {
+    max-width: 360px;
+    text-align: center;
+}
+
 /* カレンダーのつくった！ボタン横のコメント */
 .calendar-description {
     font-size: 0.9em;
