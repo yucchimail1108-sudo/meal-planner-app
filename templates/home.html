@@ -3,19 +3,27 @@
 {% block title %}ホーム | うちごはんプランナー{% endblock %}
 
 {% block content %}
-<h2>こんにちは！{{ user.first_name }}さん</h2>
-<h2>献立をつくりましょう！</h2>
 
-{% if not has_today_menu %}
-    <p class="home-empty-message">今日はまだ献立がありません</p>
-{% endif %}
+<div class="home-header">
 
-<section class="home-menu-section">
+    <h2 class="home-title">こんにちは！{{ user.first_name }}さん</h2>
+    <h2 class="home-title">献立をつくりましょう！</h2>
+
     <div class="home-date-nav">
         <a href="{% url 'home' %}?date={{ prev_date|date:'Y-m-d' }}" class="home-date-arrow">◀</a>
         <h3 class="menu-date-title">{{ today|date:"Y年n月j日" }} の献立</h3>
         <a href="{% url 'home' %}?date={{ next_date|date:'Y-m-d' }}" class="home-date-arrow">▶</a>
     </div>
+
+    {% if not has_today_menu %}
+        <div class="home-message">
+            今日はまだ献立がありません
+        </div>
+    {% endif %}
+
+</div>
+
+<section class="home-menu-section">    
 
     {% if menu_day %}
         <form method="post">
@@ -70,7 +78,7 @@
                             {% else %}
                                 <div class="home-search-button">
                                     <a
-                                        href="{% url 'recipes:menu_slot_update' slot_id=staple_slot.id %}"
+                                        href="{% url 'recipes:menu_slot_update' slot_id=staple_slot.id %}?source=home&plan_date={{ today|date:'Y-m-d' }}"
                                         class="select-button open-slot-search-modal"
                                         data-slot-id="{{ staple_slot.id }}"
                                         data-meal-label="主食"
@@ -125,7 +133,7 @@
                             {% else %}
                                 <div class="home-search-button">
                                     <a
-                                        href="{% url 'recipes:menu_slot_update' slot_id=main_slot.id %}"
+                                         href="{% url 'recipes:menu_slot_update' slot_id=main_slot.id %}?source=home&plan_date={{ today|date:'Y-m-d' }}"
                                         class="select-button open-slot-search-modal"
                                         data-slot-id="{{ main_slot.id }}"
                                         data-meal-label="主菜"
@@ -234,7 +242,7 @@
                             {% else %}
                                 <div class="home-search-button">
                                     <a
-                                        href="{% url 'recipes:menu_slot_update' slot_id=soup_slot.id %}"
+                                        href="{% url 'recipes:menu_slot_update' slot_id=soup_slot.id %}?source=home&plan_date={{ today|date:'Y-m-d' }}"
                                         class="select-button open-slot-search-modal"
                                         data-slot-id="{{ soup_slot.id }}"
                                         data-meal-label="汁物"

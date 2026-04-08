@@ -456,7 +456,11 @@ body {
 .menu-detail-card a {
     text-decoration: none;
     color: inherit;
-    display: block;
+    display: block
+    
+    
+    
+    ;
 }
 
 .menu-detail-date-title {
@@ -620,8 +624,22 @@ body {
     margin-top: 0;
 }
 
+.home-header {
+    text-align: center;
+    margin-bottom: 24px;
+}
+
 .home-title {
-    margin-bottom: 4px;
+    font-size: 22px;
+    margin-bottom: 12px;
+}
+
+.home-message {
+    margin-top: 12px;
+    padding: 10px;
+    background-color: #fff3cd;
+    border-radius: 6px;
+    font-size: 14px;
 }
 
 .menu-date-title {

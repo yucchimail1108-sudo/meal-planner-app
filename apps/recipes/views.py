@@ -942,6 +942,10 @@ def menu_slot_update_view(request, slot_id):
         request.session["temp_menu"] = temp_menu
 
         messages.success(request, "レシピを選択しました")
+        
+        if plan_date:
+            return redirect(f"/home/?date={plan_date}")
+        
         return redirect("home")
 
     source = request.GET.get("source", "")
