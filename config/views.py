@@ -96,7 +96,10 @@ def home_view(request):
         request.session["temp_menu"] = {}
 
         messages.success(request, "献立を保存しました")
-        return redirect(f"/home/?date={selected_date}")
+        return redirect(
+            "recipes:menu_detail",
+            plan_date=selected_date.strftime("%Y-%m-%d")
+        )
 
     menu_day = get_or_create_menu_day_with_slots(request.user, selected_date)
 

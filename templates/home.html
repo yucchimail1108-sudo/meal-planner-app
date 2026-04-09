@@ -71,6 +71,7 @@
                         {% endif %}
                     </div>
 
+                     <!-- 主食 -->
                     <p class="home-menu-value">
                         {% if temp_staple_recipe %}
                             <a href="{% url 'recipes:recipe_detail' temp_staple_recipe.id %}" class="home-menu-recipe-link">
@@ -110,6 +111,7 @@
                     {% endif %}
                 </div>
 
+                <!-- 主菜 -->
                 <div class="home-menu-card">
                     <p class="home-menu-label">主菜</p>
 
@@ -182,6 +184,7 @@
                     {% endif %}
                 </div>
 
+                <!-- 副菜 -->
                 <div class="home-menu-card">
                     <p class="home-menu-label">副菜</p>
 
@@ -254,6 +257,7 @@
                     {% endif %}
                 </div>
 
+                <!-- 汁物 -->
                 <div class="home-menu-card">
                     <p class="home-menu-label">汁物</p>
 
@@ -289,9 +293,9 @@
 
                     <p class="home-menu-value">
                         {% if temp_side_recipe %}
-                            <a href="{% url 'recipes:recipe_detail' temp_side_recipe.id %}" class="home-menu-recipe-link">
-                                {{ temp_side_recipe.recipe_name }}
-                            </a>
+                            <a href="{% url 'recipes:recipe_detail' temp_soup_recipe.id %}" class="home-menu-recipe-link">
+                            {{ temp_soup_recipe.recipe_name }}
+                        </a>
                             <span class="unsaved-badge">未保存</span>
                         {% elif side_slot and side_slot.recipe %}
                             <a href="{% url 'recipes:recipe_detail' side_slot.recipe.id %}" class="home-menu-recipe-link">

@@ -532,17 +532,19 @@ body {
 }
 
 .menu-detail-image {
-    width: 70%;
-    height: 90px;
+    width: 40%;
+    height: 60px;
     object-fit: cover;
     border-radius: 8px;
     display: block;
     margin: 0 auto 8px;
+    border: 1px solid #cccccc;
+    background-color: #f8f8f8;
 }
 
 .menu-detail-no-image {
-    width: 70%;
-    height: 90px;
+    width: 40%;
+    height: 60px;
     background-color: #dddddd;
     color: #666666;
     display: flex;
@@ -550,7 +552,8 @@ body {
     justify-content: center;
     border-radius: 8px;
     margin: 0 auto 8px;
-    font-size: 12px;
+    font-size: 11px;
+    border: 1px solid #cccccc;
 }
 
 .menu-detail-recipe-name {
@@ -571,17 +574,15 @@ body {
     text-decoration: none;
     color: inherit;
     display: block
-    
-    
-    
-    ;
 }
 
 .menu-detail-date-title {
     margin: 0;
     font-size: 20px;
     font-weight: bold;
+    color: #1976d2;
 }
+
 
 /* 献立詳細画面をホーム画面に寄せる */
 .menu-detail-header {
@@ -610,10 +611,16 @@ body {
 
 .menu-detail-arrow {
     text-decoration: none;
-    color: #333333;
+    color: #1976d2;
     font-size: 20px;
     font-weight: bold;
     padding: 4px 8px;
+    line-height: 1;
+}
+
+.menu-detail-arrow:hover {
+    background-color: #e3f2fd;
+    border-radius: 6px;
 }
 
 .menu-detail-bottom-actions {
