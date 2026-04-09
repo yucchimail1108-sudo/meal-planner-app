@@ -1355,6 +1355,16 @@ body {
     background-color: #eeeeee;
 }
 
+.home-menu-recipe-link {
+    color: #1976d2;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.home-menu-recipe-link:hover {
+    text-decoration: underline;
+}
+
 .home-empty-message {
     margin: 0 0 16px;
     padding: 12px 16px;

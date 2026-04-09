@@ -73,10 +73,14 @@
 
                     <p class="home-menu-value">
                         {% if temp_staple_recipe %}
-                            {{ temp_staple_recipe.recipe_name }}
+                            <a href="{% url 'recipes:recipe_detail' temp_staple_recipe.id %}" class="home-menu-recipe-link">
+                                {{ temp_staple_recipe.recipe_name }}
+                            </a>
                             <span class="unsaved-badge">未保存</span>
                         {% elif staple_slot and staple_slot.recipe %}
-                            {{ staple_slot.recipe.recipe_name }}
+                            <a href="{% url 'recipes:recipe_detail' staple_slot.recipe.id %}" class="home-menu-recipe-link">
+                                {{ staple_slot.recipe.recipe_name }}
+                            </a>
                         {% endif %}
                     </p>
 
@@ -141,10 +145,14 @@
 
                     <p class="home-menu-value">
                         {% if temp_main_recipe %}
-                            {{ temp_main_recipe.recipe_name }}
+                            <a href="{% url 'recipes:recipe_detail' temp_main_recipe.id %}" class="home-menu-recipe-link">
+                                {{ temp_main_recipe.recipe_name }}
+                            </a>
                             <span class="unsaved-badge">未保存</span>
                         {% elif main_slot and main_slot.recipe %}
-                            {{ main_slot.recipe.recipe_name }}
+                            <a href="{% url 'recipes:recipe_detail' main_slot.recipe.id %}" class="home-menu-recipe-link">
+                                {{ main_slot.recipe.recipe_name }}
+                            </a>
                         {% endif %}
                     </p>
 
@@ -209,10 +217,14 @@
 
                     <p class="home-menu-value">
                         {% if temp_side_recipe %}
-                            {{ temp_side_recipe.recipe_name }}
+                            <a href="{% url 'recipes:recipe_detail' temp_side_recipe.id %}" class="home-menu-recipe-link">
+                                {{ temp_side_recipe.recipe_name }}
+                            </a>
                             <span class="unsaved-badge">未保存</span>
                         {% elif side_slot and side_slot.recipe %}
-                            {{ side_slot.recipe.recipe_name }}
+                            <a href="{% url 'recipes:recipe_detail' side_slot.recipe.id %}" class="home-menu-recipe-link">
+                                {{ side_slot.recipe.recipe_name }}
+                            </a>
                         {% endif %}
                     </p>
 
@@ -276,11 +288,15 @@
                 </div>
 
                     <p class="home-menu-value">
-                        {% if temp_soup_recipe %}
-                            {{ temp_soup_recipe.recipe_name }}
+                        {% if temp_side_recipe %}
+                            <a href="{% url 'recipes:recipe_detail' temp_side_recipe.id %}" class="home-menu-recipe-link">
+                                {{ temp_side_recipe.recipe_name }}
+                            </a>
                             <span class="unsaved-badge">未保存</span>
-                        {% elif soup_slot and soup_slot.recipe %}
-                            {{ soup_slot.recipe.recipe_name }}
+                        {% elif side_slot and side_slot.recipe %}
+                            <a href="{% url 'recipes:recipe_detail' side_slot.recipe.id %}" class="home-menu-recipe-link">
+                                {{ side_slot.recipe.recipe_name }}
+                            </a>
                         {% endif %}
                     </p>
 
