@@ -61,7 +61,8 @@
 
                     <p class="home-menu-value">
                         {% if temp_staple_recipe %}
-                            {{ temp_staple_recipe.recipe_name }}（未保存）
+                            {{ temp_staple_recipe.recipe_name }}
+                            <span class="unsaved-badge">未保存</span>
                         {% elif staple_slot and staple_slot.recipe %}
                             {{ staple_slot.recipe.recipe_name }}
                         {% endif %}
@@ -116,7 +117,8 @@
 
                     <p class="home-menu-value">
                         {% if temp_main_recipe %}
-                            {{ temp_main_recipe.recipe_name }}（未保存）
+                            {{ temp_main_recipe.recipe_name }}
+                            <span class="unsaved-badge">未保存</span>
                         {% elif main_slot and main_slot.recipe %}
                             {{ main_slot.recipe.recipe_name }}
                         {% endif %}
@@ -171,11 +173,13 @@
 
                     <p class="home-menu-value">
                         {% if temp_side_recipe %}
-                            {{ temp_side_recipe.recipe_name }}（未保存）
+                            {{ temp_side_recipe.recipe_name }}
+                            <span class="unsaved-badge">未保存</span>
                         {% elif side_slot and side_slot.recipe %}
                             {{ side_slot.recipe.recipe_name }}
                         {% endif %}
                     </p>
+
                     {% if side_slot %}
                         {% if menu_day and not menu_day.eat_out and not menu_day.deli %}
                             {% if side_slot.recipe %}
@@ -225,7 +229,8 @@
 
                     <p class="home-menu-value">
                         {% if temp_soup_recipe %}
-                            {{ temp_soup_recipe.recipe_name }}（未保存）
+                            {{ temp_soup_recipe.recipe_name }}
+                            <span class="unsaved-badge">未保存</span>
                         {% elif soup_slot and soup_slot.recipe %}
                             {{ soup_slot.recipe.recipe_name }}
                         {% endif %}
@@ -288,7 +293,14 @@
 
              <!-- 保存 -->
             <div class="home-save-area">
-                <button type="submit" class="save-button">献立保存</button>
+                <button
+                    type="submit"
+                    class="save-button"
+                    id="save-button"
+                    {% if not has_temp_recipe %}disabled{% endif %}
+                >
+                    献立保存
+                </button>
             </div>
             
         </form>
@@ -471,6 +483,34 @@ document.addEventListener("DOMContentLoaded", function () {
             modal.style.display = "none";
         }
     });
+
+    // ===== 保存ボタン制御 =====
+    const saveButton = document.getElementById("save-button");
+
+    if (saveButton) {
+        // チェックボックス
+        const checkboxes = document.querySelectorAll("input[type='checkbox']");
+        checkboxes.forEach(function(cb) {
+            cb.addEventListener("change", function () {
+                saveButton.disabled = false;
+            });
+        });
+
+        // 削除ボタン
+        const deleteButtons = document.querySelectorAll("button[name='delete_slot_id']");
+        deleteButtons.forEach(function(btn) {
+            btn.addEventListener("click", function () {
+                saveButton.disabled = false;
+            });
+        });
+
+        // レシピ選択
+        document.addEventListener("click", function (e) {
+            if (e.target.classList.contains("recipe-select-item")) {
+                saveButton.disabled = false;
+            }
+        });
+    }
 });
 </script>
 {% endblock %}

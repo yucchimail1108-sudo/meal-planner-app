@@ -157,6 +157,7 @@ def home_view(request):
         "temp_main_recipe": temp_recipe_map.get("main"),
         "temp_side_recipe": temp_recipe_map.get("side"),
         "temp_soup_recipe": temp_recipe_map.get("soup"),
+        "has_temp_recipe": has_temp_recipe,
         "has_today_menu": has_today_menu,
         "prev_date": selected_date - timedelta(days=1),
         "next_date": selected_date + timedelta(days=1),

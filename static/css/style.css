@@ -49,6 +49,11 @@ body {
     color: #ffffff;
 }
 
+.save-button:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+}
+
 /* =========================
    戻るボタン（白地＋青文字）
 ========================= */
@@ -755,6 +760,7 @@ body {
     text-align: center;
     margin: 10px 0;
     font-weight: bold;
+    color: #1976d2;
 }
 
 /* ヘッダーのタイトル */
@@ -1367,11 +1373,16 @@ body {
 
 .home-date-arrow {
     text-decoration: none;
-    color: #333333;
+    color: #1976d2;
     font-size: 20px;
     font-weight: bold;
     padding: 4px 8px;
     line-height: 1;
+}
+
+.home-date-arrow:hover {
+    background-color: #e3f2fd;
+    border-radius: 6px;
 }
 
 .slot-search-modal-content {
@@ -1402,6 +1413,19 @@ body {
     text-align: center;
     padding: 32px 0;
 }
+
+.unsaved-badge {
+    display: inline-block;
+    margin-left: 6px;
+    padding: 2px 6px;
+    font-size: 11px;
+    background-color: #fff3cd;
+    border: 1px solid #ffeeba;
+    border-radius: 4px;
+    color: #856404;
+    font-weight: bold;
+}
+
 
 /* =========================
    献立レシピ検索モーダル

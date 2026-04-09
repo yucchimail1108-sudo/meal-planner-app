@@ -64,7 +64,7 @@
                                     {% endif %}
                                 {% else %}
                                     <div class="calendar-status">献立なし</div>
-                                    <a href="{% url 'recipes:menu_create' %}?plan_date={{ item.date|date:'Y-m-d' }}" class="select-button calendar-create-button">
+                                    <a href="{% url 'home' %}?date={{ item.date|date:'Y-m-d' }}" class="select-button calendar-create-button">
                                         作成
                                     </a>
                                 {% endif %}
