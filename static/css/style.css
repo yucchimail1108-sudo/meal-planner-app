@@ -1281,6 +1281,16 @@ body {
     display: block;
 }
 
+.home-menu-image-link {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    color: inherit;
+}
+
 .home-search-button {
     text-align: center;
     margin-top: 8px;

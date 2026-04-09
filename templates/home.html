@@ -42,18 +42,30 @@
                     <p class="home-menu-label">主食</p>
             
                     <div class="home-menu-image-box">
-                        {% if temp_staple_recipe and temp_staple_recipe.image %}
-                            <img
-                                src="{{ temp_staple_recipe.image.url }}"
-                                alt="{{ temp_staple_recipe.recipe_name }}"
-                                class="home-menu-image"
-                            >
-                        {% elif staple_slot and staple_slot.recipe and staple_slot.recipe.image %}
-                            <img
-                                src="{{ staple_slot.recipe.image.url }}"
-                                alt="{{ staple_slot.recipe.recipe_name }}"
-                                class="home-menu-image"
-                            >
+                        {% if temp_staple_recipe %}
+                            <a href="{% url 'recipes:recipe_detail' temp_staple_recipe.id %}" class="home-menu-image-link">
+                                {% if temp_staple_recipe.image %}
+                                    <img
+                                        src="{{ temp_staple_recipe.image.url }}"
+                                        alt="{{ temp_staple_recipe.recipe_name }}"
+                                        class="home-menu-image"
+                                    >
+                                {% else %}
+                                    NO IMAGE
+                                {% endif %}
+                            </a>
+                        {% elif staple_slot and staple_slot.recipe %}
+                            <a href="{% url 'recipes:recipe_detail' staple_slot.recipe.id %}" class="home-menu-image-link">
+                                {% if staple_slot.recipe.image %}
+                                    <img
+                                        src="{{ staple_slot.recipe.image.url }}"
+                                        alt="{{ staple_slot.recipe.recipe_name }}"
+                                        class="home-menu-image"
+                                    >
+                                {% else %}
+                                    NO IMAGE
+                                {% endif %}
+                            </a>
                         {% else %}
                             NO IMAGE
                         {% endif %}
@@ -98,18 +110,30 @@
                     <p class="home-menu-label">主菜</p>
 
                     <div class="home-menu-image-box">
-                        {% if temp_main_recipe and temp_main_recipe.image %}
-                            <img
-                                src="{{ temp_main_recipe.image.url }}"
-                                alt="{{ temp_main_recipe.recipe_name }}"
-                                class="home-menu-image"
-                            >
-                        {% elif main_slot and main_slot.recipe and main_slot.recipe.image %}
-                            <img
-                                src="{{ main_slot.recipe.image.url }}"
-                                alt="{{ main_slot.recipe.recipe_name }}"
-                                class="home-menu-image"
-                            >
+                        {% if temp_main_recipe %}
+                            <a href="{% url 'recipes:recipe_detail' temp_main_recipe.id %}" class="home-menu-image-link">
+                                {% if temp_main_recipe.image %}
+                                    <img
+                                        src="{{ temp_main_recipe.image.url }}"
+                                        alt="{{ temp_main_recipe.recipe_name }}"
+                                        class="home-menu-image"
+                                    >
+                                {% else %}
+                                    NO IMAGE
+                                {% endif %}
+                            </a>
+                        {% elif main_slot and main_slot.recipe %}
+                            <a href="{% url 'recipes:recipe_detail' main_slot.recipe.id %}" class="home-menu-image-link">
+                                {% if main_slot.recipe.image %}
+                                    <img
+                                        src="{{ main_slot.recipe.image.url }}"
+                                        alt="{{ main_slot.recipe.recipe_name }}"
+                                        class="home-menu-image"
+                                    >
+                                {% else %}
+                                    NO IMAGE
+                                {% endif %}
+                            </a>
                         {% else %}
                             NO IMAGE
                         {% endif %}
@@ -154,18 +178,30 @@
                     <p class="home-menu-label">副菜</p>
 
                     <div class="home-menu-image-box">
-                        {% if temp_side_recipe and temp_side_recipe.image %}
-                            <img
-                                src="{{ temp_side_recipe.image.url }}"
-                                alt="{{ temp_side_recipe.recipe_name }}"
-                                class="home-menu-image"
-                            >
-                        {% elif side_slot and side_slot.recipe and side_slot.recipe.image %}
-                            <img
-                                src="{{ side_slot.recipe.image.url }}"
-                                alt="{{ side_slot.recipe.recipe_name }}"
-                                class="home-menu-image"
-                            >
+                        {% if temp_side_recipe %}
+                            <a href="{% url 'recipes:recipe_detail' temp_side_recipe.id %}" class="home-menu-image-link">
+                                {% if temp_side_recipe.image %}
+                                    <img
+                                        src="{{ temp_side_recipe.image.url }}"
+                                        alt="{{ temp_side_recipe.recipe_name }}"
+                                        class="home-menu-image"
+                                    >
+                                {% else %}
+                                    NO IMAGE
+                                {% endif %}
+                            </a>
+                        {% elif side_slot and side_slot.recipe %}
+                            <a href="{% url 'recipes:recipe_detail' side_slot.recipe.id %}" class="home-menu-image-link">
+                                {% if side_slot.recipe.image %}
+                                    <img
+                                        src="{{ side_slot.recipe.image.url }}"
+                                        alt="{{ side_slot.recipe.recipe_name }}"
+                                        class="home-menu-image"
+                                    >
+                                {% else %}
+                                    NO IMAGE
+                                {% endif %}
+                            </a>
                         {% else %}
                             NO IMAGE
                         {% endif %}
@@ -210,18 +246,30 @@
                     <p class="home-menu-label">汁物</p>
 
                 <div class="home-menu-image-box">
-                    {% if temp_soup_recipe and temp_soup_recipe.image %}
-                        <img
-                            src="{{ temp_soup_recipe.image.url }}"
-                            alt="{{ temp_soup_recipe.recipe_name }}"
-                            class="home-menu-image"
-                        >
-                    {% elif soup_slot and soup_slot.recipe and soup_slot.recipe.image %}
-                        <img
-                            src="{{ soup_slot.recipe.image.url }}"
-                            alt="{{ soup_slot.recipe.recipe_name }}"
-                            class="home-menu-image"
-                        >
+                    {% if temp_soup_recipe %}
+                        <a href="{% url 'recipes:recipe_detail' temp_soup_recipe.id %}" class="home-menu-image-link">
+                            {% if temp_soup_recipe.image %}
+                                <img
+                                    src="{{ temp_soup_recipe.image.url }}"
+                                    alt="{{ temp_soup_recipe.recipe_name }}"
+                                    class="home-menu-image"
+                                >
+                            {% else %}
+                                NO IMAGE
+                            {% endif %}
+                        </a>
+                    {% elif soup_slot and soup_slot.recipe %}
+                        <a href="{% url 'recipes:recipe_detail' soup_slot.recipe.id %}" class="home-menu-image-link">
+                            {% if soup_slot.recipe.image %}
+                                <img
+                                    src="{{ soup_slot.recipe.image.url }}"
+                                    alt="{{ soup_slot.recipe.recipe_name }}"
+                                    class="home-menu-image"
+                                >
+                            {% else %}
+                                NO IMAGE
+                            {% endif %}
+                        </a>
                     {% else %}
                         NO IMAGE
                     {% endif %}
