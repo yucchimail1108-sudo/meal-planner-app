@@ -3,73 +3,77 @@
 {% block title %}献立編集 | うちごはんプランナー{% endblock %}
 
 {% block content %}
-<div class="menu-edit-container">
+<div class="page-container">
+    <div class="page-header">
+        <h2 class="page-title">≪献立編集≫</h2>
 
-    <h2>{{ menu_day.plan_date }}の献立</h2>
-
-    <p>
-        <a href="{% url 'recipes:menu_detail' plan_date=menu_day.plan_date %}" class="back-button">献立詳細へ戻る</a>
-    </p>
-
-    <form method="POST">
-        {% csrf_token %}
-
-        {% if form.errors %}
-            <div class="error-box">
-                {{ form.errors }}
-            </div>
-        {% endif %}
-
-        <div class="menu-info">
-            <label>献立日</label>
-            <p>{{ menu_day.plan_date }}</p>
-        
-            <label>外食</label>
-            {{ form.eat_out }}
-
-            <label>惣菜</label>
-            {{ form.deli }}
+        <div class="page-header-actions">
+            <a href="{% url 'recipes:menu_detail' plan_date=menu_day.plan_date %}" class="back-button">
+                献立詳細へ戻る
+            </a>
         </div>
+    </div>
 
-        <hr>
+    <div class="content-card">
+        <p class="menu-edit-date-title">{{ menu_day.plan_date }}の献立</p>
 
-        <div class="slot-list">
-            {% for slot in slots %}
-                <div class="slot-card">
-        
-                    <h3 class="slot-title">
-                        {% if slot.meal_type == "staple" %}主食
-                        {% elif slot.meal_type == "main" %}主菜
-                        {% elif slot.meal_type == "side" %}副菜
-                        {% elif slot.meal_type == "soup" %}汁物
-                        {% endif %}
-                    </h3>
+        <form method="POST">
+            {% csrf_token %}
 
-                    <p class="label">現在のレシピ</p>
-
-                    <p class="recipe-name">
-                        {% if slot.recipe %}
-                            {{ slot.recipe.recipe_name }}
-                        {% else %}
-                            レシピが設定されていません
-                        {% endif %}
-                    </p>
-
-                    <a href="{% url 'recipes:menu_slot_update' slot.id %}?source=menu_update&plan_date={{ menu_day.plan_date|date:'Y-m-d' }}" class="select-button">
-                        探す
-                    </a>
-
+            {% if form.errors %}
+                <div class="error-box">
+                    {{ form.errors }}
                 </div>
-            {% endfor %}
-        </div>
+            {% endif %}
 
-        <button type="submit" class="save-button">献立保存</button>
-        
-        <a href="{% url 'recipes:menu_detail' plan_date=menu_day.plan_date %}" class="back-button">
-            戻る
-        </a>
-        
-    </form>
+            <div class="menu-edit-flags">
+                <label class="menu-edit-flag">
+                    {{ form.eat_out }}
+                    外食
+                </label>
+
+                <label class="menu-edit-flag">
+                    {{ form.deli }}
+                    惣菜
+                </label>
+            </div>
+
+            <div class="menu-edit-slot-grid">
+                {% for slot in slots %}
+                    <div class="menu-edit-slot-card">
+                        <h3 class="menu-edit-slot-title">
+                            {% if slot.meal_type == "staple" %}主食
+                            {% elif slot.meal_type == "main" %}主菜
+                            {% elif slot.meal_type == "side" %}副菜
+                            {% elif slot.meal_type == "soup" %}汁物
+                            {% endif %}
+                        </h3>
+
+                        <p class="menu-edit-current-label">現在のレシピ</p>
+
+                        <p class="menu-edit-recipe-name">
+                            {% if slot.recipe %}
+                                {{ slot.recipe.recipe_name }}
+                            {% else %}
+                                レシピが設定されていません
+                            {% endif %}
+                        </p>
+
+                        <a href="{% url 'recipes:menu_slot_update' slot.id %}?source=menu_update&plan_date={{ menu_day.plan_date|date:'Y-m-d' }}" class="select-button">
+                            探す
+                        </a>
+                    </div>
+                {% endfor %}
+            </div>
+
+            <div class="form-actions menu-edit-actions">
+                <button type="submit" class="save-button">献立保存</button>
+
+                <a href="{% url 'recipes:menu_detail' plan_date=menu_day.plan_date %}" class="back-button">
+                    戻る
+                </a>
+            </div>
+        </form>
+    </div>
 </div>
-
 {% endblock %}
