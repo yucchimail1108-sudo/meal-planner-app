@@ -292,14 +292,14 @@
                 </div>
 
                     <p class="home-menu-value">
-                        {% if temp_side_recipe %}
+                        {% if temp_soup_recipe %}
                             <a href="{% url 'recipes:recipe_detail' temp_soup_recipe.id %}" class="home-menu-recipe-link">
-                            {{ temp_soup_recipe.recipe_name }}
-                        </a>
+                                {{ temp_soup_recipe.recipe_name }}
+                            </a>
                             <span class="unsaved-badge">未保存</span>
-                        {% elif side_slot and side_slot.recipe %}
-                            <a href="{% url 'recipes:recipe_detail' side_slot.recipe.id %}" class="home-menu-recipe-link">
-                                {{ side_slot.recipe.recipe_name }}
+                        {% elif soup_slot and soup_slot.recipe %}
+                            <a href="{% url 'recipes:recipe_detail' soup_slot.recipe.id %}" class="home-menu-recipe-link">
+                                {{ soup_slot.recipe.recipe_name }}
                             </a>
                         {% endif %}
                     </p>
