@@ -54,31 +54,31 @@
 
    {% if user.is_authenticated %}
     <nav class="bottom-nav">
-        <a href="{% url 'home' %}" class="bottom-nav__item">
+        <a href="{% url 'home' %}" class="bottom-nav__item {% if request.resolver_match.url_name == 'home' %}active{% endif %}">
             <img src="{% static 'images/icons/home.svg' %}" class="nav-icon">
             <span>ホーム</span>
         </a>
 
-        <a href="{% url 'recipes:recipe_list' %}" class="bottom-nav__item">
+        <a href="{% url 'recipes:recipe_list' %}" class="bottom-nav__item {% if request.resolver_match.url_name == 'recipe_list' or request.resolver_match.url_name == 'recipe_detail' or request.resolver_match.url_name == 'recipe_create' or request.resolver_match.url_name == 'recipe_edit' %}active{% endif %}">
             <img src="{% static 'images/icons/recipe.svg' %}" class="nav-icon">
             <span>マイレシピ</span>
         </a>
 
-        <a href="{% url 'recipes:home_food_list' %}" class="bottom-nav__item">
+        <a href="{% url 'recipes:home_food_list' %}" class="bottom-nav__item {% if request.resolver_match.url_name == 'home_food_list' or request.resolver_match.url_name == 'food_item_create' %}active{% endif %}">
             <img src="{% static 'images/icons/food.svg' %}" class="nav-icon">
             <span>おうち食材</span>
         </a>
 
-        <a href="{% url 'recipes:menu_calendar' %}" class="bottom-nav__item">
+        <a href="{% url 'recipes:menu_calendar' %}" class="bottom-nav__item {% if request.resolver_match.url_name == 'menu_calendar' or request.resolver_match.url_name == 'menu_detail' or request.resolver_match.url_name == 'menu_edit' or request.resolver_match.url_name == 'menu_create' %}active{% endif %}">
             <img src="{% static 'images/icons/menu.svg' %}" class="nav-icon">
             <span>献立</span>
         </a>
 
-        <a href="{% url 'recipes:shopping_list' %}" class="bottom-nav__item">
+        <a href="{% url 'recipes:shopping_list' %}" class="bottom-nav__item {% if request.resolver_match.url_name == 'shopping_list' %}active{% endif %}">
             <img src="{% static 'images/icons/shopping.svg' %}" class="nav-icon">
             <span>買い物リスト</span>
         </a>
-</nav>
+    </nav>
     {% endif %}
     
     <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>

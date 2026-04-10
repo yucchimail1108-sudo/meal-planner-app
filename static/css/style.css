@@ -387,6 +387,17 @@ body {
     filter: brightness(0) saturate(100%) invert(52%) sepia(28%) saturate(800%) hue-rotate(340deg);
 }
 
+.bottom-nav__item:active {
+    transform: scale(0.95);
+}
+
+.bottom-nav__item:hover {
+    background-color: #f7e6d5;
+}
+
+.bottom-nav__item {
+    transition: all 0.15s ease;
+}
 
 /* 献立カレンダー */
 .calendar-nav {
