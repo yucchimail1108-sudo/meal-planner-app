@@ -17,11 +17,17 @@
 
         <nav class="main-nav">
             {% if user.is_authenticated %}
-                <a href="{% url 'accounts:mypage' %}" class="nav-link">👤</a>
+                <a href="{% url 'accounts:mypage' %}" class="nav-link">
+                    <img src="{% static 'images/icons/user.svg' %}" class="header-icon">
+                    <span>マイページ</span>
+                </a>
                 
-                <form action="{% url 'accounts:logout' %}" method="POST" style="display:inline;" class="logout-form">
+                <form action="{% url 'accounts:logout' %}" method="POST" class="logout-form">
                     {% csrf_token %}
-                    <button type="submit" class="logout-button">🚪</button>
+                    <button type="submit" class="logout-button">
+                        <img src="{% static 'images/icons/logout.svg' %}" class="header-icon">
+                        <span>ログアウト</span>
+                    </button>
                 </form>
             {% else %}
                 <a href="{% url 'accounts:signup' %}" class="nav-link">新規登録</a>
@@ -48,12 +54,31 @@
 
    {% if user.is_authenticated %}
     <nav class="bottom-nav">
-        <a href="{% url 'home' %}" class="bottom-nav__item">ホーム</a>
-        <a href="{% url 'recipes:recipe_list' %}" class="bottom-nav__item">マイレシピ</a>
-        <a href="{% url 'recipes:home_food_list' %}" class="bottom-nav__item">おうち食材</a>
-        <a href="{% url 'recipes:menu_calendar' %}" class="bottom-nav__item">献立</a>
-        <a href="{% url 'recipes:shopping_list' %}" class="bottom-nav__item">買い物リスト</a>
-    </nav>
+        <a href="{% url 'home' %}" class="bottom-nav__item">
+            <img src="{% static 'images/icons/home.svg' %}" class="nav-icon">
+            <span>ホーム</span>
+        </a>
+
+        <a href="{% url 'recipes:recipe_list' %}" class="bottom-nav__item">
+            <img src="{% static 'images/icons/recipe.svg' %}" class="nav-icon">
+            <span>マイレシピ</span>
+        </a>
+
+        <a href="{% url 'recipes:home_food_list' %}" class="bottom-nav__item">
+            <img src="{% static 'images/icons/food.svg' %}" class="nav-icon">
+            <span>おうち食材</span>
+        </a>
+
+        <a href="{% url 'recipes:menu_calendar' %}" class="bottom-nav__item">
+            <img src="{% static 'images/icons/menu.svg' %}" class="nav-icon">
+            <span>献立</span>
+        </a>
+
+        <a href="{% url 'recipes:shopping_list' %}" class="bottom-nav__item">
+            <img src="{% static 'images/icons/shopping.svg' %}" class="nav-icon">
+            <span>買い物リスト</span>
+        </a>
+</nav>
     {% endif %}
     
     <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
