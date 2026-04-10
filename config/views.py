@@ -1,6 +1,8 @@
 from datetime import date, datetime, timedelta
 
+
 from django.shortcuts import render, redirect
+from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 
@@ -50,9 +52,8 @@ def home_view(request):
                 temp_menu.pop(str(slot.id), None)
                 request.session["temp_menu"] = temp_menu
 
-                messages.success(request, "献立からレシピを削除しました")
-
-            return redirect(f"/home/?date={selected_date}")
+                messages.success(request, "献立を保存しました")
+                return redirect(f"{reverse('home')}?date={selected_date}")
 
         eat_out = "eat_out" in request.POST
         deli = "deli" in request.POST
@@ -96,10 +97,7 @@ def home_view(request):
         request.session["temp_menu"] = {}
 
         messages.success(request, "献立を保存しました")
-        return redirect(
-            "recipes:menu_detail",
-            plan_date=selected_date.strftime("%Y-%m-%d")
-        )
+        return redirect(f"{reverse('home')}?date={selected_date}")
 
     menu_day = get_or_create_menu_day_with_slots(request.user, selected_date)
 

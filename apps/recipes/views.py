@@ -2,6 +2,7 @@ import calendar
 from datetime import date, datetime, timedelta
 import re
 from decimal import Decimal, InvalidOperation
+from django.urls import reverse
 
 from django.shortcuts import render, get_object_or_404,redirect
 from django.http import JsonResponse
@@ -715,10 +716,8 @@ def menu_day_update_view(request, plan_date):
 
             updated_menu_day.save()
             messages.success(request, "献立を保存しました")
-            return redirect(
-                "recipes:menu_update",
-                plan_date=menu_day.plan_date
-            )
+            print("ここ通ってる:", menu_day.plan_date)
+            return redirect(f"{reverse('home')}?date={menu_day.plan_date}")
 
     else:
         form = MenuDayForm(initial={

@@ -22,9 +22,9 @@
                     <span>マイページ</span>
                 </a>
                 
-                <form action="{% url 'accounts:logout' %}" method="POST" class="logout-form">
+                <form action="{% url 'accounts:logout' %}" method="POST" class="logout-form" id="logout-form">
                     {% csrf_token %}
-                    <button type="submit" class="logout-button">
+                    <button type="button" class="logout-button" id="logout-open-button">
                         <img src="{% static 'images/icons/logout.svg' %}" class="header-icon">
                         <span>ログアウト</span>
                     </button>
@@ -51,6 +51,17 @@
         {% block content %}
         {% endblock %}
     </main>
+
+    <div class="modal-overlay" id="logout-modal">
+        <div class="modal-content menu-delete-modal-content">
+            <p class="modal-message">ログアウトしますか？</p>
+
+            <div class="form-actions modal-actions">
+                <button type="button" class="delete-button" id="logout-confirm-button">はい</button>
+                <button type="button" class="back-button" id="logout-cancel-button">いいえ</button>
+            </div>
+        </div>
+    </div>
 
    {% if user.is_authenticated %}
     <nav class="bottom-nav">
@@ -82,6 +93,39 @@
     {% endif %}
     
     <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const logoutOpenButton = document.getElementById("logout-open-button");
+            const logoutModal = document.getElementById("logout-modal");
+            const logoutCancelButton = document.getElementById("logout-cancel-button");
+            const logoutConfirmButton = document.getElementById("logout-confirm-button");
+            const logoutForm = document.getElementById("logout-form");
+
+            if (!logoutOpenButton || !logoutModal || !logoutCancelButton || !logoutConfirmButton || !logoutForm) {
+                return;
+            }
+
+            logoutOpenButton.addEventListener("click", function () {
+                logoutModal.classList.add("active");
+            });
+
+            logoutCancelButton.addEventListener("click", function () {
+                logoutModal.classList.remove("active");
+            });
+
+            logoutModal.addEventListener("click", function (event) {
+                if (event.target === logoutModal) {
+                    logoutModal.classList.remove("active");
+                }
+            });
+
+            logoutConfirmButton.addEventListener("click", function () {
+                logoutForm.submit();
+            });
+        });
+    </script>
+
     {% block extra_js %}{% endblock %}
 </body>
 </html>
