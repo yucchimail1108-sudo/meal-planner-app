@@ -242,14 +242,14 @@
                             {% else %}
                                 <div class="home-search-button">
                                     <a
-                                        href="{% url 'recipes:menu_slot_update' slot_id=side_slot.id %}"
+                                        href="{% url 'recipes:menu_slot_update' slot_id=side_slot.id %}?source=home&plan_date={{ today|date:'Y-m-d' }}"
                                         class="select-button open-slot-search-modal"
                                         data-slot-id="{{ side_slot.id }}"
                                         data-meal-label="副菜"
                                     >
                                         探す
                                     </a>
-                                                                    </div>
+                                </div>
                             {% endif %}
                         {% else %}
                              <div class="home-menu-locked-badge">外食・惣菜設定中</div>
