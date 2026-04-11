@@ -1071,6 +1071,42 @@ def menu_cooked_view(request):
         )
     return redirect("recipes:menu_calendar")
 
+# おうち食材を一括削除
+@login_required
+def home_food_bulk_delete_view(request):
+    if request.method != "POST":
+        return redirect("recipes:home_food_list")
+
+    selected_ids = request.POST.getlist("selected_items")
+
+    if not selected_ids:
+        messages.info(request, "削除する食材を選択してください")
+        return redirect("recipes:home_food_list")
+
+    target_items = HomeFoodItem.objects.filter(
+        user=request.user,
+        id__in=selected_ids
+    ).select_related("food_item")
+
+    deleted_names = [
+        item.food_item.ingredient_name
+        for item in target_items
+    ]
+
+    deleted_count = target_items.count()
+    target_items.delete()
+
+    if deleted_count == 0:
+        messages.info(request, "削除対象の食材が見つかりませんでした")
+    else:
+        deleted_names_text = "、".join(deleted_names)
+        messages.success(
+            request,
+            f"おうち食材から削除しました：{deleted_names_text}"
+        )
+
+    return redirect("recipes:home_food_list")
+
 # 買い物リスト一覧＆追加＆購入済み処理
 @login_required
 def shopping_list_view(request):

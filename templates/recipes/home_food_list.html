@@ -104,32 +104,61 @@
         </form>
 
         {% if home_food_items %}
-            <div class="home-food-table-wrap">
-                <table class="home-food-table">
-                    <thead>
+            <form method="post" action="{% url 'recipes:home_food_bulk_delete' %}" id="bulk-delete-form">
+                {% csrf_token %}
+
+                <div class="form-actions">
+                    <button type="button" class="delete-button" id="open-bulk-delete-modal">
+                        選択した食材を削除
+                    </button>
+                </div>
+
+                <div class="home-food-table-wrap">
+                    <table class="home-food-table">
+                <thead>
+                    <tr>
+                        <th>選択</th>
+                        <th>食材名</th>
+                        <th>カテゴリ</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in home_food_items %}
                         <tr>
-                            <th>食材名</th>
-                            <th>カテゴリ</th>
-                            <th>操作</th>
+                            <td>
+                                <input
+                                    type="checkbox"
+                                    name="selected_items"
+                                    value="{{ item.id }}"
+                                    class="bulk-delete-checkbox"
+                                >
+                            </td>
+                            <td>{{ item.food_item.ingredient_name }}</td>
+                            <td>{{ item.food_item.get_category_display }}</td>
                         </tr>
-                    </thead>
-                    <tbody>
-                        {% for item in home_food_items %}
-                            <tr>
-                                <td>{{ item.food_item.ingredient_name }}</td>
-                                <td>{{ item.food_item.get_category_display }}</td>
-                                <td>
-                                    <form method="post" action="{% url 'recipes:home_food_delete' item.id %}">
-                                        {% csrf_token %}
-                                        <button type="submit" class="list-delete-button">削除</button>
-                                    </form>
-                                </td>
-                            </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </form>
+
+    <div id="bulk-delete-modal" class="modal-overlay">
+        <div class="modal-content menu-delete-modal-content">
+            <p class="modal-message">
+                選択した食材をおうち食材から削除しますか？
+            </p>
+
+            <div class="form-actions modal-actions">
+                <button type="submit" class="delete-button" form="bulk-delete-form">
+                    はい
+                </button>
+                <button type="button" class="back-button" id="close-bulk-delete-modal">
+                    いいえ
+                </button>
             </div>
-        {% else %}
+        </div>
+    </div>
+{% else %}
             <div class="empty-box">
                 {% if selected_category %}
                     <p>該当する食材がありません</p>
@@ -159,6 +188,36 @@ document.addEventListener("DOMContentLoaded", function () {
             noChoicesText: "選択できる食材がありません",
         });
     });
+
+    const openModalButton = document.getElementById("open-bulk-delete-modal");
+    const closeModalButton = document.getElementById("close-bulk-delete-modal");
+    const modal = document.getElementById("bulk-delete-modal");
+    const checkboxes = document.querySelectorAll(".bulk-delete-checkbox");
+
+    if (openModalButton && closeModalButton && modal) {
+        openModalButton.addEventListener("click", function () {
+            const hasCheckedItem = Array.from(checkboxes).some(function (checkbox) {
+                return checkbox.checked;
+            });
+
+            if (!hasCheckedItem) {
+                alert("削除する食材を選択してください");
+                return;
+            }
+
+            modal.classList.add("active");
+        });
+
+        closeModalButton.addEventListener("click", function () {
+            modal.classList.remove("active");
+        });
+
+        modal.addEventListener("click", function (event) {
+            if (event.target === modal) {
+                modal.classList.remove("active");
+            }
+        });
+    }
 });
 </script>
 {% endblock %}
