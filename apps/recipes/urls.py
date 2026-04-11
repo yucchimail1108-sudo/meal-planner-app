@@ -25,6 +25,7 @@ urlpatterns = [
     path("step/<int:step_id>/edit/", views.step_update_view, name="step_update"),
     path("step/<int:step_id>/delete/", views.step_delete_view, name="step_delete"),
     path("shopping-list/", views.shopping_list_view, name="shopping_list"),
+    path("shopping-list/delete-selected/", views.shopping_list_bulk_delete_view, name="shopping_list_bulk_delete"),
     path("shopping-list/<int:item_id>/delete/", views.shopping_list_delete_view, name="shopping_list_delete"),
     path("home-foods/", views.home_food_list_view, name="home_food_list"),
     path("home-foods/delete-selected/", views.home_food_bulk_delete_view, name="home_food_bulk_delete"),

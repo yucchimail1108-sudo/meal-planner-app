@@ -314,6 +314,20 @@ body {
     flex-wrap: wrap;
 }
 
+.shopping-list-toolbar {
+    display: flex;
+    margin-bottom: 10px;
+}
+
+.shopping-list-toolbar.right-align {
+    justify-content: flex-end;
+}
+
+.delete-check-label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
 
 /* ナビげーションバーを画面下に固定する */
 .main-content {

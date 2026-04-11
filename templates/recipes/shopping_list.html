@@ -78,10 +78,19 @@
         <input type="hidden" name="action" value="mark_as_purchased">
     </form>
 
+    <form method="post" id="bulk-delete-form" action="{% url 'recipes:shopping_list_bulk_delete' %}">
+        {% csrf_token %}
+    </form>
+
     <!-- 買い物リスト一覧表示エリア -->
     <div class="content-card section-block">
         <h2 class="section-title">買うもの一覧</h2>
-
+        <div class="shopping-list-toolbar right-align">
+            <label class="delete-check-label">
+                <input type="checkbox" id="select-all-delete-items">
+                <span>削除対象を全選択</span>
+            </label>
+        </div>
         {% if shopping_items %}
             {% regroup shopping_items by food_item.get_category_display as grouped_items %}
 
@@ -92,21 +101,29 @@
                     <ul class="item-list">
                         {% for item in category_group.list %}
                             <li class="item-row">
-                                <label class="item-check-label">
-                                    <input
-                                        type="checkbox"
-                                        name="checked_items"
-                                        value="{{ item.id }}"
-                                        form="purchase-form"
-                                    >
-                                    <span class="item-name">{{ item.food_item.ingredient_name }}</span>
-                                </label>
+                                <div class="item-row-left">
+                                    <label class="item-check-label">
+                                        <input
+                                            type="checkbox"
+                                            name="checked_items"
+                                            value="{{ item.id }}"
+                                            form="purchase-form"
+                                        >
+                                        <span class="item-name">{{ item.food_item.ingredient_name }}</span>
+                                    </label>
+                                </div>
 
                                 <div class="item-row-actions">
-                                    <form method="post" action="{% url 'recipes:shopping_list_delete' item.id %}">
-                                        {% csrf_token %}
-                                        <button type="submit" class="list-delete-button">削除</button>
-                                    </form>
+                                    <label class="delete-check-label">
+                                        <input
+                                            type="checkbox"
+                                            name="selected_delete_items"
+                                            value="{{ item.id }}"
+                                            form="bulk-delete-form"
+                                            class="bulk-delete-checkbox"
+                                        >
+                                        <span>削除</span>
+                                    </label>
                                 </div>
                             </li>
                         {% endfor %}
@@ -116,6 +133,7 @@
 
             <div class="form-actions bottom-actions">
                 <button type="submit" class="save-button" form="purchase-form">購入済み</button>
+                <button type="button" class="delete-button" id="open-bulk-delete-modal">選択した食材を削除</button>
                 <a href="{% url 'recipes:home_food_list' %}" class="select-button">おうち食材を見る</a>
             </div>
         {% else %}
@@ -123,6 +141,23 @@
                 <p>買い物リストはまだありません。</p>
             </div>
         {% endif %}
+    </div>
+
+    <div id="bulk-delete-modal" class="modal-overlay">
+        <div class="modal-content menu-delete-modal-content">
+            <p class="modal-message">
+                選択した食材を買い物リストから削除しますか？
+            </p>
+
+            <div class="form-actions modal-actions">
+                <button type="submit" class="delete-button" form="bulk-delete-form">
+                    はい
+                </button>
+                <button type="button" class="back-button" id="close-bulk-delete-modal">
+                    いいえ
+                </button>
+            </div>
+        </div>
     </div>
 
 </div>
@@ -189,6 +224,55 @@ document.addEventListener("DOMContentLoaded", function () {
                 if (firstMatchedOption) {
                     select.value = firstMatchedOption.value;
                 }
+            }
+        });
+    }
+
+    const openBulkDeleteButton = document.getElementById("open-bulk-delete-modal");
+    const closeBulkDeleteButton = document.getElementById("close-bulk-delete-modal");
+    const bulkDeleteModal = document.getElementById("bulk-delete-modal");
+    const deleteCheckboxes = document.querySelectorAll(".bulk-delete-checkbox");
+    const selectAllDeleteItems = document.getElementById("select-all-delete-items");
+
+    if (selectAllDeleteItems) {
+        selectAllDeleteItems.addEventListener("change", function () {
+            deleteCheckboxes.forEach(function (checkbox) {
+                checkbox.checked = selectAllDeleteItems.checked;
+            });
+        });
+
+        deleteCheckboxes.forEach(function (checkbox) {
+            checkbox.addEventListener("change", function () {
+                const allChecked = Array.from(deleteCheckboxes).every(function (item) {
+                    return item.checked;
+                });
+
+                selectAllDeleteItems.checked = allChecked;
+            });
+        });
+    }
+
+    if (openBulkDeleteButton && closeBulkDeleteButton && bulkDeleteModal) {
+        openBulkDeleteButton.addEventListener("click", function () {
+            const hasCheckedItem = Array.from(deleteCheckboxes).some(function (checkbox) {
+                return checkbox.checked;
+            });
+
+            if (!hasCheckedItem) {
+                alert("削除する食材を選択してください");
+                return;
+            }
+
+            bulkDeleteModal.classList.add("active");
+        });
+
+        closeBulkDeleteButton.addEventListener("click", function () {
+            bulkDeleteModal.classList.remove("active");
+        });
+
+        bulkDeleteModal.addEventListener("click", function (event) {
+            if (event.target === bulkDeleteModal) {
+                bulkDeleteModal.classList.remove("active");
             }
         });
     }
