@@ -117,7 +117,12 @@
                     <table class="home-food-table">
                 <thead>
                     <tr>
-                        <th>選択</th>
+                        <th>
+                            <label>
+                                <input type="checkbox" id="select-all-home-foods">
+                                全選択
+                            </label>
+                        </th>
                         <th>食材名</th>
                         <th>カテゴリ</th>
                     </tr>
@@ -172,6 +177,7 @@
 </div>
 {% endblock %}
 
+
 {% block extra_js %}
 <script>
 document.addEventListener("DOMContentLoaded", function () {
@@ -193,6 +199,26 @@ document.addEventListener("DOMContentLoaded", function () {
     const closeModalButton = document.getElementById("close-bulk-delete-modal");
     const modal = document.getElementById("bulk-delete-modal");
     const checkboxes = document.querySelectorAll(".bulk-delete-checkbox");
+    const selectAllCheckbox = document.getElementById("select-all-home-foods");
+    const itemCheckboxes = document.querySelectorAll(".bulk-delete-checkbox");
+
+    if (selectAllCheckbox) {
+        selectAllCheckbox.addEventListener("change", function () {
+            itemCheckboxes.forEach(function (checkbox) {
+                checkbox.checked = selectAllCheckbox.checked;
+            });
+        });
+
+        itemCheckboxes.forEach(function (checkbox) {
+            checkbox.addEventListener("change", function () {
+                const allChecked = Array.from(itemCheckboxes).every(function (item) {
+                    return item.checked;
+                });
+
+                selectAllCheckbox.checked = allChecked;
+            });
+        });
+    }
 
     if (openModalButton && closeModalButton && modal) {
         openModalButton.addEventListener("click", function () {
