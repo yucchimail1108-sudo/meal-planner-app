@@ -12,30 +12,33 @@
     </div>
 
     <!-- 献立の対象期間から食材を抽出するエリア -->
-    <div class="content-card section-block">
+    <div class="content-card section-block shopping-extract-card">
         <h2 class="section-title">献立の対象期間選択</h2>
-        <p class="section-text">
-            対象期間の献立で使用する食材を抽出します（おうち食材にあるものは除く）
+        <p class="section-text shopping-extract-text">
+            対象期間の献立で使用する食材を抽出します<br>（おうち食材にあるものは除く）
         </p>
 
-        <form method="get" class="form-block">
-            <div class="form-row">
-                <div class="form-group">
+        <form method="get" class="shopping-extract-form">
+            <div class="shopping-extract-inline">
+                <div class="shopping-inline-field">
                     <label for="{{ extract_form.start_date.id_for_label }}">開始日</label>
                     {{ extract_form.start_date }}
                 </div>
-                <div class="form-group">
+
+                <div class="shopping-inline-separator">〜</div>
+
+                <div class="shopping-inline-field">
                     <label for="{{ extract_form.end_date.id_for_label }}">終了日</label>
                     {{ extract_form.end_date }}
                 </div>
             </div>
 
-            <div class="form-actions">
+            <div class="shopping-extract-submit">
                 <button type="submit" class="search-button">抽出</button>
             </div>
         </form>
     </div>
-
+            
     <!-- 食材を手動追加するエリア -->
     <div id="manual-add-modal" class="modal-overlay">
         <div class="modal-content">
