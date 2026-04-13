@@ -790,8 +790,18 @@ def build_calendar_day_data(day_date, month, menu_day):
     meal_items = build_calendar_meal_items(menu_day)
 
     visible = False
+    slot_map = {
+        "staple": None,
+        "main": None,
+        "side": None,
+        "soup": None,
+    }
+
     if menu_day:
         visible = has_visible_menu(menu_day)
+
+        for slot in menu_day.slots.all():
+            slot_map[slot.meal_type] = slot
 
     return {
         "date": day_date,
@@ -803,8 +813,9 @@ def build_calendar_day_data(day_date, month, menu_day):
         "meal_items": meal_items,
         "has_more_meals": len(meal_items) > 2,
         "display_meal_items": meal_items[:2],
+        "slot_map": slot_map,
     }
-
+    
 # 献立カレンダー
 @login_required
 def menu_calendar_view(request):
@@ -844,6 +855,31 @@ def menu_calendar_view(request):
 
         calendar_weeks.append(week_data)
 
+    selected_date_text = request.GET.get("selected_date", "")
+    selected_day = None
+
+    if selected_date_text:
+        try:
+            selected_day = datetime.strptime(
+                selected_date_text,
+                "%Y-%m-%d"
+            ).date()
+        except ValueError:
+            selected_day = today
+    else:
+        selected_day = today
+
+    if selected_day.year != year or selected_day.month != month:
+        selected_day = date(year, month, 1)
+
+    selected_menu_day = menu_day_dict.get(selected_day)
+
+    selected_day_data = build_calendar_day_data(
+        day_date=selected_day,
+        month=month,
+        menu_day=selected_menu_day,
+    )
+
     # 前月
     if month == 1:
         prev_year = year - 1
@@ -868,7 +904,9 @@ def menu_calendar_view(request):
         "prev_month": prev_month,
         "next_year": next_year,
         "next_month": next_month,
-        "today": date.today(),
+        "today": today,
+        "selected_day_data": selected_day_data,
+        "selected_date": selected_day,
     }
 
     return render(

@@ -6,6 +6,25 @@
 <div class="page-container">
     <h2 class="page-title">≪献立≫</h2>
 
+    <div class="content-card calendar-cooked-card">
+        <p class="calendar-description">
+            ※つくった！を押すると「おうち食材」から使用した食材を削除できます
+        </p>
+
+        <form method="post" action="{% url 'recipes:menu_cooked' %}" class="calendar-cooked-form">
+            {% csrf_token %}
+            <label for="cooked_date" class="calendar-cooked-label">何日の献立をつくりましたか？</label>
+            <input
+                type="date"
+                id="cooked_date"
+                name="cooked_date"
+                max="{{ today|date:'Y-m-d' }}"
+                required
+            >
+            <button type="submit" class="save-button">つくった！</button>
+        </form>
+    </div>
+
     <div class="content-card">
         <div class="calendar-nav">
             <a href="{% url 'recipes:menu_calendar' %}?year={{ prev_year }}&month={{ prev_month }}" class="back-button">◁ 前月</a>
@@ -32,15 +51,12 @@
                         <div class="calendar-cell">
                             <div class="calendar-day">
                                 {% if item.is_current_month %}
-                                    {% if item.has_visible_menu %}
-                                        <a href="{% url 'recipes:menu_detail' plan_date=item.date|date:'Y-m-d' %}" class="calendar-day-link">
-                                            {{ item.day }}
-                                        </a>
-                                    {% else %}
-                                        <a href="{% url 'home' %}?date={{ item.date|date:'Y-m-d' }}" class="calendar-day-link calendar-create-link">
-                                            {{ item.day }}
-                                        </a>
-                                    {% endif %}
+                                    <a
+                                        href="{% url 'recipes:menu_calendar' %}?year={{ year }}&month={{ month }}&selected_date={{ item.date|date:'Y-m-d' }}"
+                                        class="calendar-day-link {% if selected_date == item.date %}calendar-day-link-selected{% endif %}"
+                                    >
+                                        {{ item.day }}
+                                    </a>
                                 {% else %}
                                     {{ item.day }}
                                 {% endif %}
@@ -74,23 +90,89 @@
         </table>
     </div>
 
-    <div class="content-card calendar-cooked-card">
-        <p class="calendar-description">
-            ※つくった！を押すると「おうち食材」から使用した食材を削除できます
-        </p>
+    <div class="content-card selected-menu-card">
+        <h3 class="section-title">{{ selected_date|date:"n月j日" }}の献立</h3>
 
-        <form method="post" action="{% url 'recipes:menu_cooked' %}" class="calendar-cooked-form">
-            {% csrf_token %}
-            <label for="cooked_date" class="calendar-cooked-label">何日の献立をつくりましたか？</label>
-            <input
-                type="date"
-                id="cooked_date"
-                name="cooked_date"
-                max="{{ today|date:'Y-m-d' }}"
-                required
-            >
-            <button type="submit" class="save-button">つくった！</button>
-        </form>
+        {% if selected_day_data.has_visible_menu %}
+            <div class="selected-menu-status">
+                {% if selected_day_data.menu_day.eat_out %}
+                    <span class="calendar-mini-label">外食</span>
+                {% endif %}
+
+                {% if selected_day_data.menu_day.deli %}
+                    <span class="calendar-mini-label">惣菜</span>
+                {% endif %}
+
+                {% if selected_day_data.is_cooked %}
+                    <span class="calendar-mini-label">つくった</span>
+                {% endif %}
+            </div>
+
+            <div class="selected-menu-list">
+                <div class="selected-menu-row">
+                    <span class="selected-menu-label">主食</span>
+                    <span class="selected-menu-value">
+                        {% if selected_day_data.slot_map.staple and selected_day_data.slot_map.staple.recipe %}
+                            {{ selected_day_data.slot_map.staple.recipe.recipe_name }}
+                        {% else %}
+                            未設定
+                        {% endif %}
+                    </span>
+                </div>
+
+                <div class="selected-menu-row">
+                    <span class="selected-menu-label">主菜</span>
+                    <span class="selected-menu-value">
+                        {% if selected_day_data.slot_map.main and selected_day_data.slot_map.main.recipe %}
+                            {{ selected_day_data.slot_map.main.recipe.recipe_name }}
+                        {% else %}
+                            未設定
+                        {% endif %}
+                    </span>
+                </div>
+
+                <div class="selected-menu-row">
+                    <span class="selected-menu-label">副菜</span>
+                    <span class="selected-menu-value">
+                        {% if selected_day_data.slot_map.side and selected_day_data.slot_map.side.recipe %}
+                            {{ selected_day_data.slot_map.side.recipe.recipe_name }}
+                        {% else %}
+                            未設定
+                        {% endif %}
+                    </span>
+                </div>
+
+                <div class="selected-menu-row">
+                    <span class="selected-menu-label">汁物</span>
+                    <span class="selected-menu-value">
+                        {% if selected_day_data.slot_map.soup and selected_day_data.slot_map.soup.recipe %}
+                            {{ selected_day_data.slot_map.soup.recipe.recipe_name }}
+                        {% else %}
+                            未設定
+                        {% endif %}
+                    </span>
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <a href="{% url 'recipes:menu_detail' plan_date=selected_date|date:'Y-m-d' %}?return_year={{ year }}&return_month={{ month }}&return_selected_date={{ selected_date|date:'Y-m-d' }}" class="save-button">
+                    献立詳細を見る
+                </a>
+                <a href="{% url 'home' %}?date={{ selected_date|date:'Y-m-d' }}&return_year={{ year }}&return_month={{ month }}&return_selected_date={{ selected_date|date:'Y-m-d' }}" class="back-button">
+                    ホームで編集
+                </a>
+            </div>
+        {% else %}
+            <p class="section-text">この日の献立は未作成です</p>
+
+            <div class="form-actions">
+                <a href="{% url 'home' %}?date={{ selected_date|date:'Y-m-d' }}" class="save-button">
+                    献立を作成する
+                </a>
+            </div>
+        {% endif %}
     </div>
+
+    
 </div>
 {% endblock %}
