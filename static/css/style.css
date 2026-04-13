@@ -2310,3 +2310,52 @@ body {
 .field-error p {
     margin: 4px 0 0;
 }
+
+/* =========================
+   マイページ画面
+========================= */
+.mypage-page {
+    max-width: 480px;
+    margin: 0 auto;
+}
+
+.mypage-card {
+    margin-top: 24px;
+    padding: 24px 20px;
+}
+
+.mypage-title {
+    text-align: center;
+    margin: 0 0 20px;
+}
+
+.mypage-user-name {
+    margin: 0 0 20px;
+    text-align: center;
+    color: #666666;
+    font-size: 14px;
+}
+
+.mypage-menu {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.mypage-menu-item {
+    display: block;
+    padding: 14px 16px;
+    border: 1px solid #dddddd;
+    border-radius: 8px;
+    background-color: #ffffff;
+    text-decoration: none;
+    color: #333333;
+    font-weight: bold;
+    text-align: center;
+    transition: background-color 0.2s, border-color 0.2s;
+}
+
+.mypage-menu-item:hover {
+    background-color: #f5f9ff;
+    border-color: #90caf9;
+}

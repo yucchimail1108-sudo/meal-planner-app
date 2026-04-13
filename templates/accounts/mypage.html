@@ -2,24 +2,26 @@
 
 {% block content %}
 <div class="page-container mypage-page">
+    <div class="content-card mypage-card">
+        <h1 class="page-title mypage-title">マイページ</h1>
 
-    <div class="page-header">
-        <h1 class="page-title">マイページ</h1>
-    </div>
-
-    <div class="content-card section-block">
-        <h2 class="section-title">アカウント情報</h2>
-
-        <p class="section-text">
-            ニックネーム：{{ request.user.first_name }}
+        <p class="mypage-user-name">
+            ニックネーム：{{ request.user.first_name|default:"未設定" }}
         </p>
 
-        <div class="form-actions">
-            <a href="{% url 'accounts:nickname_change' %}" class="save-button">ニックネーム変更</a>
-            <a href="{% url 'accounts:email_change' %}" class="save-button">メールアドレス変更</a>
-            <a href="{% url 'accounts:password_change' %}" class="save-button">パスワード変更</a>
-        </div>  
-    </div>
+        <div class="mypage-menu">
+            <a href="{% url 'accounts:nickname_change' %}" class="mypage-menu-item">
+                ニックネーム変更
+            </a>
 
+            <a href="{% url 'accounts:email_change' %}" class="mypage-menu-item">
+                メールアドレス変更
+            </a>
+
+            <a href="{% url 'accounts:password_change' %}" class="mypage-menu-item">
+                パスワード変更
+            </a>
+        </div>
+    </div>
 </div>
 {% endblock %}
