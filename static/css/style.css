@@ -291,6 +291,44 @@ body {
 .item-row-actions {
     display: flex;
     align-items: center;
+    gap: 8px;
+}
+
+.icon-delete-button {
+    border: none;
+    background: none;
+    cursor: pointer;
+    font-size: 18px;
+    line-height: 1;
+    padding: 4px;
+}
+
+.icon-delete-button:hover {
+    opacity: 0.7;
+}
+
+.shopping-purchase-actions {
+    display: flex !important;
+    justify-content: flex-start !important;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: nowrap !important;
+}
+
+.shopping-purchase-actions {
+    text-align: left !important;
+}
+
+.shopping-purchase-actions .select-button {
+    margin: 0;
+}
+
+.shopping-purchase-note {
+    margin: 0;
+    font-size: 13px;
+    color: #1976d2;
+    line-height: 1.4;
+    white-space: nowrap;
 }
 
 .list-delete-button {

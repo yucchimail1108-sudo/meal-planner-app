@@ -1366,39 +1366,21 @@ def shopping_list_delete_view(request, item_id):
 
     return redirect("recipes:shopping_list")
 
-# 買い物リストを一括削除
+# 買い物リストを全削除
 @login_required
-def shopping_list_bulk_delete_view(request):
+def shopping_list_delete_all_view(request):
     if request.method != "POST":
         return redirect("recipes:shopping_list")
 
-    selected_ids = request.POST.getlist("selected_delete_items")
-
-    if not selected_ids:
-        messages.info(request, "削除する食材を選択してください")
-        return redirect("recipes:shopping_list")
-
-    target_items = ShoppingListItem.objects.filter(
-        user=request.user,
-        id__in=selected_ids
-    ).select_related("food_item")
-
-    deleted_names = [
-        item.food_item.ingredient_name
-        for item in target_items
-    ]
+    target_items = ShoppingListItem.objects.filter(user=request.user)
 
     deleted_count = target_items.count()
     target_items.delete()
 
     if deleted_count == 0:
-        messages.info(request, "削除対象の食材が見つかりませんでした")
+        messages.info(request, "削除する買い物リストがありません")
     else:
-        deleted_names_text = "、".join(deleted_names)
-        messages.success(
-            request,
-            f"買い物リストから削除しました：{deleted_names_text}"
-        )
+        messages.success(request, "買い物リストをすべて削除しました")
 
     return redirect("recipes:shopping_list")
 
