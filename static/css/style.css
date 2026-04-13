@@ -483,20 +483,32 @@ body {
 
 .calendar-day-link {
     text-decoration: none;
-    color: #1976d2;
     font-weight: bold;
-    display: inline-block;
-    padding: 2px 4px;
-    border-radius: 4px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 26px;
+    min-height: 26px;
+    padding: 2px 6px;
+    border-radius: 999px;
 }
 
-.calendar-day-link:hover {
-    text-decoration: none;
-    background-color: #e3f2fd;
-}
-
+/* 未作成日（＝押せる日） */
 .calendar-create-link {
-    color: #333333;
+    color: #1976d2;
+    background-color: #e3f2fd;
+    border: 1px solid #90caf9;
+}
+
+/* hover時 */
+.calendar-create-link:hover {
+    background-color: #bbdefb;
+    border-color: #64b5f6;
+}
+
+/* タップ（スマホ）用 */
+.calendar-create-link:active {
+    background-color: #90caf9;
 }
 
 .calendar-icons {
@@ -575,6 +587,28 @@ body {
     border-radius: 6px;
     font-size: 14px;
     background-color: #ffffff;
+}
+
+/* 鍋アイコンも押せる感じにする */
+.calendar-pot-link {
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px;
+    border-radius: 6px;
+}
+
+.calendar-pot-link:hover {
+    background-color: #f0f0f0;
+}
+
+.calendar-pot-link,
+.calendar-pot-link:link,
+.calendar-pot-link:visited,
+.calendar-pot-link:hover,
+.calendar-pot-link:active {
+    text-decoration: none;
 }
 
 /* 献立の見た目変更 */
@@ -754,8 +788,14 @@ body {
 .menu-detail-bottom-actions {
     display: flex;
     justify-content: center;
-    gap: 12px;
+    align-items: center;
+    width: 100%;
     margin-top: 16px;
+    clear: both;
+}
+
+.menu-detail-bottom-actions .back-button {
+    margin: 0;
 }
 
 /* 献立詳細での削除ボタンモーダル */
