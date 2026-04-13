@@ -83,23 +83,85 @@
         </table>
     </div>
 
-    <div class="content-card calendar-cooked-card">
-        <p class="calendar-description">
-            ※つくった！を押して、献立をつくった日付を選択すると「おうち食材」から使用した食材を削除できます
-        </p>
+    <div class="calendar-cooked-inline">
+        <button type="button" class="select-button" id="open-cooked-modal">
+            つくった！
+        </button>
 
-        <form method="post" action="{% url 'recipes:menu_cooked' %}" class="calendar-cooked-form">
-            {% csrf_token %}
-            <label for="cooked_date" class="calendar-cooked-label">何日の献立をつくりましたか？</label>
-            <input
-                type="date"
-                id="cooked_date"
-                name="cooked_date"
-                max="{{ today|date:'Y-m-d' }}"
-                required
-            >
-            <button type="submit" class="select-button">つくった！</button>
-        </form>
+        <p class="calendar-cooked-description">
+            つくった！日を登録すると<br>
+            使用した食材をおうち食材から<br>
+            削除できます
+            
+        </p>
+    </div>
+
+    <div id="cooked-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>つくった日を登録</h3>
+                <span class="modal-close" id="close-cooked-modal">&times;</span>
+            </div>
+
+            <div class="modal-body">
+                <p class="calendar-description">
+                    つくった！日を登録すると、使用した食材をおうち食材から削除できます
+                </p>
+
+                <form method="post" action="{% url 'recipes:menu_cooked' %}">
+                    {% csrf_token %}
+
+                    <label for="cooked_date">日付</label>
+                    <input
+                        type="date"
+                        id="cooked_date"
+                        name="cooked_date"
+                        max="{{ today|date:'Y-m-d' }}"
+                        value="{{ today|date:'Y-m-d' }}"
+                        required
+                    >
+
+                    <button type="submit" class="save-button">
+                        登録する
+                    </button>
+                </form>
+            </div>
+        </div>
     </div>
 </div>
+{% endblock %}
+
+
+{% block extra_js %}
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const openBtn = document.getElementById("open-cooked-modal");
+    const modal = document.getElementById("cooked-modal");
+    const closeBtn = document.getElementById("close-cooked-modal");
+
+    openBtn.addEventListener("click", function () {
+        modal.style.display = "block";
+
+        const input = document.getElementById("cooked_date");
+
+        // URLから selected_date を取得
+        const params = new URLSearchParams(window.location.search);
+        const selectedDate = params.get("selected_date");
+
+        if (selectedDate) {
+            input.value = selectedDate;
+        }
+    });
+
+    closeBtn.addEventListener("click", function () {
+        modal.style.display = "none";
+    });
+
+    window.addEventListener("click", function (e) {
+        if (e.target === modal) {
+            modal.style.display = "none";
+        }
+    });
+});
+</script>
 {% endblock %}
