@@ -1,14 +1,54 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h1>ログイン画面</h1>
+<div class="page-container auth-page">
+    <div class="content-card auth-card">
+        <h1 class="page-title auth-title">ログイン</h1>
 
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">ログイン</button>
-</form>
+        {% if form.non_field_errors %}
+            <div class="error-box">
+                {% for error in form.non_field_errors %}
+                    <p>{{ error }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
 
-<p><a href="{% url 'accounts:signup' %}">新規アカウント登録</a></p>
-<p><a href="#">パスワードを忘れた方はこちら</a></p>
+        <form method="post" class="auth-form">
+            {% csrf_token %}
+
+            <div class="auth-form-group">
+                <label for="{{ form.email.id_for_label }}">メールアドレス</label>
+                {{ form.email }}
+                {% if form.email.errors %}
+                    <div class="field-error">
+                        {% for error in form.email.errors %}
+                            <p>{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+
+            <div class="auth-form-group">
+                <label for="{{ form.password.id_for_label }}">パスワード</label>
+                {{ form.password }}
+                {% if form.password.errors %}
+                    <div class="field-error">
+                        {% for error in form.password.errors %}
+                            <p>{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+
+            <div class="auth-submit">
+                <button type="submit" class="save-button auth-submit-button">ログイン</button>
+            </div>
+        </form>
+
+        <div class="auth-links">
+            <p><a href="{% url 'accounts:signup' %}">新規アカウント登録</a></p>
+            <p><a href="#">パスワードを忘れた方はこちら</a></p>
+        </div>
+    </div>
+</div>
 {% endblock %}
