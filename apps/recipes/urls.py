@@ -28,7 +28,7 @@ urlpatterns = [
     path("shopping-list/delete-selected/", views.shopping_list_bulk_delete_view, name="shopping_list_bulk_delete"),
     path("shopping-list/<int:item_id>/delete/", views.shopping_list_delete_view, name="shopping_list_delete"),
     path("home-foods/", views.home_food_list_view, name="home_food_list"),
-    path("home-foods/delete-selected/", views.home_food_bulk_delete_view, name="home_food_bulk_delete"),
+    path("home-foods/delete-all/", views.home_food_delete_all_view, name="home_food_delete_all"),
     path("home-foods/<int:item_id>/delete/", views.home_food_delete_view, name="home_food_delete"),
     path("food-items/create/", views.food_item_create_view, name="food_item_create"),
 ]

@@ -1645,7 +1645,16 @@ body {
 }
 
 .home-food-header {
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.home-food-add-note {
+    margin-top: 0;
     margin-bottom: 16px;
+    color: #666666;
+    font-size: 14px;
+    line-height: 1.6;
 }
 
 .home-food-search-form {

@@ -198,9 +198,10 @@ class HomeFoodItemForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self.fields["food_item"].empty_label = "食材選択"
+        self.fields["food_item"].empty_label = "検索"
         self.fields["food_item"].queryset = FoodItem.objects.order_by("ingredient_name")
         self.fields["food_item"].widget.attrs["class"] = "home-food-select"
+        self.fields["food_item"].widget.attrs["data-placeholder"] = "検索"
 
         self.fields["food_item"].label_from_instance = (
             lambda obj: (
