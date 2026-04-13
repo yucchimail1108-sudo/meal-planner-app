@@ -13,18 +13,17 @@
             <a href="{% url 'recipes:menu_calendar' %}?year={{ next_year }}&month={{ next_month }}" class="save-button">次月 ▷</a>
         </div>
 
+<div class="calendar-weekdays">
+            <div class="calendar-weekday">日</div>
+            <div class="calendar-weekday">月</div>
+            <div class="calendar-weekday">火</div>
+            <div class="calendar-weekday">水</div>
+            <div class="calendar-weekday">木</div>
+            <div class="calendar-weekday">金</div>
+            <div class="calendar-weekday">土</div>
+        </div>
+
         <table class="menu-calendar-table">
-            <thead>
-                <tr>
-                    <th>日</th>
-                    <th>月</th>
-                    <th>火</th>
-                    <th>水</th>
-                    <th>木</th>
-                    <th>金</th>
-                    <th>土</th>
-                </tr>
-            </thead>
             <tbody>
                 {% for week in calendar_weeks %}
                 <tr>
@@ -32,42 +31,39 @@
                     <td class="{% if not item.is_current_month %}other-month{% endif %}">
                         <div class="calendar-cell">
                             <div class="calendar-day">
-                                {% if item.is_current_month and item.has_visible_menu %}
-                                    <a href="{% url 'recipes:menu_detail' plan_date=item.date|date:'Y-m-d' %}" class="calendar-day-link">
-                                        {{ item.day }}
-                                    </a>
+                                {% if item.is_current_month %}
+                                    {% if item.has_visible_menu %}
+                                        <a href="{% url 'recipes:menu_detail' plan_date=item.date|date:'Y-m-d' %}" class="calendar-day-link">
+                                            {{ item.day }}
+                                        </a>
+                                    {% else %}
+                                        <a href="{% url 'home' %}?date={{ item.date|date:'Y-m-d' }}" class="calendar-day-link calendar-create-link">
+                                            {{ item.day }}
+                                        </a>
+                                    {% endif %}
                                 {% else %}
                                     {{ item.day }}
                                 {% endif %}
                             </div>
 
                             {% if item.is_current_month %}
-                                {% if item.has_visible_menu %}
-                                    {% for meal_item in item.display_meal_items %}
-                                        <div class="calendar-meal-item">{{ meal_item }}</div>
-                                    {% endfor %}
+                                <div class="calendar-icons">
+                                    {% if item.has_visible_menu %}
+                                        {% if item.is_cooked %}
+                                            <div class="calendar-icon cooked-icon">🍲✓</div>
+                                        {% else %}
+                                            <div class="calendar-icon">🍲</div>
+                                        {% endif %}
 
-                                    {% if item.has_more_meals %}
-                                        <div class="calendar-meal-item">…</div>
-                                    {% endif %}
+                                        {% if item.menu_day.eat_out %}
+                                            <div class="calendar-mini-label">外</div>
+                                        {% endif %}
 
-                                    {% if item.menu_day.eat_out %}
-                                        <div class="calendar-label">外食</div>
+                                        {% if item.menu_day.deli %}
+                                            <div class="calendar-mini-label">惣</div>
+                                        {% endif %}
                                     {% endif %}
-
-                                    {% if item.menu_day.deli %}
-                                        <div class="calendar-label">惣菜</div>
-                                    {% endif %}
-
-                                    {% if item.is_cooked %}
-                                        <div class="calendar-label">🍲 つくった</div>
-                                    {% endif %}
-                                {% else %}
-                                    <div class="calendar-status">献立なし</div>
-                                    <a href="{% url 'home' %}?date={{ item.date|date:'Y-m-d' }}" class="select-button calendar-create-button">
-                                        作成
-                                    </a>
-                                {% endif %}
+                                </div>
                             {% endif %}
                         </div>
                     </td>
@@ -80,7 +76,7 @@
 
     <div class="content-card calendar-cooked-card">
         <p class="calendar-description">
-            ※つくった！を押して、献立をつくった日付を選択すると「おうち食材」から使用した食材を削除できます
+            ※つくった！を押すると「おうち食材」から使用した食材を削除できます
         </p>
 
         <form method="post" action="{% url 'recipes:menu_cooked' %}" class="calendar-cooked-form">

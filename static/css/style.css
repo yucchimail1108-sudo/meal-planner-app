@@ -430,24 +430,50 @@ body {
     width: 100%;
     border-collapse: collapse;
     table-layout: fixed;
+    margin-top: 0;
 }
 
-.menu-calendar-table th,
 .menu-calendar-table td {
     border: 1px solid #cccccc;
+}
+
+.menu-calendar-table td {
+    height: 64px;
+    padding: 4px;
     vertical-align: top;
-    height: 100px;
-    padding: 8px;
 }
 
 .calendar-cell {
     display: flex;
     flex-direction: column;
-    gap: 6px;
+    justify-content: space-between;
+    min-height: 60px;
 }
 
 .calendar-day {
     font-weight: bold;
+    font-size: 14px;
+}
+
+.calendar-weekdays {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    margin-bottom: 4px;
+    border: 1px solid #cccccc;
+    border-bottom: none;
+    background-color: #fafafa;
+}
+
+.calendar-weekday {
+    text-align: center;
+    font-size: 12px;
+    font-weight: bold;
+    padding: 6px 0;
+    border-right: 1px solid #cccccc;
+}
+
+.calendar-weekday:last-child {
+    border-right: none;
 }
 
 .other-month {
@@ -455,43 +481,81 @@ body {
     color: #999999;
 }
 
-.calendar-status {
-    font-size: 12px;
-}
-
-.calendar-label {
-    display: inline-block;
-    font-size: 12px;
-    padding: 2px 6px;
-    border: 1px solid #999999;
-    border-radius: 4px;
-    width: fit-content;
-}
-
-/* 献立カレンダー */
-.calendar-meal-item {
-    font-size: 12px;
-    line-height: 1.4;
-    word-break: break-word;
-}
-
 .calendar-day-link {
     text-decoration: none;
     color: #1976d2;
     font-weight: bold;
+    display: inline-block;
+    padding: 2px 4px;
+    border-radius: 4px;
 }
 
 .calendar-day-link:hover {
-    text-decoration: underline;
+    text-decoration: none;
+    background-color: #e3f2fd;
 }
 
-.calendar-create-button {
+.calendar-create-link {
+    color: #333333;
+}
+
+.calendar-icons {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    flex-wrap: wrap;
     margin-top: 6px;
-    text-align: center;
+}
+
+.calendar-icon {
+    font-size: 18px;
+    line-height: 1;
+}
+
+.cooked-icon {
+    font-size: 16px;
+}
+
+.calendar-mini-label {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 20px;
+    height: 20px;
+    padding: 0 4px;
+    font-size: 11px;
+    border: 1px solid #999999;
+    border-radius: 999px;
+    background-color: #ffffff;
 }
 
 .calendar-cooked-card {
     margin-top: 0;
+}
+
+@media (max-width: 640px) {
+    .calendar-title {
+        font-size: 16px;
+    }
+
+    .menu-calendar-table td {
+        height: 64px;
+        padding: 4px;
+    }
+
+    .calendar-day {
+        font-size: 13px;
+    }
+
+    .calendar-icon {
+        font-size: 16px;
+    }
+
+    .calendar-mini-label {
+        min-width: 18px;
+        height: 18px;
+        font-size: 10px;
+    }
 }
 
 .calendar-cooked-form {
