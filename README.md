@@ -83,8 +83,8 @@
 ### ホーム画面
 ![ホーム画面](docs/images/home_2.png)
 
-### マイレシピ画面
-![マイレシピ画面](docs/images/reciipe_2.png)
+### 献立画面
+![献立画面](docs/images/menu_2.png)
 
 ### 買い物リスト
 ![買い物リスト](docs/images/shopping_2.png)
