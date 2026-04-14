@@ -307,6 +307,9 @@ body {
     opacity: 0.7;
 }
 
+
+
+/* ★ */
 .shopping-purchase-actions {
     display: flex !important;
     justify-content: flex-start !important;
@@ -431,6 +434,48 @@ body {
     min-width: 120px;
 }
 
+.shopping-date-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    width: 100%;
+    min-width: 0;
+}
+
+.shopping-date-group label {
+    font-weight: bold;
+    font-size: 13px;
+}
+
+.shopping-date-group input[type="date"] {
+    padding: 8px 10px;
+    border: 1px solid #cccccc;
+    border-radius: 6px;
+    font-size: 14px;
+    background-color: #ffffff;
+    box-sizing: border-box;
+}
+
+.shopping-date-separator {
+    width: 100%;
+    text-align: center;
+    font-size: 18px;
+    line-height: 1;
+    padding-bottom: 0;
+    color: #666666;
+}
+
+.shopping-extract-button-wrap {
+    display: flex;
+    align-items: flex-end;
+    width: 100%;
+}
+
+.shopping-extract-button-wrap .search-button {
+    width: 100%;
+    margin: 0;
+}
+
 @media (max-width: 640px) {
     .shopping-extract-inline {
         gap: 6px;
@@ -455,59 +500,7 @@ body {
         min-width: 120px;
     }
 
-.shopping-date-group label {
-    font-weight: bold;
-    font-size: 13px;
-}
-
-.shopping-date-group input[type="date"] {
-    padding: 8px 10px;
-    border: 1px solid #cccccc;
-    border-radius: 6px;
-    font-size: 14px;
-    background-color: #ffffff;
-    box-sizing: border-box;
-}
-
-.shopping-date-separator {
-    font-size: 18px;
-    line-height: 1;
-    padding-bottom: 8px;
-    color: #666666;
-}
-
-.shopping-extract-button-wrap {
-    display: flex;
-    align-items: flex-end;
-}
-
-.shopping-extract-button-wrap .search-button {
-    margin: 0;
-}
-
-.shopping-date-group {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    width: 100%;
-    min-width: 0;
-}
-
-.shopping-date-separator {
-    width: 100%;
-    text-align: center;
-    padding-bottom: 0;
-}
-
-.shopping-extract-button-wrap {
-    width: 100%;
-}
-
-.shopping-extract-button-wrap .search-button {
-    width: 100%;
-}
-
-
+    
 /* ナビげーションバーを画面下に固定する */
 .main-content {
     max-width: 800px;
