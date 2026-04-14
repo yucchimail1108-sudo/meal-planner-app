@@ -243,7 +243,10 @@ body {
 ログアウト → 薄赤 
 */ 
 
-/* 検索フォーム */
+
+/* =========================
+   検索フォーム
+========================= */
 .search-form {
     display: flex;
     gap: 10px;
@@ -269,7 +272,9 @@ body {
     width: 180px;
 }
 
-/* おうち食材一覧 */
+/* =========================
+   おうち食材一覧 
+========================= */
 .item-list {
     list-style: none;
     margin: 0;
@@ -307,9 +312,9 @@ body {
     opacity: 0.7;
 }
 
-
-
-/* ★ */
+/* =========================
+    買い物リスト画面 
+========================= */
 .shopping-purchase-actions {
     display: flex !important;
     justify-content: flex-start !important;
@@ -336,7 +341,9 @@ body {
     font-size: 13px;
 }
 
-/* 買い物リストのチェック表示 */
+/* =========================
+    買い物リストのチェック表示
+========================= */
 .item-check-label {
     display: flex;
     align-items: center;
@@ -344,7 +351,9 @@ body {
     margin: 0;
 }
 
-/* 買い物リスト下部の操作ボタン */
+/* =========================
+    買い物リスト下部の操作ボタン
+========================= */
 .bottom-actions {
     margin-top: 20px;
     justify-content: flex-end;
@@ -499,9 +508,11 @@ body {
         width: auto;
         min-width: 120px;
     }
+}
 
-    
-/* ナビげーションバーを画面下に固定する */
+/* =========================
+ナビげーションバーを画面下に固定
+========================= */
 .main-content {
     max-width: 800px;
     margin: 0 auto;
@@ -564,7 +575,9 @@ body {
     flex-shrink: 0;
 }
 
-/* 選択中ナビを分かるようにする */
+/* =========================
+選択中ナビを分かるようにする
+========================= */
 .bottom-nav__item.active {
     color: #c67c3a;
 }
@@ -585,7 +598,9 @@ body {
     transition: all 0.15s ease;
 }
 
-/* 献立カレンダー */
+/* =========================
+　　献立カレンダー
+========================= */
 .calendar-nav {
     display: flex;
     justify-content: space-between;
@@ -665,20 +680,20 @@ body {
     border-radius: 999px;
 }
 
-/* 未作成日（＝押せる日） */
+/* =========================
+　　未作成日（＝押せる日）
+========================= */
 .calendar-create-link {
     color: #1976d2;
     background-color: #e3f2fd;
     border: 1px solid #90caf9;
 }
 
-/* hover時 */
 .calendar-create-link:hover {
     background-color: #bbdefb;
     border-color: #64b5f6;
 }
 
-/* タップ（スマホ）用 */
 .calendar-create-link:active {
     background-color: #90caf9;
 }
@@ -761,7 +776,9 @@ body {
     background-color: #ffffff;
 }
 
-/* 鍋アイコンも押せる感じにする */
+/* =========================
+   鍋アイコンも押せる感じにする
+========================= */
 .calendar-pot-link {
     text-decoration: none;
     display: inline-flex;
@@ -807,21 +824,17 @@ body {
     color: #666666;
 }
 
-/* @media (max-width: 480px) {
-    .calendar-cooked-inline {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-} */
-
-/* 献立の見た目変更 */
+/* =========================
+   献立の見た目変更
+========================= */
 .menu-detail-nav {
     display: flex;
     justify-content: space-between;
     margin-bottom: 16px;
 }
-
-/* 献立の写真 */
+/* =========================
+   献立の写真
+========================= */
 .menu-image {
     width: 120px;
     height: 120px;
@@ -841,7 +854,9 @@ body {
     border-radius: 8px;
 }
 
-/* 献立削除ボタン */
+/* =========================
+   献立削除ボタン
+========================= */
 .delete-button,
 .list-delete-button {
     background-color: #e74c3c;
@@ -849,7 +864,9 @@ body {
     color: #ffffff;
 }
 
-/* 献立詳細画面を４枠２列、画像表示（NO IMAGE） */
+/* =========================
+   献立詳細画面を４枠２列、画像表示（NO IMAGE）
+========================= */
 .menu-detail-status {
     display: flex;
     justify-content: center;
@@ -934,7 +951,9 @@ body {
     text-align: center;
 }
 
-/* 献立詳細の見た目崩れ対策 */
+/* =========================
+   献立詳細の見た目崩れ対策
+========================= */
 .menu-detail-card a {
     text-decoration: none;
     color: inherit;
@@ -948,8 +967,9 @@ body {
     color: #1976d2;
 }
 
-
-/* 献立詳細画面をホーム画面に寄せる */
+/* =========================
+   献立詳細画面をホーム画面に寄せる
+========================= */
 .menu-detail-header {
     margin-bottom: 16px;
 }
@@ -1000,20 +1020,26 @@ body {
     margin: 0;
 }
 
-/* 献立詳細での削除ボタンモーダル */
+/* =========================
+   献立詳細での削除ボタンモーダル
+========================= */
 .menu-delete-modal-content {
     max-width: 360px;
     text-align: center;
 }
 
-/* カレンダーのつくった！ボタン横のコメント */
+/* =========================
+カレンダーのつくった！ボタン横のコメント
+========================= */ 
 .calendar-description {
     font-size: 0.9em;
     color: #666;
     margin-bottom: 10px;
 }
 
-/* 「つくった！」モーダル */
+/* =========================
+   「つくった！」モーダル
+========================= */
 .modal {
     display: none;
     position: fixed;
@@ -1046,8 +1072,9 @@ body {
     cursor: pointer;
 }
 
-
-/* マイレシピの画像と参照URL部分 */
+/* =========================
+   マイレシピの画像と参照URL部分
+========================= */
 .image-url-area {
     display: flex;
     gap: 20px;
@@ -1062,8 +1089,9 @@ body {
     width: 50%;
 }
 
-
-/* タイトルやボタンの見た目を他画面に寄せる */
+/* =========================
+   タイトルやボタンの見た目を他画面に寄せる
+========================= */
 .page-container {
     max-width: 800px;
     margin: 0 auto;
@@ -1120,7 +1148,6 @@ body {
     gap: 16px;
 }
 
-
 .form-row {
     display: flex;
     gap: 16px;
@@ -1142,7 +1169,9 @@ body {
     margin-bottom: 10px;
 }
 
-/* ホーム画面ヘッダー */
+/* =========================
+   ホーム画面ヘッダー
+========================= */
 .header-inner {
     display: flex;
     justify-content: space-between;
@@ -1189,7 +1218,9 @@ body {
     color: #1976d2;
 }
 
-/* ヘッダーのタイトル */
+/* =========================
+   ヘッダーのタイトル
+========================= */
 .site-title {
     font-size: 24px;
     font-weight: bold;
@@ -1203,7 +1234,9 @@ body {
     text-align: center;
 }
 
-/* レシピ削除モーダル */
+/* =========================
+   レシピ削除モーダル
+========================= */
 .modal-message {
     margin: 0 0 20px;
     line-height: 1.6;
@@ -1241,7 +1274,9 @@ body {
     font-size: 10px;
 }
 
-/* レシピ詳細画面 */
+/* =========================
+   レシピ詳細画面
+========================= */
 .recipe-detail-page {
     max-width: 800px;
     margin: 0 auto;
@@ -1340,18 +1375,18 @@ body {
     gap: 10px;
 }
 
-/* レシピ名太字 */
+/* =========================
+   レシピ名太字
+========================= */
 .recipe-name {
     font-weight: bold;
 }
 
-/* 分量換算のセレクトボックスのみ青字 */
 .recipe-scale-form select {
     color: #1976d2;
     font-weight: bold;
 }
 
-/* マイレシピ一覧に戻る */
 .recipe-detail-back-area {
     margin-top: 24px;
     text-align: center;
@@ -1377,8 +1412,6 @@ body {
 /* =========================
    レシピ登録・編集画面
 ========================= */
-
-/* 画像表示 */
 .recipe-form-image-block {
     width: 120px;
     margin-bottom: 10px;
@@ -1409,7 +1442,9 @@ body {
     font-size: 13px;
 }
 
-/* 画像アップロード */
+/* =========================
+   画像アップロード
+========================= */
 .hidden-file-input {
     display: none !important;
 }
@@ -1442,8 +1477,9 @@ body {
 .custom-file-upload .custom-file-button:hover {
     background-color: #f57c00;
 }
-
-/* フォーム横並び */
+/* =========================
+   フォーム横並び
+========================= */
 .form-group {
     display: flex;
     align-items: flex-start;
@@ -1474,7 +1510,9 @@ body {
     margin-left: 2px;
 }
 
-/* 作る量 */
+/* =========================
+   作る量
+========================= */
 .servings-field {
     display: flex;
     align-items: center;
@@ -1491,7 +1529,9 @@ body {
     white-space: nowrap;
 }
 
-/* 縦並びフォーム */
+/* =========================
+   縦並びフォーム
+========================= */
 .form-group-vertical {
     flex-direction: column;
     align-items: stretch;
@@ -1520,7 +1560,9 @@ body {
     box-sizing: border-box;
 }
 
-/* 材料欄 */
+/* =========================
+   材料欄
+========================= */
 .ingredient-row {
     display: flex;
     gap: 8px;
@@ -1595,7 +1637,9 @@ body {
     box-sizing: border-box;
 }
 
-/* 作り方欄 */
+/* =========================
+   作り方欄
+========================= */
 .recipe-steps-section {
     margin-top: 0;
 }
@@ -1954,7 +1998,6 @@ body {
     background-color: #fafafa;
 }
 
-
 /* =========================
    おうち食材画面
 ========================= */
@@ -2105,9 +2148,9 @@ body {
     display: flex;
 }
 
-
-
-/* 買い物リスト 手動追加モーダル内検索 */
+/* =========================
+   買い物リスト手動追加モーダル内検索
+========================= */
 .modal-search-block {
     margin-bottom: 12px;
 }
@@ -2154,12 +2197,13 @@ body {
     background-color: #ffffff;
 }
 
-/* 作る量だけ幅を制限 */
 #id_servings {
     width: 80px;
 }
 
-/* 小さい画面（横幅 380px 以下）のスマホ用 */
+/* =========================
+   小さい画面（横幅 380px 以下）のスマホ用
+========================= */
 @media (max-width: 380px) {
     .site-title a {
         font-size: 17px;
@@ -2339,4 +2383,3 @@ body {
     background-color: #f5f9ff;
     border-color: #90caf9;
 }
-
