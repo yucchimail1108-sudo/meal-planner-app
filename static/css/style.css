@@ -305,11 +305,57 @@ body {
     cursor: pointer;
     font-size: 18px;
     line-height: 1;
+    padding: 6px; border: none;
+    background: none;
+    cursor: pointer;
     padding: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.delete-icon-img {
+    width: 26px;
+    height: 26px;
+    object-fit: contain;
 }
 
 .icon-delete-button:hover {
     opacity: 0.7;
+}
+
+@media (max-width: 380px) {
+    .home-food-filter-form {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 6px;
+        padding: 10px;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .home-food-filter-form select {
+        width: 82px;
+        min-width: 82px;
+        padding: 6px 8px;
+        font-size: 13px;
+    }
+
+    .home-food-filter-form .save-button,
+    .home-food-filter-form .back-button {
+        padding: 6px 8px;
+        font-size: 13px;
+        margin: 0;
+        white-space: nowrap;
+    }
+
+    .home-food-filter-form .delete-all-wrap {
+        width: 100%;
+        display: flex;
+        justify-content: flex-end;
+        margin-left: 0;
+    }
 }
 
 /* =========================
@@ -717,7 +763,6 @@ body {
     font-size: 18px;
     line-height: 1;
 }
-
 
 .cooked-icon {
     font-size: 16px;
@@ -2098,6 +2143,15 @@ body {
     margin-bottom: 20px;
     flex-wrap: wrap;
     width: 100%;
+}.home-food-filter-form {
+    background-color: #ffffff;
+    border: 1px solid #dddddd;
+    border-radius: 10px;
+    padding: 16px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .delete-all-wrap {
