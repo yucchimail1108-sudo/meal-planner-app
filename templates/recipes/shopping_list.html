@@ -1,14 +1,13 @@
 {% extends "base.html" %}
 
+{% load static %}
+
 {% block content %}
 <div class="page-container shopping-page">
 
     <!-- 買い物リスト画面のタイトル行 -->
     <div class="page-header">
         <h1 class="page-title">≪買い物リスト≫</h1>
-        <div class="page-header-actions">
-            <button type="button" class="save-button" id="open-manual-add-modal">＋ 食材を追加</button>
-        </div>
     </div>
 
     <!-- 献立の対象期間から食材を抽出するエリア -->
@@ -84,7 +83,13 @@
 
     <!-- 買い物リスト一覧表示エリア -->
     <div class="content-card section-block">
-        <h2 class="section-title">買うもの一覧</h2>
+        <div class="page-header shopping-list-card-header">
+            <h2 class="section-title">買うもの一覧</h2>
+            <div class="page-header-actions">
+                <button type="button" class="save-button" id="open-manual-add-modal">＋ 食材を追加</button>
+            </div>
+        </div>
+
         <div class="shopping-list-toolbar right-align">
             <button type="button" class="delete-button" id="open-delete-all-modal">全削除</button>
         </div>
@@ -93,7 +98,7 @@
 
             {% for category_group in grouped_items %}
                 <div class="category-block">
-                    <h3 class="category-title">{{ category_group.grouper }}</h3>
+                    <h3 class="category-title">≪{{ category_group.grouper }}≫</h3>
 
                     <ul class="item-list">
                         {% for item in category_group.list %}
@@ -114,7 +119,7 @@
                                     <form method="post" action="{% url 'recipes:shopping_list_delete' item.id %}">
                                         {% csrf_token %}
                                         <button type="submit" class="icon-delete-button" aria-label="削除">
-                                            🗑
+                                            <img src="{% static 'images/icons/delete-bin.png' %}" class="delete-icon-img" alt="削除">
                                         </button>
                                     </form>
                                 </div>
@@ -124,12 +129,19 @@
                 </div>
             {% endfor %}
 
-            <div class="form-actions bottom-actions shopping-purchase-actions">
-                <button type="submit" class="select-button" form="purchase-form">購入済み</button>
-                <p class="shopping-purchase-note">
-                    購入済みにすると<br>
-                    おうち食材に追加されます
-                </p>
+            <div class="shopping-purchase-bar">
+                <label class="shopping-select-all">
+                    <input type="checkbox" id="select-all-shopping-items">
+                    <span>全選択</span>
+                </label>
+
+                <div class="shopping-purchase-center">
+                    <button type="submit" class="select-button" form="purchase-form">購入済み</button>
+                    <p class="shopping-purchase-note">
+                        購入済みにすると<br>
+                        おうち食材に追加されます
+                    </p>
+                </div>
             </div>
         {% else %}
             <div class="empty-box">
@@ -228,7 +240,27 @@ document.addEventListener("DOMContentLoaded", function () {
     const openDeleteAllButton = document.getElementById("open-delete-all-modal");
     const closeDeleteAllButton = document.getElementById("close-delete-all-modal");
     const deleteAllModal = document.getElementById("delete-all-modal");
+    const selectAllCheckbox = document.getElementById("select-all-shopping-items");
+    const shoppingItemCheckboxes = document.querySelectorAll('input[name="checked_items"]');
 
+    if (selectAllCheckbox && shoppingItemCheckboxes.length > 0) {
+        selectAllCheckbox.addEventListener("change", function () {
+            shoppingItemCheckboxes.forEach(function (checkbox) {
+                checkbox.checked = selectAllCheckbox.checked;
+            });
+        });
+
+        shoppingItemCheckboxes.forEach(function (checkbox) {
+            checkbox.addEventListener("change", function () {
+                const allChecked = Array.from(shoppingItemCheckboxes).every(function (item) {
+                    return item.checked;
+                });
+
+                selectAllCheckbox.checked = allChecked;
+            });
+        });
+    }
+    
     if (openDeleteAllButton && closeDeleteAllButton && deleteAllModal) {
         openDeleteAllButton.addEventListener("click", function () {
             deleteAllModal.classList.add("active");
