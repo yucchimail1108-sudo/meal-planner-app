@@ -23,7 +23,7 @@ class SignUpForm(UserCreationForm):
     def clean_email(self):
         email = self.cleaned_data['email']
         if User.objects.filter(email=email).exists():
-            raise forms.ValidationError('このメールアドレスは既に登録されています。')
+            raise forms.ValidationError('このメールアドレスは既に登録されています')
         return email
     
     def save(self, commit=True):
@@ -66,7 +66,7 @@ class EmailChangeForm(forms.Form):
         new_email = self.cleaned_data["new_email"]
 
         if User.objects.filter(email=new_email).exists():
-            raise forms.ValidationError("このメールアドレスはすでに登録されています。")
+            raise forms.ValidationError("このメールアドレスはすでに登録されています")
 
         return new_email
     
@@ -97,7 +97,7 @@ class PasswordChangeForm(forms.Form):
         current_password = self.cleaned_data["current_password"]
 
         if not self.user.check_password(current_password):
-            raise forms.ValidationError("現在のパスワードが正しくありません。")
+            raise forms.ValidationError("現在のパスワードが正しくありません")
 
         return current_password
 
@@ -107,6 +107,22 @@ class PasswordChangeForm(forms.Form):
         pw2 = cleaned_data.get("new_password2")
 
         if pw1 and pw2 and pw1 != pw2:
-            raise forms.ValidationError("新しいパスワードが一致しません。")
+            raise forms.ValidationError("入力されたパスワードが一致しません")
 
         return cleaned_data
+    
+    
+# パスワード再設定メールアドレス入力フォーム
+class PasswordResetRequestForm(forms.Form):
+    email = forms.EmailField(
+        label="メールアドレス",
+        required=True
+    )
+
+    def clean_email(self):
+        email = self.cleaned_data["email"]
+
+        if not User.objects.filter(email=email).exists():
+            raise forms.ValidationError("このメールアドレスは登録されていません")
+
+        return email

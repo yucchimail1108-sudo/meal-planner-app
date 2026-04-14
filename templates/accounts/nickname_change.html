@@ -1,36 +1,28 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="page-container">
+<div class="page-container auth-page">
+    <div class="content-card auth-card">
+        <h1 class="page-title auth-title">ニックネーム変更</h1>
 
-    <div class="page-header">
-        <h1 class="page-title">ニックネーム変更</h1>
-    </div>
-
-    <div class="content-card section-block">
-        <form method="post" class="form-block">
+        <form method="post" class="auth-form">
             {% csrf_token %}
 
-            <div class="form-row">
-                <div class="form-group">
-                    <label>現在のニックネーム</label>
-                    <p class="section-text">{{ current_nickname }}</p>
-                </div>
+            <div class="auth-form-group">
+                <label>現在のニックネーム</label>
+                <p class="auth-current-text">{{ current_nickname }}</p>
             </div>
 
-            <div class="form-row">
-                <div class="form-group">
-                    <label for="{{ form.new_first_name.id_for_label }}">新しいニックネーム</label>
-                    {{ form.new_first_name }}
-                </div>
+            <div class="auth-form-group">
+                <label for="{{ form.new_first_name.id_for_label }}">新しいニックネーム</label>
+                {{ form.new_first_name }}
             </div>
 
-            <div class="form-actions">
-                <button type="submit" class="save-button">変更</button>
+            <div class="auth-submit">
+                <button type="submit" class="save-button auth-submit-button">変更</button>
                 <a href="{% url 'accounts:mypage' %}" class="back-button">戻る</a>
             </div>
         </form>
     </div>
-
 </div>
 {% endblock %}

@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
-from .forms import SignUpForm, LoginForm, NicknameChangeForm, EmailChangeForm, PasswordChangeForm
+from .forms import SignUpForm, LoginForm, NicknameChangeForm, EmailChangeForm, PasswordChangeForm,  PasswordResetRequestForm
 from django.contrib import messages
 
 
@@ -30,7 +30,7 @@ def login_view(request):
                 login(request, user)
                 return redirect('home')
             else:
-                form.add_error(None, 'メールアドレスまたはパスワードが正しくありません。')
+                form.add_error(None, 'メールアドレスまたはパスワードが正しくありません')
     else:
         form = LoginForm()
         
@@ -65,14 +65,10 @@ def nickname_change_view(request):
         if form.is_valid():
             request.user.first_name = form.cleaned_data["new_first_name"]
             request.user.save()
-            messages.success(request, "ニックネームを変更しました。")
+            messages.success(request, "ニックネームを変更しました")
             return redirect("accounts:mypage")
     else:
-        form = NicknameChangeForm(
-            initial={
-                "new_first_name": request.user.first_name
-            }
-        )
+        form = NicknameChangeForm()
 
     return render(
         request,
@@ -96,7 +92,7 @@ def email_change_view(request):
             request.user.username = new_email  # ログイン用も更新
             request.user.save()
 
-            messages.success(request, "メールアドレスを変更しました。")
+            messages.success(request, "メールアドレスを変更しました")
             return redirect("accounts:mypage")
     else:
         form = EmailChangeForm()
@@ -121,7 +117,7 @@ def password_change_view(request):
             request.user.set_password(new_password)
             request.user.save()
 
-            messages.success(request, "パスワードを変更しました。")
+            messages.success(request, "パスワードを変更しました")
             return redirect("accounts:login")
     else:
         form = PasswordChangeForm(request.user)
@@ -129,5 +125,25 @@ def password_change_view(request):
     return render(
         request,
         "accounts/password_change.html",
+        {"form": form}
+    )
+    
+# パスワード再設定メールアドレス入力画面
+def password_reset_request_view(request):
+    if request.method == "POST":
+        form = PasswordResetRequestForm(request.POST)
+
+        if form.is_valid():
+            messages.success(
+                request,
+                "パスワード再設定用メールの送信機能はこれから実装します。メールアドレス入力は確認できました。"
+            )
+            return redirect("accounts:login")
+    else:
+        form = PasswordResetRequestForm()
+
+    return render(
+        request,
+        "accounts/password_reset_request.html",
         {"form": form}
     )
