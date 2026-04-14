@@ -31,7 +31,10 @@
 
             <button type="submit" class="save-button">絞り込む</button>
             <a href="{% url 'recipes:home_food_list' %}" class="back-button">リセット</a>
-            <button type="button" class="delete-button" id="open-delete-all-modal">全削除</button>
+
+            <div class="delete-all-wrap">
+                <button type="button" class="delete-button" id="open-delete-all-modal">全削除</button>
+            </div>
         </form>
 
         {% if home_food_items %}

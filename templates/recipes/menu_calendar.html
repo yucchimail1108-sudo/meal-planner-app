@@ -1,5 +1,7 @@
 {% extends "base.html" %}
 
+{% load static %}
+
 {% block title %}献立カレンダー | うちごはんプランナー{% endblock %}
 
 {% block content %}
@@ -64,13 +66,27 @@
                                             aria-label="{{ item.date|date:'n月j日' }}の献立詳細を見る"
                                         >
                                             {% if item.is_cooked %}
-                                                <span class="calendar-icon cooked-icon">🍲✓</span>
+                                                <img
+                                                    src="{% static 'images/icons/menu-cooked.png' %}"
+                                                    alt="調理済み"
+                                                    class="calendar-icon-img"
+                                                >
                                             {% else %}
-                                                <span class="calendar-icon">🍲</span>
+                                                <img
+                                                    src="{% static 'images/icons/menu-pot.png' %}"
+                                                    alt="献立あり"
+                                                    class="calendar-icon-img"
+                                                >
                                             {% endif %}
                                         </a>
                                     {% elif item.is_cooked %}
-                                        <div class="calendar-icon cooked-icon">🍲✓</div>
+                                        <div class="calendar-icon">
+                                            <img
+                                                src="{% static 'images/icons/menu-cooked.png' %}"
+                                                alt="調理済み"
+                                                class="calendar-icon-img"
+                                            >
+                                        </div>
                                     {% endif %}
                                 </div>
                             {% endif %}
