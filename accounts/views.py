@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
-from .forms import SignUpForm, LoginForm, NicknameChangeForm, EmailChangeForm, PasswordChangeForm,  PasswordResetRequestForm
+from .forms import SignUpForm, LoginForm, NicknameChangeForm, EmailChangeForm, PasswordChangeForm
 from django.contrib import messages
 
 
@@ -128,22 +128,3 @@ def password_change_view(request):
         {"form": form}
     )
     
-# パスワード再設定メールアドレス入力画面
-def password_reset_request_view(request):
-    if request.method == "POST":
-        form = PasswordResetRequestForm(request.POST)
-
-        if form.is_valid():
-            messages.success(
-                request,
-                "パスワード再設定用メールの送信機能はこれから実装します。メールアドレス入力は確認できました。"
-            )
-            return redirect("accounts:login")
-    else:
-        form = PasswordResetRequestForm()
-
-    return render(
-        request,
-        "accounts/password_reset_request.html",
-        {"form": form}
-    )

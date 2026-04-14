@@ -1,7 +1,6 @@
 from django import forms
 from django.contrib.auth.models import User
-from django.contrib.auth.forms import UserCreationForm
-
+from django.contrib.auth.forms import UserCreationForm, PasswordResetForm
 
 class SignUpForm(UserCreationForm):
     nickname = forms.CharField(label='ニックネーム', max_length=150, required=True)
@@ -113,7 +112,7 @@ class PasswordChangeForm(forms.Form):
     
     
 # パスワード再設定メールアドレス入力フォーム
-class PasswordResetRequestForm(forms.Form):
+class PasswordResetRequestForm(PasswordResetForm):
     email = forms.EmailField(
         label="メールアドレス",
         required=True
