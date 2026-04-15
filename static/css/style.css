@@ -1287,8 +1287,8 @@ body {
     background-color: #ffffff;
     border: 1px solid #dddddd;
     border-radius: 10px;
-    padding: 20px;
-    margin-bottom: 20px;
+    padding: 16px;
+    margin-bottom: 16px;
 }
 
 .home-menu-card .content-card {
@@ -1305,7 +1305,7 @@ body {
 
 .section-title {
     margin-top: 0;
-    margin-bottom: 8px;
+    margin-bottom: 6px;
     font-size: 18px;
     font-weight: bold;
 }
@@ -1902,7 +1902,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    margin: 0 auto 6px;  /* 少し詰める */
+    margin: 0 auto 6px;  
     color: #777777;
     background-color: #f8f8f8;
     font-size: 11px;
@@ -1935,12 +1935,12 @@ body {
     display: inline-block;
     margin-top: 8px;
     min-width: 64px;
-    padding: 8px 12px;
+    padding: 6px 10px;
 }
 
 .home-flags {
     text-align: center;
-    margin: 16px 0;
+    margin: 14px 0;
     font-size: 16px;
 }
 
@@ -2016,7 +2016,7 @@ body {
     justify-content: center;
     align-items: center;
     gap: 16px;
-    margin-bottom: 16px;
+    margin-bottom: 14px;
 }
 
 .home-date-nav .menu-date-title {

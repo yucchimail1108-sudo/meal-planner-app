@@ -1,30 +1,110 @@
 {% extends "base.html" %}
 
+{% load static %}
+
 {% block content %}
 <div class="page-container">
 
+    <!-- タイトル -->
     <div class="content-card">
         <h1 class="page-title">うちごはんプランナー</h1>
         <p class="section-text">
-            毎日の献立決めをサポートするアプリ
+            献立作成から買い物、食材管理までを一元化する料理管理アプリ
         </p>
     </div>
 
+    <!-- 画面イメージ -->
     <div class="content-card">
-        <h2 class="section-title">アプリ概要</h2>
-        <p class="section-text">
-            うちごはんプランナーは、献立作成・買い物リスト・おうち食材管理を
-            まとめて行えるアプリです
-        </p>
+        <h2 class="section-title">ホーム画面</h2>
+        <img src="{% static 'docs/images/home_2.png' %}" alt="ホーム画面" style="width:100%; border-radius:8px;">
+    </div>
 
+    <!-- 概要 -->
+    <div class="content-card">
+        <h2 class="section-title">概要</h2>
+        <p class="section-text">
+            うちごはんプランナーは、献立作成から買い物、食材管理までを一元的に行える家庭向け料理管理アプリです
+        </p>
+        <p class="section-text">
+            献立を作成することで必要な食材を自動で抽出し、不足分を買い物リストとして一覧化できます
+        </p>
+        <p class="section-text">
+            おうち食材を登録することで在庫を考慮した買い物ができ、重複購入やフードロスを防ぐことができます
+        </p>
+    </div>
+
+    <!-- 目的 -->
+    <div class="content-card">
+        <h2 class="section-title">作成の目的</h2>
+        <p class="section-text">
+            食事に関する家事負担を軽減し、献立作成・買い物・食材管理の効率化を目的として開発しました
+        </p>
+        <p class="section-text">
+            重複購入やフードロスを減らし、家計や環境への負担軽減を目指しています
+        </p>
+    </div>
+
+    <!-- 主な機能 -->
+    <div class="content-card">
+        <h2 class="section-title">主な機能</h2>
         <ul>
-            <li>レシピ管理</li>
-            <li>献立作成（カレンダー形式）</li>
-            <li>おうち食材管理</li>
-            <li>買い物リスト自動作成</li>
+            <li>ユーザー登録 / ログイン / ログアウト</li>
+            <li>レシピの登録 / 編集 / 削除</li>
+            <li>献立の作成・カレンダー管理</li>
+            <li>買い物リストの自動生成</li>
+            <li>おうち食材の管理</li>
         </ul>
     </div>
 
+    <!-- 技術 -->
+    <div class="content-card">
+        <h2 class="section-title">使用技術</h2>
+        <ul>
+            <li>Python / Django</li>
+            <li>HTML / CSS / JavaScript</li>
+            <li>SQLite</li>
+            <li>Git / GitHub</li>
+        </ul>
+    </div>
+
+    <!-- 工夫 -->
+    <div class="content-card">
+        <h2 class="section-title">工夫した点</h2>
+        <ul>
+            <li>献立 → 買い物 → 食材管理の流れを一体化</li>
+            <li>在庫考慮による重複購入防止</li>
+            <li>分量換算の簡単操作化</li>
+            <li>外食・惣菜対応の柔軟設計</li>
+            <li>CSS共通化によるUI統一</li>
+        </ul>
+    </div>
+
+    <!-- 課題 -->
+    <div class="content-card">
+        <h2 class="section-title">今後の課題</h2>
+        <ul>
+            <li>食材の数量管理対応</li>
+            <li>UI/UX改善</li>
+            <li>レシピ登録の簡略化</li>
+            <li>モバイル操作性向上</li>
+        </ul>
+    </div>
+
+    <!-- 画面イメージ -->
+    <div class="content-card">
+        <h2 class="section-title">画面イメージ</h2>
+
+        <p>マイレシピ画面</p>
+        <img src="{% static 'docs/images/recipe_2.png' %}" style="width:100%; border-radius:8px; margin-bottom:16px;">
+
+        <p>献立画面</p>
+        <img src="{% static 'docs/images/menu_2.png' %}" style="width:100%; border-radius:8px; margin-bottom:16px;">
+
+        <p>買い物リスト</p>
+        <img src="{% static 'docs/images/shopping_2.png' %}" style="width:100%; border-radius:8px;">
+    </div>
+
+    <!-- CTA -->
     <div class="content-card">
         <h2 class="section-title">アプリを使う</h2>
 
@@ -32,16 +112,6 @@
             <a href="{% url 'accounts:signup' %}" class="save-button">新規登録</a>
             <a href="{% url 'accounts:login' %}" class="back-button">ログイン</a>
         </div>
-    </div>
-
-    <div class="content-card">
-        <h2 class="section-title">資料</h2>
-        <ul>
-            <li><a href="#">企画書</a></li>
-            <li><a href="#">画面設計図</a></li>
-            <li><a href="#">画面遷移図</a></li>
-            <li><a href="#">ER図</a></li>
-        </ul>
     </div>
 
 </div>
