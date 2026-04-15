@@ -9,7 +9,10 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css">
 </head>
 <body>
+
+{% if request.resolver_match.url_name != "top" %}
 <header class="site-header">
+
     <div class="header-inner">
         <h1 class="site-title">
             <a href="{% url 'top' %}">うちごはんプランナー</a>
@@ -36,8 +39,9 @@
         </nav>
     </div>
 
-        <hr>
-    </header>
+    <hr>
+</header>
+{% endif %}
     
     {% if messages %}
         <ul class="message-list">
@@ -63,7 +67,7 @@
         </div>
     </div>
 
-   {% if user.is_authenticated %}
+   {% if user.is_authenticated and request.resolver_match.url_name != "top" %}
     <nav class="bottom-nav">
         <a href="{% url 'home' %}" class="bottom-nav__item {% if request.resolver_match.url_name == 'home' %}active{% endif %}">
             <img src="{% static 'images/icons/home.svg' %}" class="nav-icon">
