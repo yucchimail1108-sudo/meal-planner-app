@@ -37,7 +37,7 @@ def login_view(request):
     return render(request, 'accounts/login.html', {'form': form}) 
 
 def top_view(request):
-    return render(request, 'top.html') 
+    return render(request, 'portfolio.html') 
 
 def logout_view(request):
     if request.method == 'POST':

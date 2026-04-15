@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="page-container">
+
+    <div class="content-card">
+        <h1 class="page-title">うちごはんプランナー</h1>
+        <p class="section-text">
+            毎日の献立決めをサポートするアプリ
+        </p>
+    </div>
+
+    <div class="content-card">
+        <h2 class="section-title">アプリ概要</h2>
+        <p class="section-text">
+            うちごはんプランナーは、献立作成・買い物リスト・おうち食材管理を
+            まとめて行えるアプリです
+        </p>
+
+        <ul>
+            <li>レシピ管理</li>
+            <li>献立作成（カレンダー形式）</li>
+            <li>おうち食材管理</li>
+            <li>買い物リスト自動作成</li>
+        </ul>
+    </div>
+
+    <div class="content-card">
+        <h2 class="section-title">アプリを使う</h2>
+
+        <div class="form-actions">
+            <a href="{% url 'accounts:signup' %}" class="save-button">新規登録</a>
+            <a href="{% url 'accounts:login' %}" class="back-button">ログイン</a>
+        </div>
+    </div>
+
+    <div class="content-card">
+        <h2 class="section-title">資料</h2>
+        <ul>
+            <li><a href="#">企画書</a></li>
+            <li><a href="#">画面設計図</a></li>
+            <li><a href="#">画面遷移図</a></li>
+            <li><a href="#">ER図</a></li>
+        </ul>
+    </div>
+
+</div>
+{% endblock %}

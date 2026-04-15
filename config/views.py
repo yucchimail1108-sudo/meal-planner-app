@@ -11,7 +11,7 @@ from apps.recipes.services import get_or_create_menu_day_with_slots
 
 # ポートフォリオ画面
 def top_view(request):
-    return render(request, "top.html")
+    return render(request, "portfolio.html")
 
 
 # ホーム画面
