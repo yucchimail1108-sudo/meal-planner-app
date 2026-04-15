@@ -52,11 +52,11 @@
                             {% if item.is_current_month and item.has_visible_menu %}
                                 <div class="calendar-icons">
                                     {% if item.menu_day and item.menu_day.eat_out %}
-                                        <div class="calendar-mini-label">外</div>
+                                        <div class="calendar-mini-label">外食</div>
                                     {% endif %}
 
                                     {% if item.menu_day and item.menu_day.deli %}
-                                        <div class="calendar-mini-label">惣</div>
+                                        <div class="calendar-mini-label">惣菜</div>
                                     {% endif %}
 
                                     {% if item.menu_day and not item.menu_day.eat_out and not item.menu_day.deli %}

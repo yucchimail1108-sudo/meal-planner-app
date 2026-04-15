@@ -3,16 +3,41 @@ from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm, PasswordResetForm
 
 class SignUpForm(UserCreationForm):
-    nickname = forms.CharField(label='ニックネーム', max_length=150, required=True)
-    email = forms.EmailField(label='メールアドレス',required=True)
-    
+    nickname = forms.CharField(
+        label="ニックネーム",
+        max_length=150,
+        required=True,
+        widget=forms.TextInput(
+            attrs={
+                "class": "auth-input",
+            }
+        ),
+    )
+    email = forms.EmailField(
+        label="メールアドレス",
+        required=True,
+        widget=forms.EmailInput(
+            attrs={
+                "class": "auth-input",
+            }
+        ),
+    )
+
     password1 = forms.CharField(
-        label='パスワード',
-        widget=forms.PasswordInput
+        label="パスワード",
+        widget=forms.PasswordInput(
+            attrs={
+                "class": "auth-input",
+            }
+        ),
     )
     password2 = forms.CharField(
-        label='パスワード再入力',
-        widget=forms.PasswordInput
+        label="パスワード再入力",
+        widget=forms.PasswordInput(
+            attrs={
+                "class": "auth-input",
+            }
+        ),
     )
     
     class Meta:
