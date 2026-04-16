@@ -1,5 +1,7 @@
 {% extends "base.html" %}
 
+{% load static %}
+
 {% block content %}
 <div class="page-container">
 
@@ -98,9 +100,14 @@
                                 <div class="ingredient-col ingredient-delete">
                                     <button
                                         type="button"
-                                        class="delete-button ingredient-delete-button"
+                                        class="icon-delete-button ingredient-delete-button"
+                                        aria-label="削除"
                                     >
-                                        削除
+                                        <img
+                                            src="{% static 'images/icons/delete-bin.png' %}"
+                                            class="delete-icon-img"
+                                            alt="削除"
+                                        >
                                     </button>
                                 </div>
                                 
@@ -137,9 +144,14 @@
                         <div class="ingredient-col ingredient-delete">
                             <button
                                 type="button"
-                                class="delete-button ingredient-delete-button"
+                                class="icon-delete-button ingredient-delete-button"
+                                aria-label="削除"
                             >
-                                削除
+                                <img
+                                    src="{% static 'images/icons/delete-bin.png' %}"
+                                    class="delete-icon-img"
+                                    alt="削除"
+                                >
                             </button>
                         </div>
 
@@ -179,9 +191,14 @@
 
                                         <button
                                             type="button"
-                                            class="delete-button step-delete-button"
+                                            class="icon-delete-button step-delete-button"
+                                            aria-label="削除"
                                         >
-                                            削除
+                                            <img
+                                                src="{% static 'images/icons/delete-bin.png' %}"
+                                                class="delete-icon-img"
+                                                alt="削除"
+                                            >
                                         </button>
                                     </div>
                                 </div>
@@ -701,21 +718,19 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 document.addEventListener("click", function (e) {
-    if (e.target.classList.contains("ingredient-delete-button")) {
+    const deleteButton = e.target.closest(".ingredient-delete-button");
 
-        const row = e.target.closest(".ingredient-row");
+    if (!deleteButton) return;
 
-        if (!row) return;
+    const row = deleteButton.closest(".ingredient-row");
+    if (!row) return;
 
-        // DELETEチェックをON
-        const deleteInput = row.querySelector('input[name$="-DELETE"]');
-        if (deleteInput) {
-            deleteInput.checked = true;
-        }
-
-        // 行を非表示
-        row.style.display = "none";
+    const deleteInput = row.querySelector('input[name$="-DELETE"]');
+    if (deleteInput) {
+        deleteInput.checked = true;
     }
+
+    row.style.display = "none";
 });
 
 </script>

@@ -358,6 +358,25 @@ body {
     }
 }
 
+#add-food-modal .choices__inner {
+    min-height: 40px;
+    padding: 6px 10px;
+    box-sizing: border-box;
+}
+
+#add-food-modal .choices__input {
+    font-size: 14px;
+    line-height: 1.5;
+    padding: 2px 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+#add-food-modal .choices__list--single {
+    padding: 4px 24px 4px 0;
+    line-height: 1.5;
+}
+
 /* =========================
     買い物リスト画面 
 ========================= */
@@ -2246,14 +2265,9 @@ body {
 }
 
 .home-food-filter-form {
-    background-color: #ffffff;
-    border: 1px solid #dddddd;
-    border-radius: 10px;
-    padding: 16px;
-    margin-bottom: 20px;
+    display: flex;           
     flex-wrap: wrap;
-    width: 100%;
-}.home-food-filter-form {
+    gap: 8px;  
     background-color: #ffffff;
     border: 1px solid #dddddd;
     border-radius: 10px;
@@ -2262,6 +2276,10 @@ body {
     flex-wrap: wrap;
     width: 100%;
     box-sizing: border-box;
+}
+
+#open-delete-all-modal {
+    margin-left: auto;
 }
 
 .delete-all-wrap {
@@ -2300,6 +2318,17 @@ body {
 
 .home-food-table td:last-child {
     width: 90px;
+}
+
+.home-food-add-button {
+    margin-left: auto;
+}
+
+.home-food-bottom-actions {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin-top: 8px;
 }
 
 .empty-box {

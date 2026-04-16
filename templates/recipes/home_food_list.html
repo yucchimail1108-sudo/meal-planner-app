@@ -8,9 +8,6 @@
     <div class="content-card section-block">
         <div class="page-header home-food-list-header">
             <h2 class="section-title">おうち食材一覧</h2>
-            <div class="page-header-actions">
-                <button type="button" class="save-button" id="open-add-modal">＋ 食材を追加</button>
-            </div>
         </div>
         
 
@@ -29,7 +26,8 @@
             <button type="submit" class="save-button">絞り込む</button>
             <a href="{% url 'recipes:home_food_list' %}" class="back-button">リセット</a>
 
-            <div class="delete-all-wrap">
+            <div class="home-food-bottom-actions">
+                <button type="button" class="save-button" id="open-add-modal">＋ 食材を追加</button>
                 <button type="button" class="delete-button" id="open-delete-all-modal">全削除</button>
             </div>
         </form>
