@@ -84,8 +84,9 @@ class FoodItem(models.Model):
     ]
     
     ingredient_name = models.CharField(
-        max_length=30,
-        verbose_name="食材名",
+    max_length=30,
+    unique=True,
+    verbose_name="食材名"
     )
 
     reading_kana = models.CharField(

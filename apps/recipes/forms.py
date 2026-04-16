@@ -214,7 +214,16 @@ class FoodItemCreateForm(forms.ModelForm):
     class Meta:
         model = FoodItem
         fields = ["ingredient_name", "category", "item_type"]
-        
+
+    def clean_ingredient_name(self):
+        ingredient_name = self.cleaned_data["ingredient_name"].strip()
+        ingredient_name = ingredient_name.replace("　", " ")
+
+        if FoodItem.objects.filter(ingredient_name=ingredient_name).exists():
+            raise forms.ValidationError("この食材名はすでに登録されています")
+
+        return ingredient_name
+            
 # レシピ編集画面の食材追加用        
 RecipeIngredientFormSet = inlineformset_factory(
     Recipe,
@@ -233,3 +242,4 @@ RecipeStepFormSet = inlineformset_factory(
     extra=1,  # 最初は1行だけ表示
     can_delete=True
 )
+

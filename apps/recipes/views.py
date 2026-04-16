@@ -1402,13 +1402,16 @@ def home_food_list_view(request):
 
             if create_form.is_valid():
                 ingredient_name = create_form.cleaned_data["ingredient_name"]
+                ingredient_name = ingredient_name.strip()  
+                ingredient_name = ingredient_name.replace("　", " ")  # 全角対策
+
                 category = create_form.cleaned_data["category"]
                 item_type = create_form.cleaned_data["item_type"]
 
                 food_item, created = FoodItem.objects.get_or_create(
                     ingredient_name=ingredient_name,
-                    category=category,
                     defaults={
+                        "category": category,
                         "item_type": item_type,
                     }
                 )
@@ -1486,6 +1489,9 @@ def food_item_create_view(request):
 
         if form.is_valid():
             ingredient_name = form.cleaned_data["ingredient_name"]
+            ingredient_name = ingredient_name.strip()  
+            ingredient_name = ingredient_name.replace("　", " ")  
+
             category = form.cleaned_data["category"]
             item_type = form.cleaned_data["item_type"]
 
