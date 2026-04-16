@@ -115,7 +115,10 @@
         </div>
 
     <div class="recipe-detail-back-area">
-        <a href="{% url 'recipes:recipe_list' %}" class="back-button">レシピ一覧に戻る</a>
+        <a href="{% url 'recipes:recipe_list' %}?q={{ request.GET.q|default:'' }}&category={{ request.GET.category|default:'' }}"
+        class="back-button">
+            レシピ一覧に戻る
+        </a>
     </div>
 
     </div>

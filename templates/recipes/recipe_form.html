@@ -337,6 +337,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const imageInput = document.getElementById("id_image");
     const imagePreview = document.getElementById("image-preview");
     const noImageText = document.getElementById("no-image-text");
+    const memoTextarea = document.querySelector(".memo-textarea");
 
     function openFoodItemModal() {
         if (!foodItemModal) return;
@@ -687,6 +688,14 @@ document.addEventListener("DOMContentLoaded", function () {
             };
 
             reader.readAsDataURL(file);
+        });
+    }
+
+    if (memoTextarea) {
+        autoResizeTextarea(memoTextarea);
+
+        memoTextarea.addEventListener("input", function () {
+            autoResizeTextarea(memoTextarea);
         });
     }
 });

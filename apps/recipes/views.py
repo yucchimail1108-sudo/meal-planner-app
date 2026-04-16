@@ -175,6 +175,7 @@ def convert_amount_text(amount_text, scale):
 # レシピ詳細画面
 @login_required
 def recipe_detail_view(request, recipe_id):
+    
     recipe = get_object_or_404(
         Recipe,
         id=recipe_id,
@@ -265,6 +266,8 @@ def recipe_create_view(request):
                     step.step_no = index
                     step.save()
 
+                messages.success(request, "レシピを登録しました")
+                
                 return redirect(
                     "recipes:recipe_detail",
                     recipe_id=recipe.id
@@ -340,42 +343,13 @@ def recipe_update_view(request, recipe_id):
 
                     step_number += 1
 
+                messages.success(request, "レシピを更新しました")
+
                 return redirect(
                     "recipes:recipe_detail",
                     recipe_id=recipe.id
                 )
 
-            for step_form in step_formset.deleted_forms:
-                if step_form.instance.pk:
-                    step_form.instance.delete()
-
-            step_number = 1
-
-            for step_form in step_formset.forms:
-                if step_form in step_formset.deleted_forms:
-                    continue
-
-                if not hasattr(step_form, "cleaned_data"):
-                    continue
-
-                if not step_form.cleaned_data:
-                    continue
-
-                instruction = step_form.cleaned_data.get("instruction")
-                if not instruction:
-                    continue
-
-                step = step_form.save(commit=False)
-                step.recipe = recipe
-                step.step_no = step_number
-                step.save()
-
-                step_number += 1
-
-            return redirect(
-                "recipes:recipe_detail",
-                recipe_id=recipe.id
-            )
     else:
         form = RecipeForm(instance=recipe)
         ingredient_formset = RecipeIngredientFormSet(
@@ -409,6 +383,7 @@ def recipe_delete_view(request, recipe_id):
 
     if request.method == 'POST':
         recipe.delete()
+        messages.success(request, "レシピを削除しました")
         return redirect('recipes:recipe_list')
            
     return render(
@@ -416,7 +391,7 @@ def recipe_delete_view(request, recipe_id):
         "recipes/recipe_confirm_delete.html",
         {"recipe": recipe}
     )
-
+    
 # 材料追加
 @login_required
 def ingredient_create_view(request, recipe_id):

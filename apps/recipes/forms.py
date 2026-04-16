@@ -25,6 +25,7 @@ class RecipeForm(forms.ModelForm):
                 attrs={
                     "placeholder": "メモ入力",
                     "rows": 3,
+                    "class": "memo-textarea",
                 }
             ),
         }

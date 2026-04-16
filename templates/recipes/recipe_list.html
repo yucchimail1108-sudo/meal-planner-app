@@ -74,9 +74,8 @@
 
             <div style="position: relative; width: 100%; max-width: 140px; margin: 0 auto; min-width: 0;">
 
-                <a href="{% url 'recipes:recipe_detail' recipe.id %}"
-                   style="text-decoration: none; color: inherit; display: block;">
-
+                <a href="{% url 'recipes:recipe_detail' recipe.id %}?q={{ request.GET.q|default:'' }}&category={{ request.GET.category|default:'' }}"
+                    style="text-decoration: none; color: inherit; display: block;">
                     {% if recipe.image %}
                         <img src="{{ recipe.image.url }}"
                              style="width: 100%; aspect-ratio: 1 / 1; object-fit: cover; display: block;">
