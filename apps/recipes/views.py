@@ -691,7 +691,6 @@ def menu_day_update_view(request, plan_date):
 
             updated_menu_day.save()
             messages.success(request, "献立を保存しました")
-            print("ここ通ってる:", menu_day.plan_date)
             return redirect(f"{reverse('home')}?date={menu_day.plan_date}")
 
     else:

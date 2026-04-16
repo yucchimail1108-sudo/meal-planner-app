@@ -439,19 +439,11 @@ document.addEventListener("DOMContentLoaded", function () {
             })
             .then(function (data) {
                 if (!data.success) {
-                    const select = document.querySelector(".ingredient-food:last-of-type");
-
-                    const option = document.createElement("option");
-                    option.value = data.food_item.id;
-                    option.textContent = data.food_item.label;
-                    option.selected = true;
-
-                    select.appendChild(option);
                     showError(foodItemModalError, data.error || "食材の追加に失敗しました");
                     return;
                 }
 
-                const ingredientRows = ingredientFormList.querySelectorAll(".ingredient-row");
+                const ingredientRows = getVisibleIngredientRows();
                 const targetRow = ingredientRows[ingredientRows.length - 1];
                 const targetSelect = targetRow ? targetRow.querySelector('select[name$="-food_item"]') : null;
 
@@ -460,18 +452,41 @@ document.addEventListener("DOMContentLoaded", function () {
                     return;
                 }
 
+                const choicesInstance = initIngredientSelect(targetSelect);
+
                 const exists = Array.from(targetSelect.options).some(function (option) {
                     return option.value === String(data.food_item.id);
                 });
 
                 if (!exists) {
-                    const newOption = document.createElement("option");
-                    newOption.value = data.food_item.id;
-                    newOption.textContent = data.food_item.label;
-                    targetSelect.appendChild(newOption);
+                    if (choicesInstance) {
+                        choicesInstance.setChoices(
+                            [
+                                {
+                                    value: String(data.food_item.id),
+                                    label: data.food_item.label,
+                                    selected: true,
+                                }
+                            ],
+                            "value",
+                            "label",
+                            false
+                        );
+                    } else {
+                        const newOption = document.createElement("option");
+                        newOption.value = data.food_item.id;
+                        newOption.textContent = data.food_item.label;
+                        newOption.selected = true;
+                        targetSelect.appendChild(newOption);
+                    }
                 }
 
                 targetSelect.value = String(data.food_item.id);
+
+                if (choicesInstance) {
+                    choicesInstance.setChoiceByValue(String(data.food_item.id));
+                }
+
                 closeFoodItemModal();
             })
             .catch(function () {
@@ -505,7 +520,11 @@ document.addEventListener("DOMContentLoaded", function () {
     function initIngredientSelect(select) {
         if (!select) return;
 
-        new Choices(select, {
+        if (select._choicesInstance) {
+            return select._choicesInstance;
+        }
+
+        const choices = new Choices(select, {
             searchEnabled: true,
             searchFloor: 1,
             searchResultLimit: -1,
@@ -514,6 +533,9 @@ document.addEventListener("DOMContentLoaded", function () {
             noResultsText: "該当する食材がありません",
             noChoicesText: "選択できる食材がありません",
         });
+
+        select._choicesInstance = choices;
+        return choices;
     }
 
     function isStepRowFilled(row) {

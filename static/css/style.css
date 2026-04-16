@@ -1768,55 +1768,94 @@ body {
     min-width: 70px;
 }
 
-.ingredient-col select,
-.ingredient-col input {
+.ingredient-delete {
+    flex-shrink: 0;
+}
+
+.ingredient-col input,
+.ingredient-col select {
     width: 100%;
     box-sizing: border-box;
     font-size: 14px;
 }
 
 .ingredient-col input {
+    min-height: 40px;
     padding: 8px 10px;
+    line-height: 1.5;
 }
 
+/* Choices 全体 */
+.ingredient-food .choices {
+    width: 100%;
+    margin: 0;
+    font-size: 14px;
+}
+
+/* 閉じた状態の枠 */
 .ingredient-food .choices__inner {
-    padding: 3px 10px;
+    min-height: 40px !important;
+    height: 40px !important;
+    padding: 0 34px 0 10px !important;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
 }
 
+/* 閉じた状態の表示文字エリア */
 .ingredient-food .choices__list--single {
-    padding: 4px 24px 4px 0;
+    padding: 0 !important;
 }
 
+/* 閉じた状態の表示文字 */
+.ingredient-food .choices__item--selectable {
+    font-size: 14px;
+    line-height: 1.5 !important;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* 矢印位置 */
 .ingredient-food .choices[data-type*="select-one"]::after {
+    right: 11px;
     top: 50%;
     transform: translateY(-50%);
 }
 
-.ingredient-food .choices {
-    width: 100%;
-    margin: 0;
+/* ドロップダウン全体 */
+.ingredient-food .choices__list--dropdown,
+.ingredient-food .choices__list[aria-expanded] {
+    z-index: 30;
 }
 
-.ingredient-food .choices__inner {
-    min-height: 38px;
-    width: 100%;
-    box-sizing: border-box;
+/* ドロップダウン内の検索欄 */
+.ingredient-food .choices__list--dropdown .choices__input,
+.ingredient-food .choices__list[aria-expanded] .choices__input {
+    min-height: 32px;
     font-size: 14px;
-}
-
-.ingredient-food .choices__list--single {
-    padding: 4px 24px 4px 8px;
-}
-
-.ingredient-food .choices[data-type*="select-one"]::after {
-    right: 11px;
-}
-
-.ingredient-col input,
-.ingredient-food .choices__inner {
-    min-height: 38px;
-    font-size: 14px;
+    line-height: 1.5 !important;
+    padding: 6px 8px !important;
+    margin: 0 !important;
     box-sizing: border-box;
+}
+
+/* ドロップダウン内の候補リスト */
+.ingredient-food .choices__list--dropdown .choices__list,
+.ingredient-food .choices__list[aria-expanded] .choices__list {
+    max-height: 220px;
+    overflow-y: auto;
+}
+
+/* ドロップダウン内の候補 */
+.ingredient-food .choices__list--dropdown .choices__item,
+.ingredient-food .choices__list[aria-expanded] .choices__item {
+    font-size: 14px;
+    line-height: 1.5 !important;
+    padding: 8px 10px !important;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 /* =========================

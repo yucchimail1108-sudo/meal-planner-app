@@ -90,18 +90,14 @@ class RecipeIngredientForm(forms.ModelForm):
         self.recipe = kwargs.pop("recipe", None)
         super().__init__(*args, **kwargs)
 
-        self.fields["amount_text"].widget.attrs["placeholder"] = "分量入力"
+        self.fields["amount_text"].widget.attrs["placeholder"] = "分量"
         self.fields["food_item"].empty_label = "材料選択"
         self.fields["food_item"].widget.attrs["class"] = "ingredient-select"
         
         self.fields["food_item"].queryset = FoodItem.objects.order_by("ingredient_name")
 
         self.fields["food_item"].label_from_instance = (
-            lambda obj: (
-                f"{obj.ingredient_name}｜{obj.get_category_display()}｜{obj.reading_kana}"
-                if obj.reading_kana
-                else f"{obj.ingredient_name}｜{obj.get_category_display()}"
-            )
+            lambda obj: f"{obj.ingredient_name}｜{obj.get_category_display()}"
         )
 
     def clean(self):

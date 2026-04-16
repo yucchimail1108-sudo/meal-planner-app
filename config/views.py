@@ -15,6 +15,7 @@ def top_view(request):
 
 
 # ホーム画面
+# ホーム画面
 @login_required
 def home_view(request):
     selected_date_str = request.GET.get("date")
@@ -45,6 +46,15 @@ def home_view(request):
             ).first()
 
             if slot:
+                meal_label_map = {
+                    "staple": "主食",
+                    "main": "主菜",
+                    "side": "副菜",
+                    "soup": "汁物",
+                }
+
+                label = meal_label_map.get(slot.meal_type, "献立")
+
                 slot.recipe = None
                 slot.save()
 
@@ -52,8 +62,11 @@ def home_view(request):
                 temp_menu.pop(str(slot.id), None)
                 request.session["temp_menu"] = temp_menu
 
-                messages.success(request, "献立を保存しました")
-                return redirect(f"{reverse('home')}?date={selected_date}")
+                messages.success(request, f"{label}を削除しました")
+            else:
+                messages.error(request, "削除対象の献立が見つかりません")
+
+            return redirect(f"{reverse('home')}?date={selected_date}")
 
         eat_out = "eat_out" in request.POST
         deli = "deli" in request.POST
