@@ -1355,7 +1355,7 @@ def shopping_list_delete_all_view(request):
     if deleted_count == 0:
         messages.info(request, "削除する買い物リストがありません")
     else:
-        messages.success(request, "買い物リストをすべて削除しました")
+        messages.success(request, "買うものをすべて削除しました")
 
     return redirect("recipes:shopping_list")
 
@@ -1389,7 +1389,7 @@ def home_food_list_view(request):
                 else:
                     messages.info(
                         request,
-                        "この食材はすでにおうち食材に登録されています。"
+                        "この食材はすでにおうち食材に登録されています"
                     )
 
                 return redirect("recipes:home_food_list")
@@ -1424,9 +1424,9 @@ def home_food_list_view(request):
                         user=request.user,
                         food_item=food_item
                     )
-                    messages.success(request, "新しい食材を追加し、おうち食材にも登録しました。")
+                    messages.success(request, "新しい食材を追加し、おうち食材にも登録しました")
                 else:
-                    messages.info(request, "この食材はすでにおうち食材に登録されています。")
+                    messages.info(request, "この食材はすでにおうち食材に登録されています")
 
                 return redirect("recipes:home_food_list")
 

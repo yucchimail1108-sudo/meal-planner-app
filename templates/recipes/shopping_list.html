@@ -5,11 +5,6 @@
 {% block content %}
 <div class="page-container shopping-page">
 
-    <!-- 買い物リスト画面のタイトル行 -->
-    <div class="page-header">
-        <h1 class="page-title">≪買い物リスト≫</h1>
-    </div>
-
     <!-- 献立の対象期間から食材を抽出するエリア -->
     <div class="content-card section-block shopping-extract-card">
         <h2 class="section-title">献立の対象期間選択</h2>
@@ -84,9 +79,9 @@
     <!-- 買い物リスト一覧表示エリア -->
     <div class="content-card section-block">
         <div class="page-header shopping-list-card-header">
-            <h2 class="section-title">買うもの一覧</h2>
+            <h2 class="section-title">買い物リスト</h2>
             <div class="page-header-actions">
-                <button type="button" class="save-button" id="open-manual-add-modal">＋ 食材を追加</button>
+                <button type="button" class="save-button" id="open-manual-add-modal">＋ 買うものを追加</button>
             </div>
         </div>
 
@@ -145,7 +140,7 @@
             </div>
         {% else %}
             <div class="empty-box">
-                <p>買い物リストはまだありません。</p>
+                <p>買うものはまだありません</p>
             </div>
         {% endif %}
     </div>
@@ -156,7 +151,7 @@
     <div id="delete-all-modal" class="modal-overlay">
         <div class="modal-content menu-delete-modal-content">
             <p class="modal-message">
-                買い物リストをすべて削除しますか？
+                買うものをすべて削除しますか？
             </p>
 
             <div class="form-actions modal-actions">

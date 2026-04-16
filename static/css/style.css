@@ -753,7 +753,7 @@ body {
     width: 100%;
     border-collapse: collapse;
     table-layout: fixed;
-    margin-top: 0;
+    margin-top: 4;
 }
 
 .menu-calendar-table td {
@@ -815,6 +815,10 @@ body {
 .other-month {
     background-color: #f5f5f5;
     color: #999999;
+}
+
+.menu-page-title {
+    margin-bottom: 30px;
 }
 
 /* =========================
@@ -1258,7 +1262,7 @@ body {
 .page-title {
     font-size: 20px;
     font-weight: bold;
-    margin-bottom: 16px;
+    margin: 0 0 4px;
 }
 
 .page-header-actions {
@@ -1268,11 +1272,11 @@ body {
 }
 
 .content-card {
-    background-color: #ffffff;
+     background-color: #ffffff;
     border: 1px solid #dddddd;
     border-radius: 10px;
-    padding: 16px;
-    margin-bottom: 16px;
+    padding: 20px;
+    margin-bottom: 20px;
 }
 
 .home-menu-card .content-card {
