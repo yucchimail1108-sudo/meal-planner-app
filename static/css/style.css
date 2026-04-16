@@ -769,6 +769,7 @@ body {
 .calendar-cell {
     display: flex;
     flex-direction: column;
+    align-items: center;
     justify-content: space-between;
     min-height: 60px;
 }
@@ -847,11 +848,12 @@ body {
 }
 
 .calendar-icons {
+    margin-top: 6px;
     display: flex;
+    justify-content: center;
     align-items: center;
     gap: 4px;
     flex-wrap: wrap;
-    margin-top: 6px;
 }
 
 .calendar-icon {
