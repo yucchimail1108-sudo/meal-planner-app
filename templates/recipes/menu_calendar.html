@@ -31,66 +31,54 @@
                 <tr>
                     {% for item in week %}
                     <td class="{% if not item.is_current_month %}other-month{% endif %}">
-                        <div class="calendar-cell">
-                            <div class="calendar-day">
-                                {% if item.is_current_month %}
-                                    {% if item.has_visible_menu %}
-                                        {{ item.day }}
+                        {% if item.is_current_month %}
+                            <a href="{% if item.has_visible_menu and not item.menu_day.eat_out and not item.menu_day.deli %}
+                                        {% url 'recipes:menu_detail' plan_date=item.date|date:'Y-m-d' %}?return_year={{ year }}&return_month={{ month }}&return_selected_date={{ item.date|date:'Y-m-d' }}
                                     {% else %}
-                                        <a
-                                            href="{% url 'home' %}?date={{ item.date|date:'Y-m-d' }}"
-                                            class="calendar-day-link calendar-create-link"
-                                        >
-                                            {{ item.day }}
-                                        </a>
-                                    {% endif %}
-                                {% else %}
-                                    {{ item.day }}
-                                {% endif %}
-                            </div>
+                                        {% url 'home' %}?date={{ item.date|date:'Y-m-d' }}
+                                    {% endif %}"
+                            class="calendar-cell-link">
+                                <div class="calendar-cell">
+                                    <div class="calendar-day">
+                                        {{ item.day }}
+                                    </div>
 
-                            {% if item.is_current_month and item.has_visible_menu %}
-                                <div class="calendar-icons">
-                                    {% if item.menu_day and item.menu_day.eat_out %}
-                                        <div class="calendar-mini-label">外食</div>
-                                    {% endif %}
-
-                                    {% if item.menu_day and item.menu_day.deli %}
-                                        <div class="calendar-mini-label">惣菜</div>
-                                    {% endif %}
-
-                                    {% if item.menu_day and not item.menu_day.eat_out and not item.menu_day.deli %}
-                                        <a
-                                            href="{% url 'recipes:menu_detail' plan_date=item.date|date:'Y-m-d' %}?return_year={{ year }}&return_month={{ month }}&return_selected_date={{ item.date|date:'Y-m-d' }}"
-                                            class="calendar-pot-link"
-                                            aria-label="{{ item.date|date:'n月j日' }}の献立詳細を見る"
-                                        >
-                                            {% if item.is_cooked %}
-                                                <img
-                                                    src="{% static 'images/icons/menu-cooked.png' %}"
-                                                    alt="調理済み"
-                                                    class="calendar-icon-img"
-                                                >
-                                            {% else %}
-                                                <img
-                                                    src="{% static 'images/icons/menu-pot.png' %}"
-                                                    alt="献立あり"
-                                                    class="calendar-icon-img"
-                                                >
+                                    {% if item.has_visible_menu %}
+                                        <div class="calendar-icons">
+                                            {% if item.menu_day and item.menu_day.eat_out %}
+                                                <div class="calendar-mini-label">外食</div>
                                             {% endif %}
-                                        </a>
-                                    {% elif item.is_cooked %}
-                                        <div class="calendar-icon">
-                                            <img
-                                                src="{% static 'images/icons/menu-cooked.png' %}"
-                                                alt="調理済み"
-                                                class="calendar-icon-img"
-                                            >
+
+                                            {% if item.menu_day and item.menu_day.deli %}
+                                                <div class="calendar-mini-label">惣菜</div>
+                                            {% endif %}
+
+                                            {% if item.menu_day and not item.menu_day.eat_out and not item.menu_day.deli %}
+                                                {% if item.is_cooked %}
+                                                    <img
+                                                        src="{% static 'images/icons/menu-cooked.png' %}"
+                                                        alt="調理済み"
+                                                        class="calendar-icon-img"
+                                                    >
+                                                {% else %}
+                                                    <img
+                                                        src="{% static 'images/icons/menu-pot.png' %}"
+                                                        alt="献立あり"
+                                                        class="calendar-icon-img"
+                                                    >
+                                                {% endif %}
+                                            {% endif %}
                                         </div>
                                     {% endif %}
                                 </div>
-                            {% endif %}
-                        </div>
+                            </a>
+                        {% else %}
+                            <div class="calendar-cell">
+                                <div class="calendar-day">
+                                    {{ item.day }}
+                                </div>
+                            </div>
+                        {% endif %}
                     </td>
                     {% endfor %}
                 </tr>

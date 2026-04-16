@@ -773,6 +773,18 @@ body {
     min-height: 60px;
 }
 
+.calendar-cell-link {
+    display: block;
+    width: 100%;
+    height: 100%;
+    text-decoration: none;
+    color: inherit;
+}
+
+.calendar-cell-link:hover .calendar-cell {
+    background-color: #f8f8f8;
+}
+
 .calendar-day {
     font-weight: bold;
     font-size: 14px;
@@ -804,18 +816,6 @@ body {
     color: #999999;
 }
 
-.calendar-day-link {
-    text-decoration: none;
-    font-weight: bold;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    min-width: 26px;
-    min-height: 26px;
-    padding: 2px 6px;
-    border-radius: 999px;
-}
-
 /* =========================
    献立 つくったボタン
 ========================= */
@@ -837,24 +837,6 @@ body {
     color: #1976d2;
     text-align: center;
     line-height: 1.4;
-}
-
-/* =========================
-　　未作成日（＝押せる日）
-========================= */
-.calendar-create-link {
-    color: #1976d2;
-    background-color: #e3f2fd;
-    border: 1px solid #90caf9;
-}
-
-.calendar-create-link:hover {
-    background-color: #bbdefb;
-    border-color: #64b5f6;
-}
-
-.calendar-create-link:active {
-    background-color: #90caf9;
 }
 
 .calendar-icon-img {
