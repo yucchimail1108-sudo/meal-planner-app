@@ -100,7 +100,7 @@
     </div>
 
     <div class="calendar-cooked-block">
-        <button class="select-button">つくった！</button>
+        <button type="button" id="open-cooked-modal" class="select-button">つくった！</button>
         <p class="calendar-cooked-note">
             つくった！で登録すると、おうち食材が減ります
         </p>
@@ -148,13 +148,44 @@ document.addEventListener("DOMContentLoaded", function () {
     const openBtn = document.getElementById("open-cooked-modal");
     const modal = document.getElementById("cooked-modal");
     const closeBtn = document.getElementById("close-cooked-modal");
+    const input = document.getElementById("cooked_date");
 
     openBtn.addEventListener("click", function () {
         modal.style.display = "block";
 
-        const input = document.getElementById("cooked_date");
+        
 
         // URLから selected_date を取得
+        const params = new URLSearchParams(window.location.search);
+        const selectedDate = params.get("selected_date");
+
+        if (selectedDate) {
+            input.value = selectedDate;
+        }
+    });
+
+    closeBtn.addEventListener("click", function () {
+        modal.style.display = "none";
+    });
+
+    window.addEventListener("click", function (e) {
+        if (e.target === modal) {
+            modal.style.display = "none";
+        }
+    });
+});document.addEventListener("DOMContentLoaded", function () {
+    const openBtn = document.getElementById("open-cooked-modal");
+    const modal = document.getElementById("cooked-modal");
+    const closeBtn = document.getElementById("close-cooked-modal");
+    const input = document.getElementById("cooked_date");
+
+    if (!openBtn || !modal || !closeBtn || !input) {
+        return;
+    }
+
+    openBtn.addEventListener("click", function () {
+        modal.style.display = "block";
+
         const params = new URLSearchParams(window.location.search);
         const selectedDate = params.get("selected_date");
 
