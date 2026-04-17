@@ -10,6 +10,9 @@ body {
     border-bottom: 1px solid #d8b38a;
     padding:  8px 12px;
     margin-bottom: 16px;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
 }
 
 .site-title a {
@@ -1794,23 +1797,22 @@ body {
 
 /* 閉じた状態の枠 */
 .ingredient-food .choices__inner {
-    min-height: 40px !important;
-    height: 40px !important;
-    padding: 0 34px 0 10px !important;
+    min-height: 40px;
+    padding: 6px 34px 6px 10px;
     box-sizing: border-box;
-    display: flex;
-    align-items: center;
+    font-size: 14px;
+    line-height: 1.5;
 }
 
 /* 閉じた状態の表示文字エリア */
 .ingredient-food .choices__list--single {
-    padding: 0 !important;
+    padding: 0;
 }
 
 /* 閉じた状態の表示文字 */
 .ingredient-food .choices__item--selectable {
     font-size: 14px;
-    line-height: 1.5 !important;
+    line-height: 1.5;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -1832,11 +1834,12 @@ body {
 /* ドロップダウン内の検索欄 */
 .ingredient-food .choices__list--dropdown .choices__input,
 .ingredient-food .choices__list[aria-expanded] .choices__input {
-    min-height: 32px;
+    width: 100%;
+    min-height: 36px;
     font-size: 14px;
-    line-height: 1.5 !important;
-    padding: 6px 8px !important;
-    margin: 0 !important;
+    line-height: 1.5;
+    padding: 6px 10px;
+    margin: 0;
     box-sizing: border-box;
 }
 
@@ -1851,8 +1854,8 @@ body {
 .ingredient-food .choices__list--dropdown .choices__item,
 .ingredient-food .choices__list[aria-expanded] .choices__item {
     font-size: 14px;
-    line-height: 1.5 !important;
-    padding: 8px 10px !important;
+    line-height: 1.5;
+    padding: 8px 10px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -2874,4 +2877,23 @@ body {
         font-size: 16px;
         padding: 12px 22px;
     }
+}
+
+/* =========================
+   材料欄の検索入力だけを調整
+========================= */
+.ingredient-food .choices__list--dropdown .choices__input,
+.ingredient-food .choices__list[aria-expanded] .choices__input {
+    width: 100% !important;
+    min-width: 0 !important;
+    height: 32px !important;
+    min-height: 32px !important;
+    padding: 4px 8px !important;
+    margin: 0 !important;
+    box-sizing: border-box !important;
+    line-height: normal !important;
+    text-indent: 0 !important;
+    transform: none !important;
+    position: static !important;
+    text-align: left !important;
 }
