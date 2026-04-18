@@ -97,7 +97,11 @@ class RecipeIngredientForm(forms.ModelForm):
         self.fields["food_item"].queryset = FoodItem.objects.order_by("ingredient_name")
 
         self.fields["food_item"].label_from_instance = (
-            lambda obj: f"{obj.ingredient_name}｜{obj.get_category_display()}"
+            lambda obj: (
+                f"{obj.ingredient_name}｜{obj.reading_kana}"
+                if obj.reading_kana
+                else f"{obj.ingredient_name}"
+            )
         )
 
     def clean(self):
