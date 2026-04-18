@@ -126,11 +126,6 @@ LOGOUT_REDIRECT_URL = "/"
 
 LOGIN_URL = '/accounts/login/'
 
-# 開発中はメールをファイルに出す
-EMAIL_BACKEND = "django.core.mail.backends.filebased.EmailBackend"
-EMAIL_FILE_PATH = BASE_DIR / "sent_emails"
-DEFAULT_FROM_EMAIL = "noreply@example.com"
-
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 
 EMAIL_HOST = "smtp.gmail.com"

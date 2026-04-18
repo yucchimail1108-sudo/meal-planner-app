@@ -670,7 +670,6 @@ def menu_day_update_view(request, plan_date):
         if form.is_valid():
             updated_menu_day = form.save(commit=False)
 
-            # 同時チェック禁止
             if updated_menu_day.eat_out and updated_menu_day.deli:
                 messages.error(request, "外食と惣菜は同時に選択できません")
                 return redirect(
@@ -678,7 +677,6 @@ def menu_day_update_view(request, plan_date):
                     plan_date=menu_day.plan_date
                 )
 
-            # レシピあり + 外食/惣菜 の排他チェック
             if not validate_menu_day(updated_menu_day):
                 messages.error(
                     request,
@@ -693,22 +691,7 @@ def menu_day_update_view(request, plan_date):
             messages.success(request, "献立を保存しました")
             return redirect(f"{reverse('home')}?date={menu_day.plan_date}")
 
-    else:
-        form = MenuDayForm(initial={
-            "plan_date": menu_day.plan_date,
-            "eat_out": menu_day.eat_out,
-            "deli": menu_day.deli,
-        })
-
-    return render(
-        request,
-        "recipes/menu_day_edit.html",
-        {
-            "form": form,
-            "menu_day": menu_day,
-            "slots": menu_day.slots.all(),
-        }
-    )
+    return redirect(f"{reverse('home')}?date={menu_day.plan_date}")
     
 # 献立削除
 @login_required
