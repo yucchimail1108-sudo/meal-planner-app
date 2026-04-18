@@ -2411,6 +2411,7 @@ body {
     z-index: 2000;
     padding: 16px;
     box-sizing: border-box;
+    overflow-y: auto;
 }
 
 .modal-overlay.active {

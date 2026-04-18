@@ -98,9 +98,9 @@ class RecipeIngredientForm(forms.ModelForm):
 
         self.fields["food_item"].label_from_instance = (
             lambda obj: (
-                f"{obj.ingredient_name}｜{obj.reading_kana}"
+                f"{obj.ingredient_name}｜{obj.get_category_display()}｜{obj.reading_kana}"
                 if obj.reading_kana
-                else f"{obj.ingredient_name}"
+                else f"{obj.ingredient_name}｜{obj.get_category_display()}"
             )
         )
 
