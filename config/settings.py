@@ -121,7 +121,7 @@ MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
 
 # ログイン後の遷移先を設定
-LOGIN_REDIRECT_URL = "/home/"
+LOGIN_REDIRECT_URL = "/app/"
 LOGOUT_REDIRECT_URL = "/"
 
 LOGIN_URL = '/accounts/login/'
@@ -130,3 +130,14 @@ LOGIN_URL = '/accounts/login/'
 EMAIL_BACKEND = "django.core.mail.backends.filebased.EmailBackend"
 EMAIL_FILE_PATH = BASE_DIR / "sent_emails"
 DEFAULT_FROM_EMAIL = "noreply@example.com"
+
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+
+EMAIL_HOST = "smtp.gmail.com"
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+
+EMAIL_HOST_USER = "uchigohan.planner@gmail.com"
+EMAIL_HOST_PASSWORD = "isaf lzue tdxw kpmt"
+
+DEFAULT_FROM_EMAIL = "うちごはんプランナー <yucchi.mail1108@gmail.com>"
