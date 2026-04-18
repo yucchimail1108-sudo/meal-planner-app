@@ -3,13 +3,14 @@ from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
 from .forms import SignUpForm, LoginForm, NicknameChangeForm, EmailChangeForm, PasswordChangeForm
 from django.contrib import messages
-
+from apps.recipes.initial_recipe_service import create_initial_recipes_for_user
 
 def signup_view(request):
     if request.method == 'POST':
         form = SignUpForm(request.POST)
         if form.is_valid():
             user = form.save()
+            create_initial_recipes_for_user(user)
             login(request, user)
             return redirect('accounts:login')
     else:
@@ -76,6 +77,8 @@ def nickname_change_view(request):
         {
             "form": form,
             "current_nickname": request.user.first_name,          
+
+
         }
     )
     
