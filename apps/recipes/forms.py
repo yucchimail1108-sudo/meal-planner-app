@@ -174,6 +174,19 @@ class ShoppingListItemForm(forms.ModelForm):
     class Meta:
         model = ShoppingListItem
         fields = ["food_item"]
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.fields["food_item"].queryset = FoodItem.objects.order_by("ingredient_name")
+        self.fields["food_item"].empty_label = "食材を選択"
+        self.fields["food_item"].label_from_instance = (
+            lambda obj: (
+                f"{obj.ingredient_name}｜{obj.get_category_display()}｜{obj.reading_kana}"
+                if obj.reading_kana
+                else f"{obj.ingredient_name}｜{obj.get_category_display()}"
+            )
+        )
         
 # 買い物リスト抽出期間入力用フォーム
 class ShoppingListExtractForm(forms.Form):
