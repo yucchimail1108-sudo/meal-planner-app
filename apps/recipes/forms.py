@@ -230,7 +230,19 @@ class HomeFoodItemForm(forms.ModelForm):
 class FoodItemCreateForm(forms.ModelForm):
     class Meta:
         model = FoodItem
-        fields = ["ingredient_name", "category", "item_type"]
+        fields = ["ingredient_name", "reading_kana", "category", "item_type"]
+        widgets = {
+            "ingredient_name": forms.TextInput(
+                attrs={
+                    "placeholder": "食材名を入力"
+                }
+            ),
+            "reading_kana": forms.TextInput(
+                attrs={
+                    "placeholder": "よみがなを入力"
+                }
+            ),
+        }
 
     def clean_ingredient_name(self):
         ingredient_name = self.cleaned_data["ingredient_name"].strip()

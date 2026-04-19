@@ -264,6 +264,18 @@
             </div>
 
             <div class="form-group form-group-vertical">
+                <label for="modal-reading-kana">よみがな</label>
+                <div class="form-field">
+                    <input
+                        type="text"
+                        id="modal-reading-kana"
+                        name="reading_kana"
+                        placeholder="よみがなを入力"
+                    >
+                </div>
+            </div>
+
+            <div class="form-group form-group-vertical">
                 <label for="modal-category">カテゴリ<span class="required-mark">＊</span></label>
                 <div class="form-field">
                     <select id="modal-category" name="category">
@@ -346,6 +358,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const saveFoodItemButton = document.getElementById("save-food-item-button");
     const foodItemModalError = document.getElementById("food-item-modal-error");
     const modalIngredientNameInput = document.getElementById("modal-ingredient-name");
+    const modalReadingKanaInput = document.getElementById("modal-reading-kana");
     const modalCategorySelect = document.getElementById("modal-category");
     const modalItemTypeSelect = document.getElementById("modal-item-type");
     const foodItemCsrfToken = document.getElementById("food-item-csrf-token");
@@ -390,6 +403,9 @@ document.addEventListener("DOMContentLoaded", function () {
         if (modalIngredientNameInput) {
             modalIngredientNameInput.value = "";
         }
+        if (modalReadingKanaInput) {
+            modalReadingKanaInput.value = "";
+        }
         if (modalCategorySelect) {
             modalCategorySelect.value = "";
         }
@@ -431,6 +447,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
             const ingredientName = modalIngredientNameInput ? modalIngredientNameInput.value.trim() : "";
             const category = modalCategorySelect ? modalCategorySelect.value : "";
+            const readingKana = modalReadingKanaInput ? modalReadingKanaInput.value.trim() : "";
             const itemType = modalItemTypeSelect ? modalItemTypeSelect.value : "";
 
             if (!ingredientName) {
@@ -457,6 +474,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 },
                 body: new URLSearchParams({
                     ingredient_name: ingredientName,
+                    reading_kana: readingKana,
                     category: category,
                     item_type: itemType,
                 }),

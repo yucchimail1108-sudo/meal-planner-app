@@ -1390,12 +1390,14 @@ def home_food_list_view(request):
 
                 category = create_form.cleaned_data["category"]
                 item_type = create_form.cleaned_data["item_type"]
+                reading_kana = create_form.cleaned_data.get("reading_kana") or ""
 
                 food_item, created = FoodItem.objects.get_or_create(
                     ingredient_name=ingredient_name,
                     defaults={
                         "category": category,
                         "item_type": item_type,
+                        "reading_kana": reading_kana,
                     }
                 )
 
@@ -1477,19 +1479,21 @@ def food_item_create_view(request):
 
             category = form.cleaned_data["category"]
             item_type = form.cleaned_data["item_type"]
+            reading_kana = form.cleaned_data.get("reading_kana") or ""
 
             food_item, created = FoodItem.objects.get_or_create(
                 ingredient_name=ingredient_name,
                 defaults={
                     "category": category,
                     "item_type": item_type,
+                    "reading_kana": reading_kana,
                 }
             )
             
             # モーダル追加ならJSONで返す
             if is_ajax:
                 category_label = food_item.get_category_display()
-                label = f"{food_item.ingredient_name}｜{category_label}"
+                label = f"{food_item.ingredient_name}｜{category_label}｜{food_item.reading_kana or ''}"
 
                 return JsonResponse(
                     {
