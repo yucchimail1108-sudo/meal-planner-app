@@ -132,8 +132,17 @@
                         <label>カテゴリ</label>
                         {{ create_form.category }}
 
-                        <label>種別</label>
-                        {{ create_form.item_type }}
+                        <div class="label-with-help">
+                            <label>種別</label>
+                            <button type="button" class="help-toggle-button" id="item-type-help-toggle">？</button>
+                        </div>
+
+                        <div class="field-with-help">
+                            {{ create_form.item_type }}
+                            <p class="help-text" id="item-type-help-text">
+                                おうち食材や買い物リストに表示しないものは「調味料ほか」を選択してください
+                            </p>
+                        </div>
 
                         <button type="submit" class="save-button">新規追加</button>
                     </form>
@@ -200,6 +209,14 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         });
     }
+    const itemTypeHelpToggle = document.getElementById("item-type-help-toggle");
+    const itemTypeHelpText = document.getElementById("item-type-help-text");
+
+    if (itemTypeHelpToggle && itemTypeHelpText) {
+        itemTypeHelpToggle.addEventListener("click", function () {
+            itemTypeHelpText.classList.toggle("active");
+        });
+    }    
 });
 </script>
 {% endblock %}

@@ -2917,3 +2917,46 @@ body {
     position: static !important;
     text-align: left !important;
 }
+
+/* =========================
+   新規材料登録の際の種別の？コメント
+========================= */
+.label-with-help {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.help-toggle-button {
+    border: 1px solid #cccccc;
+    background-color: #ffffff;
+    color: #666666;
+    font-size: 12px;
+    line-height: 1;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    padding: 0;
+    cursor: pointer;
+}
+
+.help-toggle-button:hover {
+    color: #333333;
+    border-color: #999999;
+}
+
+.field-with-help {
+    position: relative;
+}
+
+.help-text {
+    display: none;
+    margin-top: 6px;
+    font-size: 12px;
+    line-height: 1.5;
+    color: #666666;
+}
+
+.help-text.active {
+    display: block;
+}

@@ -280,13 +280,23 @@
             </div>
 
             <div class="form-group form-group-vertical">
-                <label for="modal-item-type">種類<span class="required-mark">＊</span></label>
-                <div class="form-field">
-                    <select id="modal-item-type" name="item_type">
-                        <option value="">選択してください</option>
-                        <option value="1">食材</option>
-                        <option value="2">調味料ほか</option>
-                    </select>
+                <div class="label-with-help">
+                    <label for="modal-item-type">種別<span class="required-mark">＊</span></label>
+                    <button type="button" class="help-toggle-button" id="recipe-item-type-help-toggle">？</button>
+                </div>
+
+                <div class="field-with-help">
+                    <div class="form-field">
+                        <select id="modal-item-type" name="item_type">
+                            <option value="">選択してください</option>
+                            <option value="1">食材</option>
+                            <option value="2">調味料ほか</option>
+                        </select>
+                    </div>
+
+                    <p class="help-text" id="recipe-item-type-help-text">
+                        おうち食材や買い物リストに表示しないものは「調味料ほか」を選択してください
+                    </p>
                 </div>
             </div>
 
@@ -340,6 +350,9 @@ document.addEventListener("DOMContentLoaded", function () {
     const modalItemTypeSelect = document.getElementById("modal-item-type");
     const foodItemCsrfToken = document.getElementById("food-item-csrf-token");
 
+    const recipeItemTypeHelpToggle = document.getElementById("recipe-item-type-help-toggle");
+    const recipeItemTypeHelpText = document.getElementById("recipe-item-type-help-text");
+
     const addIngredientButton = document.getElementById("add-ingredient-button");
     const ingredientFormList = document.getElementById("ingredient-form-list");
     const ingredientTotalForms = document.getElementById("id_ingredients-TOTAL_FORMS");
@@ -358,13 +371,21 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function openFoodItemModal() {
         if (!foodItemModal) return;
+        resetRecipeFoodModalState();
         foodItemModal.classList.add("active");
+    }
+
+    function resetRecipeFoodModalState() {
+        if (recipeItemTypeHelpText) {
+            recipeItemTypeHelpText.classList.remove("active");
+        }
     }
 
     function closeFoodItemModal() {
         if (!foodItemModal) return;
 
         foodItemModal.classList.remove("active");
+        resetRecipeFoodModalState();
 
         if (modalIngredientNameInput) {
             modalIngredientNameInput.value = "";
@@ -398,6 +419,12 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
+    if (recipeItemTypeHelpToggle && recipeItemTypeHelpText) {
+        recipeItemTypeHelpToggle.addEventListener("click", function () {
+            recipeItemTypeHelpText.classList.toggle("active");
+        });
+    }
+
     if (saveFoodItemButton) {
         saveFoodItemButton.addEventListener("click", function () {
             clearError(foodItemModalError);
@@ -417,7 +444,7 @@ document.addEventListener("DOMContentLoaded", function () {
             }
 
             if (!itemType) {
-                showError(foodItemModalError, "種類を選択してください");
+                showError(foodItemModalError, "種別を選択してください");
                 return;
             }
 
@@ -472,12 +499,36 @@ document.addEventListener("DOMContentLoaded", function () {
                             "label",
                             false
                         );
+
+                        sortChoicesOptionsByLabel(choicesInstance);
                     } else {
                         const newOption = document.createElement("option");
                         newOption.value = data.food_item.id;
                         newOption.textContent = data.food_item.label;
                         newOption.selected = true;
                         targetSelect.appendChild(newOption);
+
+                        const options = Array.from(targetSelect.options);
+                        const placeholderOptions = options.filter(function (option) {
+                            return option.value === "";
+                        });
+                        const normalOptions = options.filter(function (option) {
+                            return option.value !== "";
+                        });
+
+                        normalOptions.sort(function (a, b) {
+                            return a.text.localeCompare(b.text, "ja");
+                        });
+
+                        targetSelect.innerHTML = "";
+
+                        placeholderOptions.forEach(function (option) {
+                            targetSelect.appendChild(option);
+                        });
+
+                        normalOptions.forEach(function (option) {
+                            targetSelect.appendChild(option);
+                        });
                     }
                 }
 
@@ -536,6 +587,67 @@ document.addEventListener("DOMContentLoaded", function () {
 
         select._choicesInstance = choices;
         return choices;
+    }
+
+    function sortChoicesOptionsByLabel(choicesInstance) {
+        if (!choicesInstance) return;
+
+        const currentValue = choicesInstance.getValue(true);
+
+        const choiceList = choicesInstance._store.choices
+            .filter(function (choice) {
+                return choice.value !== "";
+            })
+            .map(function (choice) {
+                const parts = choice.label.split("｜");
+                const ingredientName = parts[0] || "";
+                const categoryLabel = parts[1] || "";
+                const readingKana = parts[2] || "";
+
+                return {
+                    value: choice.value,
+                    label: choice.label,
+                    ingredientName: ingredientName,
+                    categoryLabel: categoryLabel,
+                    readingKana: readingKana,
+                    selected: String(choice.value) === String(currentValue),
+                    disabled: false,
+                };
+            });
+
+        choiceList.sort(function (a, b) {
+            const aKana = a.readingKana || a.ingredientName;
+            const bKana = b.readingKana || b.ingredientName;
+
+            return aKana.localeCompare(bKana, "ja");
+        });
+
+        choicesInstance.clearChoices();
+        choicesInstance.setChoices(
+            [
+                {
+                    value: "",
+                    label: "材料選択",
+                    selected: !currentValue,
+                    disabled: false,
+                },
+                ...choiceList.map(function (choice) {
+                    return {
+                        value: choice.value,
+                        label: choice.label,
+                        selected: choice.selected,
+                        disabled: choice.disabled,
+                    };
+                }),
+            ],
+            "value",
+            "label",
+            true
+        );
+
+        if (currentValue) {
+            choicesInstance.setChoiceByValue(String(currentValue));
+        }
     }
 
     function isStepRowFilled(row) {

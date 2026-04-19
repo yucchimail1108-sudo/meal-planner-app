@@ -94,7 +94,7 @@ class RecipeIngredientForm(forms.ModelForm):
         self.fields["food_item"].empty_label = "材料選択"
         self.fields["food_item"].widget.attrs["class"] = "ingredient-select"
         
-        self.fields["food_item"].queryset = FoodItem.objects.order_by("ingredient_name")
+        self.fields["food_item"].queryset = FoodItem.objects.order_by("reading_kana", "ingredient_name")
 
         self.fields["food_item"].label_from_instance = (
             lambda obj: (
@@ -182,7 +182,7 @@ class ShoppingListItemForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self.fields["food_item"].queryset = FoodItem.objects.order_by("ingredient_name")
+        self.fields["food_item"].queryset = FoodItem.objects.order_by("reading_kana", "ingredient_name")
         self.fields["food_item"].empty_label = "食材を選択"
         self.fields["food_item"].label_from_instance = (
             lambda obj: (
@@ -213,7 +213,7 @@ class HomeFoodItemForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
 
         self.fields["food_item"].empty_label = "検索"
-        self.fields["food_item"].queryset = FoodItem.objects.order_by("ingredient_name")
+        self.fields["food_item"].queryset = FoodItem.objects.order_by("reading_kana", "ingredient_name")
         self.fields["food_item"].widget.attrs["class"] = "home-food-select"
         self.fields["food_item"].widget.attrs["data-placeholder"] = "検索"
 
