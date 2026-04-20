@@ -2961,22 +2961,3 @@ body {
     display: block;
 }
 
-/* =========================
-   Choices の候補一覧をスクロール可能にする
-========================= */
-.choices__list--dropdown,
-.choices__list[aria-expanded] {
-    max-height: 240px !important;
-    overflow-y: auto !important;
-    overflow-x: hidden !important;
-    -webkit-overflow-scrolling: touch;
-}
-
-/* =========================
-   候補の中身もスクロール可能にする 
-========================= */
-.choices__list--dropdown .choices__list,
-.choices__list[aria-expanded] .choices__list {
-    max-height: none !important;
-    overflow: visible !important;
-}

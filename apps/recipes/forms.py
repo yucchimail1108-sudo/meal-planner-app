@@ -208,6 +208,13 @@ class HomeFoodItemForm(forms.ModelForm):
     class Meta:
         model = HomeFoodItem
         fields = ["food_item"]
+        widgets = {
+            "food_item": forms.Select(
+                attrs={
+                    "class": "home-food-select"
+                }
+            )
+        }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
