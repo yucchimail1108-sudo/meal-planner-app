@@ -2756,9 +2756,7 @@ body {
 }
 
 .shopping-extract-inline {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
+    display: block;
     width: 100%;
     margin-bottom: 10px;
 }
@@ -2768,6 +2766,10 @@ body {
     min-width: 0;
 }
 
+.shopping-inline-field + .shopping-inline-field {
+    margin-top: 8px;
+}
+
 .shopping-inline-field label {
     display: block;
     font-size: 12px;
@@ -2775,23 +2777,22 @@ body {
     margin-bottom: 4px;
 }
 
-.shopping-inline-field input[type="date"] {
+.shopping-date-input {
     display: block;
     width: 100%;
     min-width: 0;
-    padding: 6px 6px;
+    max-width: 100%;
+    padding: 8px 10px;
     border: 1px solid #cccccc;
     border-radius: 6px;
-    font-size: 12px;
+    font-size: 14px;
     background-color: #ffffff;
     box-sizing: border-box;
-    height: 36px;
 }
 
-.shopping-inline-field input[type="date"]::-webkit-calendar-picker-indicator {
+.shopping-date-input::-webkit-calendar-picker-indicator {
     margin: 0;
     padding: 0;
-    width: 14px;
 }
 
 .shopping-inline-separator {
@@ -2808,30 +2809,12 @@ body {
     min-width: 120px;
 }
 
-@media (min-width: 641px) {
-    .shopping-extract-inline {
-        display: grid;
-        grid-template-columns: minmax(0, 1fr) 20px minmax(0, 1fr);
-        align-items: end;
-        gap: 6px;
-    }
-
-    .shopping-inline-separator {
-        display: block;
-        text-align: center;
-        font-size: 16px;
-        color: #666666;
-        padding-bottom: 8px;
-        white-space: nowrap;
-    }
-}
-
 @media (max-width: 480px) {
     .shopping-inline-field label {
         font-size: 11px;
     }
 
-    .shopping-inline-field input[type="date"] {
+    .shopping-date-input {
         font-size: 12px;
         padding: 8px 8px;
     }
