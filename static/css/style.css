@@ -2976,3 +2976,52 @@ body {
     display: block;
 }
 
+/* =========================
+   買い物リスト日付欄 スマホ崩れ最終調整
+========================= */
+.shopping-extract-form {
+    width: 100%;
+}
+
+.shopping-extract-inline {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) 16px minmax(0, 1fr) !important;
+    align-items: end;
+    gap: 6px;
+    width: 100%;
+}
+
+.shopping-inline-field {
+    min-width: 0 !important;
+    width: 100%;
+}
+
+.shopping-inline-field input[type="date"] {
+    display: block;
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+.shopping-inline-separator {
+    width: 16px;
+    text-align: center;
+    white-space: nowrap;
+}
+
+@media (max-width: 480px) {
+    .shopping-inline-field label {
+        font-size: 11px;
+    }
+
+    .shopping-inline-field input[type="date"] {
+        font-size: 12px;
+        padding: 7px 4px;
+    }
+
+    .shopping-inline-separator {
+        width: 12px;
+        font-size: 12px;
+    }
+}
