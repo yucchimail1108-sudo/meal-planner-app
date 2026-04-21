@@ -380,308 +380,6 @@ body {
     line-height: 1.5;
 }
 
-/* =========================
-    買い物リスト画面 
-========================= */
-.shopping-purchase-actions {
-    display: flex !important;
-    justify-content: flex-start !important;
-    align-items: center;
-    gap: 10px;
-    flex-wrap: nowrap !important;
-    text-align: left !important;
-}
-
-.shopping-purchase-actions .select-button {
-    margin: 0;
-}
-
-.shopping-purchase-note {
-    margin: 0;
-    font-size: 13px;
-    color: #1976d2;
-    line-height: 1.4;
-    white-space: nowrap;
-}
-
-.list-delete-button {
-    padding: 4px 10px;
-    font-size: 13px;
-}
-
-/* =========================
-    買い物リストのチェック表示
-========================= */
-.item-check-label {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin: 0;
-}
-
-/* =========================
-    買い物リスト下部の操作ボタン
-========================= */
-.bottom-actions {
-    margin-top: 20px;
-    justify-content: flex-end;
-    gap: 10px;
-    flex-wrap: wrap;
-}
-
-.shopping-list-toolbar {
-    display: flex;
-    margin-bottom: 10px;
-}
-
-.shopping-list-toolbar.right-align {
-    justify-content: flex-end;
-}
-
-.delete-check-label {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-}
-
-.shopping-extract-card {
-    padding: 16px;
-}
-
-.shopping-extract-text {
-    margin-bottom: 10px;
-    font-size: 13px;
-    line-height: 1.4;
-}
-
-.shopping-extract-form {
-    display: block;
-}
-
-.shopping-extract-row {
-    display: flex;
-    align-items: flex-end;
-    gap: 10px;
-    flex-wrap: wrap;
-}
-
-.shopping-extract-inline {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
-    align-items: end;
-    gap: 6px;
-    margin-bottom: 10px;
-    width: 100%;
-}
-
-.shopping-inline-field {
-    min-width: 0;
-}
-
-.shopping-inline-field input[type="date"] {
-    width: 100%;
-    min-width: 0;
-    box-sizing: border-box;
-}
-
-.shopping-inline-separator {
-    font-size: 16px;
-    color: #666666;
-    padding-bottom: 8px;
-    flex-shrink: 0;
-    white-space: nowrap;
-}
-
-.shopping-inline-field label {
-    display: block;
-    font-size: 12px;
-    font-weight: bold;
-    margin-bottom: 4px;
-}
-
-.shopping-inline-field input[type="date"] {
-    width: 100%;
-    padding: 8px 10px;
-    border: 1px solid #cccccc;
-    border-radius: 6px;
-    font-size: 14px;
-    background-color: #ffffff;
-    box-sizing: border-box;
-}
-
-
-.shopping-extract-submit {
-    display: flex;
-    justify-content: center;
-}
-
-.shopping-extract-submit .search-button {
-    margin: 0;
-    min-width: 120px;
-}
-
-.shopping-date-group {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    width: 100%;
-    min-width: 0;
-}
-
-.shopping-date-group label {
-    font-weight: bold;
-    font-size: 13px;
-}
-
-.shopping-date-group input[type="date"] {
-    padding: 8px 10px;
-    border: 1px solid #cccccc;
-    border-radius: 6px;
-    font-size: 14px;
-    background-color: #ffffff;
-    box-sizing: border-box;
-}
-
-.shopping-date-separator {
-    width: 100%;
-    text-align: center;
-    font-size: 18px;
-    line-height: 1;
-    padding-bottom: 0;
-    color: #666666;
-}
-
-.shopping-extract-button-wrap {
-    display: flex;
-    align-items: flex-end;
-    width: 100%;
-}
-
-.shopping-extract-button-wrap .search-button {
-    width: 100%;
-    margin: 0;
-}
-
-@media (max-width: 640px) {
-    .shopping-extract-inline {
-        display: grid;
-        grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
-        gap: 6px;
-        width: 100%;
-    }
-
-    .shopping-inline-field label {
-        font-size: 11px;
-    }
-
-    .shopping-inline-field input[type="date"] {
-        padding: 7px 6px;
-        font-size: 12px;
-        width: 100%;
-        min-width: 0;
-    }
-
-    .shopping-inline-separator {
-        font-size: 13px;
-        padding-bottom: 8px;
-        white-space: nowrap;
-    }
-
-    .shopping-extract-submit .search-button {
-        width: auto;
-        min-width: 120px;
-    }
-}
-
-.shopping-purchase-bar {
-    display: grid;
-    grid-template-columns: auto 1fr;
-    align-items: center;
-    gap: 10px;
-    margin-top: 16px;
-}
-
-.shopping-select-all {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 14px;
-    margin: 0;
-}
-
-.shopping-select-all input[type="checkbox"] {
-    margin: 0;
-}
-
-.shopping-purchase-center {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 6px;
-}
-
-.shopping-purchase-center .select-button {
-    margin: 0;
-}
-
-.shopping-purchase-note {
-    margin: 0;
-    font-size: 12px;
-    color: #1976d2;
-    text-align: center;
-    line-height: 1.4;
-}
-
-.category-title {
-    margin: 0 0 8px;
-    font-size: 18px;
-    font-weight: bold;
-}
-
-.category-block {
-    margin-bottom: 16px;
-}
-
-.item-row {
-    padding: 8px 0;
-}
-
-.item-name {
-    font-size: 15px;
-}
-
-.shopping-list-card-header {
-    margin-bottom: 10px;
-}
-
-.shopping-list-card-header .section-title {
-    margin-bottom: 0;
-}
-
-@media (max-width: 380px) {
-    .shopping-purchase-bar {
-        grid-template-columns: 1fr;
-        justify-items: center;
-        gap: 8px;
-    }
-
-    .shopping-select-all {
-        justify-self: start;
-    }
-
-    .shopping-purchase-note {
-        text-align: center;
-        white-space: normal;
-    }
-
-    .category-title {
-        font-size: 16px;
-    }
-
-    .item-name {
-        font-size: 14px;
-    }
-}
 
 /* =========================
 ナビゲーションバーを画面下に固定
@@ -2977,67 +2675,257 @@ body {
 }
 
 /* =========================
-   買い物リスト日付欄（PC）
+   買い物リスト画面
 ========================= */
-.shopping-extract-inline {
+.shopping-purchase-actions {
+    display: flex !important;
+    justify-content: flex-start !important;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: nowrap !important;
+    text-align: left !important;
+}
+
+.shopping-purchase-actions .select-button {
+    margin: 0;
+}
+
+.shopping-purchase-note {
+    margin: 0;
+    font-size: 13px;
+    color: #1976d2;
+    line-height: 1.4;
+    white-space: nowrap;
+}
+
+.list-delete-button {
+    padding: 4px 10px;
+    font-size: 13px;
+}
+
+/* =========================
+   買い物リストのチェック表示
+========================= */
+.item-check-label {
     display: flex;
-    align-items: flex-end;
+    align-items: center;
+    gap: 8px;
+    margin: 0;
+}
+
+/* =========================
+   買い物リスト下部の操作ボタン
+========================= */
+.bottom-actions {
+    margin-top: 20px;
+    justify-content: flex-end;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.shopping-list-toolbar {
+    display: flex;
+    margin-bottom: 10px;
+}
+
+.shopping-list-toolbar.right-align {
+    justify-content: flex-end;
+}
+
+.delete-check-label {
+    display: flex;
+    align-items: center;
     gap: 6px;
+}
+
+/* =========================
+   買い物リスト日付欄
+========================= */
+.shopping-extract-card {
+    padding: 16px;
+}
+
+.shopping-extract-text {
+    margin-bottom: 10px;
+    font-size: 13px;
+    line-height: 1.4;
+}
+
+.shopping-extract-form {
     width: 100%;
 }
 
+.shopping-extract-inline {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+    margin-bottom: 10px;
+}
+
 .shopping-inline-field {
-    flex: 1 1 0;
+    width: 100%;
     min-width: 0;
 }
 
 .shopping-inline-field label {
     display: block;
+    font-size: 12px;
+    font-weight: bold;
     margin-bottom: 4px;
 }
 
 .shopping-inline-field input[type="date"] {
+    display: block;
     width: 100%;
     min-width: 0;
+    padding: 6px 6px;
+    border: 1px solid #cccccc;
+    border-radius: 6px;
+    font-size: 12px;
+    background-color: #ffffff;
     box-sizing: border-box;
+    height: 36px;
+}
+
+.shopping-inline-field input[type="date"]::-webkit-calendar-picker-indicator {
+    margin: 0;
+    padding: 0;
+    width: 14px;
 }
 
 .shopping-inline-separator {
-    flex: 0 0 16px;
-    text-align: center;
-    padding-bottom: 8px;
-    white-space: nowrap;
+    display: none;
 }
 
-/* =========================
-   買い物リスト日付欄（スマホ）
-========================= */
-@media (max-width: 480px) {
+.shopping-extract-submit {
+    display: flex;
+    justify-content: center;
+}
+
+.shopping-extract-submit .search-button {
+    margin: 0;
+    min-width: 120px;
+}
+
+@media (min-width: 641px) {
     .shopping-extract-inline {
-        display: flex;
-        flex-direction: column;
-        align-items: stretch;
-        gap: 8px;
-    }
-
-    .shopping-inline-field {
-        width: 100%;
-    }
-
-    .shopping-inline-field label {
-        font-size: 11px;
-        margin-bottom: 4px;
-    }
-
-    .shopping-inline-field input[type="date"] {
-        width: 100%;
-        font-size: 12px;
-        padding: 8px 10px;
-        height: 40px;
-        box-sizing: border-box;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 20px minmax(0, 1fr);
+        align-items: end;
+        gap: 6px;
     }
 
     .shopping-inline-separator {
-        display: none;
+        display: block;
+        text-align: center;
+        font-size: 16px;
+        color: #666666;
+        padding-bottom: 8px;
+        white-space: nowrap;
+    }
+}
+
+@media (max-width: 480px) {
+    .shopping-inline-field label {
+        font-size: 11px;
+    }
+
+    .shopping-inline-field input[type="date"] {
+        font-size: 12px;
+        padding: 8px 8px;
+    }
+}
+
+/* =========================
+   購入バー
+========================= */
+.shopping-purchase-bar {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    align-items: center;
+    gap: 10px;
+    margin-top: 16px;
+}
+
+.shopping-select-all {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 14px;
+    margin: 0;
+}
+
+.shopping-select-all input[type="checkbox"] {
+    margin: 0;
+}
+
+.shopping-purchase-center {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+}
+
+.shopping-purchase-center .select-button {
+    margin: 0;
+}
+
+.shopping-purchase-note {
+    margin: 0;
+    font-size: 12px;
+    color: #1976d2;
+    text-align: center;
+    line-height: 1.4;
+}
+
+.category-title {
+    margin: 0 0 8px;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.category-block {
+    margin-bottom: 16px;
+}
+
+.item-row {
+    padding: 8px 0;
+}
+
+.item-name {
+    font-size: 15px;
+}
+
+.shopping-list-card-header {
+    margin-bottom: 10px;
+}
+
+.shopping-list-card-header .section-title {
+    margin-bottom: 0;
+}
+
+@media (max-width: 380px) {
+    .shopping-purchase-bar {
+        grid-template-columns: 1fr;
+        justify-items: center;
+        gap: 8px;
+    }
+
+    .shopping-select-all {
+        justify-self: start;
+    }
+
+    .shopping-purchase-note {
+        text-align: center;
+        white-space: normal;
+    }
+
+    .category-title {
+        font-size: 16px;
+    }
+
+    .item-name {
+        font-size: 14px;
     }
 }
