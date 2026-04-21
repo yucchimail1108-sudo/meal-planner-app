@@ -13,7 +13,7 @@ SECRET_KEY = 'django-insecure-b6rmdn9yp%epux#+xmb11l6li5x(k=k$k!fne--88cuf4rsish
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = ["yucchiapp.pythonanywhere.com"]
 
 
 # Application definition
