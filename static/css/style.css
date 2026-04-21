@@ -466,15 +466,30 @@ body {
 }
 
 .shopping-extract-inline {
-    display: flex;
-    align-items: flex-end;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+    align-items: end;
     gap: 6px;
     margin-bottom: 10px;
+    width: 100%;
 }
 
 .shopping-inline-field {
-    flex: 1;
     min-width: 0;
+}
+
+.shopping-inline-field input[type="date"] {
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+}
+
+.shopping-inline-separator {
+    font-size: 16px;
+    color: #666666;
+    padding-bottom: 8px;
+    flex-shrink: 0;
+    white-space: nowrap;
 }
 
 .shopping-inline-field label {
@@ -494,12 +509,6 @@ body {
     box-sizing: border-box;
 }
 
-.shopping-inline-separator {
-    font-size: 16px;
-    color: #666666;
-    padding-bottom: 8px;
-    flex-shrink: 0;
-}
 
 .shopping-extract-submit {
     display: flex;
@@ -555,7 +564,10 @@ body {
 
 @media (max-width: 640px) {
     .shopping-extract-inline {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
         gap: 6px;
+        width: 100%;
     }
 
     .shopping-inline-field label {
@@ -563,16 +575,19 @@ body {
     }
 
     .shopping-inline-field input[type="date"] {
-        padding: 7px 8px;
-        font-size: 13px;
+        padding: 7px 6px;
+        font-size: 12px;
+        width: 100%;
+        min-width: 0;
     }
 
     .shopping-inline-separator {
-        font-size: 14px;
+        font-size: 13px;
         padding-bottom: 8px;
+        white-space: nowrap;
     }
 
-        .shopping-extract-submit .search-button {
+    .shopping-extract-submit .search-button {
         width: auto;
         min-width: 120px;
     }
