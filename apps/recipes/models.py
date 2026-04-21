@@ -102,7 +102,7 @@ class FoodItem(models.Model):
 
     item_type = models.IntegerField(
         choices=ITEM_TYPE_CHOICES,
-        default=1,
+        default=0,
         verbose_name="食材種別",
     )
     

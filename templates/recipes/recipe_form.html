@@ -63,17 +63,17 @@
             </div>
 
             <div class="form-group">
-                <label>レシピ名<span class="required-mark">＊</span></label>
+                <label>レシピ名<span class="required-mark">＊必須</span></label>
                 {{ form.recipe_name }}
             </div>
 
             <div class="form-group">
-                <label>カテゴリ<span class="required-mark">＊</span></label>
+                <label>カテゴリ<span class="required-mark">＊必須</span></label>
                 {{ form.menu_category }}
             </div>
 
             <div class="form-group">
-                <label>作る量<span class="required-mark">＊</span></label>
+                <label>作る量<span class="required-mark">＊必須</span></label>
                 <div class="form-field servings-field">
                     {{ form.servings }}
                     <span class="servings-unit">人前</span>
@@ -81,7 +81,7 @@
             </div>
 
             <div class="form-group form-group-vertical">
-                <label>材料<span class="required-mark">＊</span></label>
+                <label>材料<span class="required-mark">＊必須</span></label>
 
                 <div class="form-field">
                     {{ ingredient_formset.management_form }}
@@ -127,7 +127,7 @@
                         ＋材料欄を追加
                     </button>
 
-                    <button type="button" class="select-button" id="open-food-item-modal">
+                    <button type="button" class="select-button add-food-button" id="open-food-item-modal">
                         ＋新規食材
                     </button>
 
@@ -252,7 +252,7 @@
             <input type="hidden" id="food-item-csrf-token" value="{{ csrf_token }}">
 
             <div class="form-group form-group-vertical">
-                <label for="modal-ingredient-name">食材名<span class="required-mark">＊</span></label>
+                <label for="modal-ingredient-name">食材名<span class="required-mark">＊必須</span></label>
                 <div class="form-field">
                     <input
                         type="text"
@@ -276,7 +276,7 @@
             </div>
 
             <div class="form-group form-group-vertical">
-                <label for="modal-category">カテゴリ<span class="required-mark">＊</span></label>
+                <label for="modal-category">カテゴリ<span class="required-mark">＊必須</span></label>
                 <div class="form-field">
                     <select id="modal-category" name="category">
                         <option value="">選択してください</option>
@@ -293,7 +293,7 @@
 
             <div class="form-group form-group-vertical">
                 <div class="label-with-help">
-                    <label for="modal-item-type">種別<span class="required-mark">＊</span></label>
+                    <label for="modal-item-type">種別<span class="required-mark">＊必須</span></label>
                     <button type="button" class="help-toggle-button" id="recipe-item-type-help-toggle">？</button>
                 </div>
 

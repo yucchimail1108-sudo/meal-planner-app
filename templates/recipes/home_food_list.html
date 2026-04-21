@@ -126,17 +126,25 @@
                         <input type="hidden" name="action" value="add_new_food">
                         <h3 class="modal-subtitle">新規食材を登録</h3>
 
-                        <label>食材名</label>
+                        <label for="{{ create_form.ingredient_name.id_for_label }}">
+                            食材名<span class="required-mark">＊必須</span>
+                        </label>
                         {{ create_form.ingredient_name }}
 
-                        <label>よみがな</label>
+                        <label for="{{ create_form.reading_kana.id_for_label }}">
+                            よみがな
+                        </label>
                         {{ create_form.reading_kana }}
 
-                        <label>カテゴリ</label>
+                        <label for="{{ create_form.category.id_for_label }}">
+                            カテゴリ<span class="required-mark">＊必須</span>
+                        </label>
                         {{ create_form.category }}
 
                         <div class="label-with-help">
-                            <label>種別</label>
+                            <label for="{{ create_form.item_type.id_for_label }}">
+                                種別<span class="required-mark">＊必須</span>
+                            </label>
                             <button type="button" class="help-toggle-button" id="item-type-help-toggle">？</button>
                         </div>
 

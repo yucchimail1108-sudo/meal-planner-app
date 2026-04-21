@@ -16,7 +16,7 @@
             <input type="hidden" name="next" value="{{ next }}">
 
             <div class="form-group">
-                <label for="{{ form.ingredient_name.id_for_label }}">食材名<span class="required-mark">＊</span></label>
+                <label for="{{ form.ingredient_name.id_for_label }}">食材名<span class="required-mark">＊必須</span></label>
                 <div class="form-field">
                     {{ form.ingredient_name }}
                     {% if form.ingredient_name.errors %}
@@ -28,7 +28,7 @@
             </div>
 
             <div class="form-group">
-                <label for="{{ form.category.id_for_label }}">カテゴリ<span class="required-mark">＊</span></label>
+                <label for="{{ form.category.id_for_label }}">カテゴリ<span class="required-mark">＊必須</span></label>
                 <div class="form-field">
                     {{ form.category }}
                     {% if form.category.errors %}
@@ -40,7 +40,7 @@
             </div>
 
             <div class="form-group">
-                <label for="{{ form.item_type.id_for_label }}">種別<span class="required-mark">＊</span></label>
+                <label for="{{ form.item_type.id_for_label }}">種別<span class="required-mark">＊必須</span></label>
                 <div class="form-field">
                     {{ form.item_type }}
                     {% if form.item_type.errors %}
