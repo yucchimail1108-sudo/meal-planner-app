@@ -8,11 +8,14 @@ body {
 .site-header {
     background-color: #f4d7b5;
     border-bottom: 1px solid #d8b38a;
-    padding:  8px 12px;
+    padding: 8px 12px;
     margin-bottom: 16px;
     position: sticky;
     top: 0;
     z-index: 1000;
+
+    margin-left: -16px;
+    margin-right: -16px;
 }
 
 .site-title a {
