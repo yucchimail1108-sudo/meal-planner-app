@@ -2929,3 +2929,25 @@ body {
         font-size: 14px;
     }
 }
+
+/* =========================
+   買い物リスト日付入力 最終上書き
+========================= */
+.shopping-date-input {
+    display: block;
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+}
+
+@media (max-width: 480px) {
+    .shopping-date-input {
+        -webkit-appearance: none;
+        appearance: none;
+        font-size: 16px !important;
+        line-height: 1.2;
+        padding: 8px 6px !important;
+        height: 40px;
+    }
+}

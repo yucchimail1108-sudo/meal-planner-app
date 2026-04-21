@@ -195,12 +195,20 @@ class ShoppingListItemForm(forms.ModelForm):
 # 買い物リスト抽出期間入力用フォーム
 class ShoppingListExtractForm(forms.Form):
     start_date = forms.DateField(
-        label="開始日",
-        widget=forms.DateInput(attrs={"type": "date"})
+        widget=forms.DateInput(
+            attrs={
+                "type": "date",
+                "class": "shopping-date-input",
+            }
+        )
     )
     end_date = forms.DateField(
-        label="終了日",
-        widget=forms.DateInput(attrs={"type": "date"})
+        widget=forms.DateInput(
+            attrs={
+                "type": "date",
+                "class": "shopping-date-input",
+            }
+        )
     )
 
 # おうち食材追加フォーム
