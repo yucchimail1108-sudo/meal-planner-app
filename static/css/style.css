@@ -2977,49 +2977,67 @@ body {
 }
 
 /* =========================
-   買い物リスト日付欄 スマホで入力枠を縮める
+   買い物リスト日付欄（PC）
+========================= */
+.shopping-extract-inline {
+    display: flex;
+    align-items: flex-end;
+    gap: 6px;
+    width: 100%;
+}
+
+.shopping-inline-field {
+    flex: 1 1 0;
+    min-width: 0;
+}
+
+.shopping-inline-field label {
+    display: block;
+    margin-bottom: 4px;
+}
+
+.shopping-inline-field input[type="date"] {
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+}
+
+.shopping-inline-separator {
+    flex: 0 0 16px;
+    text-align: center;
+    padding-bottom: 8px;
+    white-space: nowrap;
+}
+
+/* =========================
+   買い物リスト日付欄（スマホ）
 ========================= */
 @media (max-width: 480px) {
     .shopping-extract-inline {
-        display: flex !important;
-        align-items: flex-end;
-        gap: 4px;
-        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 8px;
     }
 
     .shopping-inline-field {
-        flex: 1 1 0;
-        min-width: 0;
+        width: 100%;
     }
 
     .shopping-inline-field label {
-        display: block;
         font-size: 11px;
         margin-bottom: 4px;
     }
 
     .shopping-inline-field input[type="date"] {
-        width: 100% !important;
-        min-width: 0 !important;
-        max-width: 100%;
+        width: 100%;
+        font-size: 12px;
+        padding: 8px 10px;
+        height: 40px;
         box-sizing: border-box;
-        font-size: 11px;
-        padding: 6px 2px;
-        height: 36px;
-    }
-
-    .shopping-inline-field input[type="date"]::-webkit-calendar-picker-indicator {
-        margin: 0;
-        padding: 0;
-        width: 14px;
     }
 
     .shopping-inline-separator {
-        flex: 0 0 10px;
-        width: 10px;
-        text-align: center;
-        font-size: 11px;
-        padding-bottom: 8px;
-        white-space: nowrap;
+        display: none;
     }
 }
