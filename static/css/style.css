@@ -2795,10 +2795,6 @@ body {
     padding: 0;
 }
 
-.shopping-inline-separator {
-    display: none;
-}
-
 .shopping-extract-submit {
     display: flex;
     justify-content: center;
