@@ -105,16 +105,18 @@
     <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
 
     <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            const logoutOpenButton = document.getElementById("logout-open-button");
-            const logoutModal = document.getElementById("logout-modal");
-            const logoutCancelButton = document.getElementById("logout-cancel-button");
-            const logoutConfirmButton = document.getElementById("logout-confirm-button");
-            const logoutForm = document.getElementById("logout-form");
+    document.addEventListener("DOMContentLoaded", function () {
 
-            if (!logoutOpenButton || !logoutModal || !logoutCancelButton || !logoutConfirmButton || !logoutForm) {
-                return;
-            }
+        // =========================
+        // ログアウトモーダル
+        // =========================
+        const logoutOpenButton = document.getElementById("logout-open-button");
+        const logoutModal = document.getElementById("logout-modal");
+        const logoutCancelButton = document.getElementById("logout-cancel-button");
+        const logoutConfirmButton = document.getElementById("logout-confirm-button");
+        const logoutForm = document.getElementById("logout-form");
+
+        if (logoutOpenButton && logoutModal && logoutCancelButton && logoutConfirmButton && logoutForm) {
 
             logoutOpenButton.addEventListener("click", function () {
                 logoutModal.classList.add("active");
@@ -133,7 +135,36 @@
             logoutConfirmButton.addEventListener("click", function () {
                 logoutForm.submit();
             });
+        }
+
+        // =========================
+        // 連打防止（全フォーム）
+        // =========================
+        const forms = document.querySelectorAll("form");
+
+        forms.forEach(form => {
+            form.addEventListener("submit", function () {
+                const buttons = form.querySelectorAll("button[type='submit'], input[type='submit']");
+                buttons.forEach(btn => {
+                    btn.disabled = true;
+                });
+            });
         });
+        forms.forEach(form => {
+            form.addEventListener("submit", function () {
+                const buttons = form.querySelectorAll("button[type='submit'], input[type='submit']");
+                buttons.forEach(btn => {
+                    btn.disabled = true;
+                    if (btn.tagName === "BUTTON") {
+                        btn.textContent = "送信中...";
+                    } else {
+                        btn.value = "送信中...";
+                    }
+                });
+            });
+        });
+
+    });
     </script>
 
     {% block extra_js %}{% endblock %}

@@ -101,6 +101,8 @@
         <div id="add-food-modal" class="modal-overlay">
                 <div class="modal-content">
 
+                    <button type="button" class="modal-close-button" id="close-home-food-modal">×</button>
+
                     <div class="page-header">
                         <h2 class="section-title">食材を追加</h2>
                         <button type="button" class="modal-close-button" id="close-add-modal">×</button>
@@ -220,6 +222,7 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         });
     }
+
     const itemTypeHelpToggle = document.getElementById("item-type-help-toggle");
     const itemTypeHelpText = document.getElementById("item-type-help-text");
 
@@ -228,6 +231,15 @@ document.addEventListener("DOMContentLoaded", function () {
             itemTypeHelpText.classList.toggle("active");
         });
     }    
+    
+    const closeBtn = document.getElementById("close-home-food-modal");
+    const modal = document.getElementById("home-food-modal");
+
+    if (closeBtn && modal) {
+        closeBtn.addEventListener("click", function() {
+            modal.style.display = "none";
+        });
+    }
 });
 </script>
 {% endblock %}

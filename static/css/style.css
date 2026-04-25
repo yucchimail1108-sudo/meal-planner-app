@@ -383,6 +383,17 @@ body {
     line-height: 1.5;
 }
 
+.modal-close-button {
+    position: absolute;
+    top: 10px;
+    right: 12px;
+    background: none;
+    border: none;
+    font-size: 20px;
+    color: #999;
+    cursor: pointer;
+}
+
 
 /* =========================
 ナビゲーションバーを画面下に固定
@@ -2271,12 +2282,13 @@ body {
 
 .auth-submit-button,
 .auth-submit .back-button {
-    display: block;
-    width: 40%;
+    display: inline-block;
+    width: auto;
     max-width: 240px;
     box-sizing: border-box;
     text-align: center;
     margin: 0;
+    white-space: nowrap;
 }
 
 .auth-links {
@@ -2320,6 +2332,15 @@ body {
     font-size: 14px;
     line-height: 1.6;
 }
+
+.login-link-area {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-top: 16px;
+    text-align: center;
+}
+
 
 /* =========================
    マイページ画面
@@ -2949,4 +2970,29 @@ body {
         padding: 8px 6px !important;
         height: 40px;
     }
+}
+
+
+/* =========================
+   エラーメッセージを赤文字に統一
+========================= */
+.errorlist,
+.errorlist li,
+.error-message,
+.form-error,
+.field-error,
+.form-error-message {
+    color: #d32f2f !important;
+    font-size: 14px;
+    font-weight: 600;
+    margin: 6px 0 10px;
+    padding: 0;
+    list-style: none;
+}
+
+/* =========================
+   ゴミ箱アイコンを赤系に変換 
+========================= */
+.delete-icon-img {
+    filter: invert(23%) sepia(90%) saturate(6000%) hue-rotate(350deg) brightness(90%) contrast(100%);
 }
