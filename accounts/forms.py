@@ -1,6 +1,7 @@
 from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm, PasswordResetForm
+import re
 
 class SignUpForm(UserCreationForm):
     nickname = forms.CharField(
@@ -124,6 +125,17 @@ class PasswordChangeForm(forms.Form):
             raise forms.ValidationError("現在のパスワードが正しくありません")
 
         return current_password
+
+    def clean_new_password1(self):
+        new_password1 = self.cleaned_data["new_password1"]
+
+        if len(new_password1) < 8:
+            raise forms.ValidationError("パスワードは8文字以上で入力してください")
+
+        if not re.search(r"[A-Za-z]", new_password1) or not re.search(r"\d", new_password1):
+            raise forms.ValidationError("パスワードは英字と数字を含めて入力してください")
+
+        return new_password1
 
     def clean(self):
         cleaned_data = super().clean()

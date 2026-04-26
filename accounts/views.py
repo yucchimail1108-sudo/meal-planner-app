@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth import login, authenticate, logout
+from django.contrib.auth import login, authenticate, logout, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
 from .forms import SignUpForm, LoginForm, NicknameChangeForm, EmailChangeForm, PasswordChangeForm
 from django.contrib import messages
@@ -119,9 +119,11 @@ def password_change_view(request):
             new_password = form.cleaned_data["new_password1"]
             request.user.set_password(new_password)
             request.user.save()
+            
+            update_session_auth_hash(request, request.user)
 
             messages.success(request, "パスワードを変更しました")
-            return redirect("accounts:login")
+            return redirect("accounts:mypage")
     else:
         form = PasswordChangeForm(request.user)
 
