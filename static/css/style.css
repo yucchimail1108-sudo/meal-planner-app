@@ -1437,8 +1437,9 @@ body {
 }
 
 .required-mark {
-    color: #e53935;
-    margin-left: 2px;
+    color: #f57c00;
+    font-weight: 600;
+    margin-left: 4px;
 }
 
 /* =========================
@@ -3010,3 +3011,31 @@ body {
 }
 
 
+/* =========================
+   レシピフォーム高さ統一
+========================= */
+
+/* テキスト入力 */
+.form-group input[type="text"],
+.form-group input[type="url"],
+.form-group input[type="number"],
+.form-group select {
+    height: 48px;
+    padding: 8px 12px;
+    font-size: 16px;
+    box-sizing: border-box;
+}
+
+/* テキストエリア */
+.form-group textarea {
+    min-height: 72px;
+    padding: 10px 12px;
+    font-size: 16px;
+    box-sizing: border-box;
+}
+
+/* 材料・作り方との見た目を揃える */
+.ingredient-col input,
+.step-input-area textarea {
+    font-size: 16px;
+}
