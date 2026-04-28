@@ -26,8 +26,14 @@
 <section class="home-menu-section">    
 
     {% if menu_day %}
-        <form method="post">
+        <form method="post" id="home-menu-form" data-has-recipe="{% if staple_slot.recipe or main_slot.recipe or side_slot.recipe or soup_slot.recipe or temp_staple_recipe or temp_main_recipe or temp_side_recipe or temp_soup_recipe %}true{% else %}false{% endif %}">
             {% csrf_token %}
+
+            {% if menu_day.is_cooked %}
+                <p class="menu-detail-notice">
+                    つくった後は献立を編集できません
+                </p>
+            {% endif %}
             
             <!-- 案内文 -->
             {% if menu_day and menu_day.eat_out %}
@@ -38,6 +44,8 @@
 
             <!-- カード一覧 -->
             <div class="home-menu-grid {% if menu_day and menu_day.eat_out or menu_day and menu_day.deli %}home-menu-grid-disabled{% endif %}">        
+                    
+                <!-- 主食 --> 
                 <div class="home-menu-card">
                     <p class="home-menu-label">主食</p>
             
@@ -71,7 +79,6 @@
                         {% endif %}
                     </div>
 
-                     <!-- 主食 -->
                     <p class="home-menu-value">
                         {% if temp_staple_recipe %}
                             <a href="{% url 'recipes:recipe_detail' temp_staple_recipe.id %}" class="home-menu-recipe-link">
@@ -86,7 +93,7 @@
                     </p>
 
                     {% if staple_slot %}
-                        {% if menu_day and not menu_day.eat_out and not menu_day.deli %}
+                        {% if menu_day and not menu_day.eat_out and not menu_day.deli and not menu_day.is_cooked %}
                             {% if staple_slot.recipe %}
                                 <div class="home-search-button">
                                     <button type="submit" name="delete_slot_id" value="{{ staple_slot.id }}" class="delete-button">
@@ -106,7 +113,11 @@
                                 </div>
                             {% endif %}
                         {% else %}
-                            <div class="home-menu-locked-badge">外食・惣菜設定中</div>
+                            {% if menu_day.is_cooked %}
+                                <div class="home-menu-locked-badge">編集できません</div>
+                            {% else %}
+                                <div class="home-menu-locked-badge">外食・惣菜設定中</div>
+                            {% endif %}
                         {% endif %}
                     {% endif %}
                 </div>
@@ -159,7 +170,7 @@
                     </p>
 
                     {% if main_slot %}
-                        {% if menu_day and not menu_day.eat_out and not menu_day.deli %}
+                        {% if menu_day and not menu_day.eat_out and not menu_day.deli and not menu_day.is_cooked %}
                             {% if main_slot.recipe %}
                                 <div class="home-search-button">
                                     <button type="submit" name="delete_slot_id" value="{{ main_slot.id }}" class="delete-button">
@@ -169,7 +180,7 @@
                             {% else %}
                                 <div class="home-search-button">
                                     <a
-                                         href="{% url 'recipes:menu_slot_update' slot_id=main_slot.id %}?source=home&plan_date={{ today|date:'Y-m-d' }}"
+                                        href="{% url 'recipes:menu_slot_update' slot_id=main_slot.id %}?source=home&plan_date={{ today|date:'Y-m-d' }}"
                                         class="select-button open-slot-search-modal"
                                         data-slot-id="{{ main_slot.id }}"
                                         data-meal-label="主菜"
@@ -179,7 +190,11 @@
                                 </div>
                             {% endif %}
                         {% else %}
-                            <div class="home-menu-locked-badge">外食・惣菜設定中</div>
+                            {% if menu_day.is_cooked %}
+                                <div class="home-menu-locked-badge">編集できません</div>
+                            {% else %}
+                                <div class="home-menu-locked-badge">外食・惣菜設定中</div>
+                            {% endif %}
                         {% endif %}
                     {% endif %}
                 </div>
@@ -232,13 +247,13 @@
                     </p>
 
                     {% if side_slot %}
-                        {% if menu_day and not menu_day.eat_out and not menu_day.deli %}
+                        {% if menu_day and not menu_day.eat_out and not menu_day.deli and not menu_day.is_cooked %}
                             {% if side_slot.recipe %}
                                 <div class="home-search-button">
                                     <button type="submit" name="delete_slot_id" value="{{ side_slot.id }}" class="delete-button">
                                         削除
                                     </button>
-                                </div>  
+                                </div>
                             {% else %}
                                 <div class="home-search-button">
                                     <a
@@ -249,10 +264,14 @@
                                     >
                                         探す
                                     </a>
-                                    </div>
+                                </div>
                             {% endif %}
                         {% else %}
-                             <div class="home-menu-locked-badge">外食・惣菜設定中</div>
+                            {% if menu_day.is_cooked %}
+                                <div class="home-menu-locked-badge">編集できません</div>
+                            {% else %}
+                                <div class="home-menu-locked-badge">外食・惣菜設定中</div>
+                            {% endif %}
                         {% endif %}
                     {% endif %}
                 </div>
@@ -261,35 +280,35 @@
                 <div class="home-menu-card">
                     <p class="home-menu-label">汁物</p>
 
-                <div class="home-menu-image-box">
-                    {% if temp_soup_recipe %}
-                        <a href="{% url 'recipes:recipe_detail' temp_soup_recipe.id %}" class="home-menu-image-link">
-                            {% if temp_soup_recipe.image %}
-                                <img
-                                    src="{{ temp_soup_recipe.image.url }}"
-                                    alt="{{ temp_soup_recipe.recipe_name }}"
-                                    class="home-menu-image"
-                                >
-                            {% else %}
-                                NO IMAGE
-                            {% endif %}
-                        </a>
-                    {% elif soup_slot and soup_slot.recipe %}
-                        <a href="{% url 'recipes:recipe_detail' soup_slot.recipe.id %}" class="home-menu-image-link">
-                            {% if soup_slot.recipe.image %}
-                                <img
-                                    src="{{ soup_slot.recipe.image.url }}"
-                                    alt="{{ soup_slot.recipe.recipe_name }}"
-                                    class="home-menu-image"
-                                >
-                            {% else %}
-                                NO IMAGE
-                            {% endif %}
-                        </a>
-                    {% else %}
-                        NO IMAGE
-                    {% endif %}
-                </div>
+                    <div class="home-menu-image-box">
+                        {% if temp_soup_recipe %}
+                            <a href="{% url 'recipes:recipe_detail' temp_soup_recipe.id %}" class="home-menu-image-link">
+                                {% if temp_soup_recipe.image %}
+                                    <img
+                                        src="{{ temp_soup_recipe.image.url }}"
+                                        alt="{{ temp_soup_recipe.recipe_name }}"
+                                        class="home-menu-image"
+                                    >
+                                {% else %}
+                                    NO IMAGE
+                                {% endif %}
+                            </a>
+                        {% elif soup_slot and soup_slot.recipe %}
+                            <a href="{% url 'recipes:recipe_detail' soup_slot.recipe.id %}" class="home-menu-image-link">
+                                {% if soup_slot.recipe.image %}
+                                    <img
+                                        src="{{ soup_slot.recipe.image.url }}"
+                                        alt="{{ soup_slot.recipe.recipe_name }}"
+                                        class="home-menu-image"
+                                    >
+                                {% else %}
+                                    NO IMAGE
+                                {% endif %}
+                            </a>
+                        {% else %}
+                            NO IMAGE
+                        {% endif %}
+                    </div>
 
                     <p class="home-menu-value">
                         {% if temp_soup_recipe %}
@@ -305,7 +324,7 @@
                     </p>
 
                     {% if soup_slot %}
-                        {% if menu_day and not menu_day.eat_out and not menu_day.deli %}
+                        {% if menu_day and not menu_day.eat_out and not menu_day.deli and not menu_day.is_cooked %}
                             {% if soup_slot.recipe %}
                                 <div class="home-search-button">
                                     <button type="submit" name="delete_slot_id" value="{{ soup_slot.id }}" class="delete-button">
@@ -325,31 +344,31 @@
                                 </div>
                             {% endif %}
                         {% else %}
-                             <div class="home-menu-locked-badge">外食・惣菜設定中</div>
+                            {% if menu_day.is_cooked %}
+                                <div class="home-menu-locked-badge">編集できません</div>
+                            {% else %}
+                                <div class="home-menu-locked-badge">外食・惣菜設定中</div>
+                            {% endif %}
                         {% endif %}
                     {% endif %}
                 </div>
             </div>
-            
+
             <!-- 外食＆惣菜チェック -->   
-            <div class="home-flags">
-                <label>
-                    <input
-                        type="checkbox"
-                        name="eat_out"
-                        {% if menu_day and menu_day.eat_out %}checked{% endif %}
-                    >
-                    外食
-                </label>
-                <label>
-                    <input
-                        type="checkbox"
-                        name="deli"
-                        {% if menu_day and menu_day.deli %}checked{% endif %}
-                    >
-                    惣菜
-                </label>
-            </div>
+            {% if not menu_day.is_cooked %}
+                <div class="home-flags">
+                    <label>
+                        <input type="checkbox" name="eat_out"
+                            {% if menu_day and menu_day.eat_out %}checked{% endif %}>
+                        外食
+                    </label>
+                    <label>
+                        <input type="checkbox" name="deli"
+                            {% if menu_day and menu_day.deli %}checked{% endif %}>
+                        惣菜
+                    </label>
+                </div>
+            {% endif %}
 
             {% if menu_day and menu_day.eat_out or menu_day and menu_day.deli %}
                 <div class="home-save-area">
@@ -360,16 +379,18 @@
             {% endif %}
 
              <!-- 保存 -->
-            <div class="home-save-area">
-                <button
-                    type="submit"
-                    class="save-button"
-                    id="save-button"
-                    {% if not has_temp_recipe %}disabled{% endif %}
-                >
-                    献立保存
-                </button>
-            </div>
+            {% if not menu_day.is_cooked %}
+                <div class="home-save-area">
+                    <button
+                        type="submit"
+                        class="save-button"
+                        id="save-button"
+                        {% if not has_temp_recipe %}disabled{% endif %}
+                    >
+                        献立保存
+                    </button>
+                </div>
+            {% endif %}
             
         </form>
 
@@ -576,6 +597,25 @@ document.addEventListener("DOMContentLoaded", function () {
         document.addEventListener("click", function (e) {
             if (e.target.classList.contains("recipe-select-item")) {
                 saveButton.disabled = false;
+            }
+        });
+    }
+
+   // ===== 外食・惣菜チェック時の確認 =====
+    const form = document.getElementById("home-menu-form");
+
+    if (form) {
+        form.addEventListener("submit", function (e) {
+            const eatOut = form.querySelector("input[name='eat_out']");
+            const deli = form.querySelector("input[name='deli']");
+            const hasRecipe = form.dataset.hasRecipe === "true";
+
+            if ((eatOut?.checked || deli?.checked) && hasRecipe) {
+                const confirmed = confirm("選択済みの献立は削除されます。よろしいですか？");
+
+                if (!confirmed) {
+                    e.preventDefault();
+                }
             }
         });
     }

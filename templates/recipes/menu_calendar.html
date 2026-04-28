@@ -31,7 +31,7 @@
                     {% for item in week %}
                     <td class="{% if not item.is_current_month %}other-month{% endif %}">
                         {% if item.is_current_month %}
-                            <a href="{% if item.has_visible_menu and not item.menu_day.eat_out and not item.menu_day.deli %}
+                            <a href="{% if item.has_visible_menu and not item.menu_day.eat_out and not item.menu_day.deli and not item.is_cooked %}
                                         {% url 'recipes:menu_detail' plan_date=item.date|date:'Y-m-d' %}?return_year={{ year }}&return_month={{ month }}&return_selected_date={{ item.date|date:'Y-m-d' }}
                                     {% else %}
                                         {% url 'home' %}?date={{ item.date|date:'Y-m-d' }}

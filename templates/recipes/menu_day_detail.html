@@ -8,9 +8,19 @@
     <h2 class="page-title">≪献立詳細≫</h2>
 
     <div class="page-header-actions">
-        <a href="{% url 'home' %}?date={{ target_date|date:'Y-m-d' }}" class="edit-button">
-            編集
-        </a>
+        {% if not menu_day.is_cooked %}
+            <a href="{% url 'home' %}?date={{ target_date|date:'Y-m-d' }}" class="edit-button">
+                編集
+            </a>
+        {% else %}
+            <p class="menu-locked-message">つくった後は献立を編集できません</p>
+        {% endif %}
+
+        {% if menu_day.is_cooked %}
+            <p class="menu-detail-notice">
+                ※この日は調理済みのため編集できません
+            </p>
+        {% endif %}
 
         {% if can_delete_menu %}
         <button

@@ -15,7 +15,6 @@ def top_view(request):
 
 
 # ホーム画面
-# ホーム画面
 @login_required
 def home_view(request):
     selected_date_str = request.GET.get("date")
@@ -84,12 +83,14 @@ def home_view(request):
         has_saved_recipe = any(slot.recipe for slot in slots)
         has_temp_recipe = any(temp_menu.get(str(slot.id)) for slot in slots)
 
-        if (eat_out or deli) and (has_saved_recipe or has_temp_recipe):
-            messages.error(
-                request,
-                "外食または惣菜を選択する場合は献立をすべて削除してください"
-            )
-            return redirect(f"/home/?date={selected_date}")
+        if eat_out or deli:
+            # 保存済みレシピ削除
+            for slot in slots:
+                slot.recipe = None
+                slot.save()
+
+            # 仮選択も削除
+            request.session["temp_menu"] = {}
 
         menu_day.eat_out = eat_out
         menu_day.deli = deli

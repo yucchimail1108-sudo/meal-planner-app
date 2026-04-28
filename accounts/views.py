@@ -12,7 +12,7 @@ def signup_view(request):
             user = form.save()
             create_initial_recipes_for_user(user)
             login(request, user)
-            return redirect('accounts:login')
+            return redirect('app_home')
     else:
         form = SignUpForm()
         
