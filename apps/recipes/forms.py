@@ -259,6 +259,15 @@ class FoodItemCreateForm(forms.ModelForm):
             ),
         }
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.fields["item_type"].choices = [
+            ("", "---------"),
+            *self.fields["item_type"].choices,
+        ]
+        self.fields["item_type"].required = True
+
     def clean_ingredient_name(self):
         ingredient_name = self.cleaned_data["ingredient_name"].strip()
         ingredient_name = ingredient_name.replace("　", " ")

@@ -101,8 +101,6 @@
         <div id="add-food-modal" class="modal-overlay">
                 <div class="modal-content">
 
-                    <button type="button" class="modal-close-button" id="close-home-food-modal">×</button>
-
                     <div class="page-header">
                         <h2 class="section-title">食材を追加</h2>
                         <button type="button" class="modal-close-button" id="close-add-modal">×</button>
@@ -127,6 +125,14 @@
                         {% csrf_token %}
                         <input type="hidden" name="action" value="add_new_food">
                         <h3 class="modal-subtitle">新規食材を登録</h3>
+
+                        {% if create_form.ingredient_name.errors %}
+                            <div class="form-error-message">
+                                {% for error in create_form.ingredient_name.errors %}
+                                    <p>{{ error }}</p>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
 
                         <label for="{{ create_form.ingredient_name.id_for_label }}">
                             食材名<span class="required-mark">＊必須</span>
@@ -207,6 +213,27 @@ document.addEventListener("DOMContentLoaded", function () {
     const closeAddModal = document.getElementById("close-add-modal");
     const addModal = document.getElementById("add-food-modal");
 
+    function resetAddFoodModalForms() {
+        if (!addModal) return;
+
+        const inputs = addModal.querySelectorAll("input[type='text'], input[type='search']");
+        const selects = addModal.querySelectorAll("select");
+        const errors = addModal.querySelectorAll(".form-error-message, .error-box");
+
+        inputs.forEach(function (input) {
+            input.value = "";
+        });
+
+        selects.forEach(function (select) {
+            select.selectedIndex = 0;
+        });
+
+        errors.forEach(function (error) {
+            error.textContent = "";
+            error.style.display = "none";
+        });
+    }
+
     if (openAddModal && closeAddModal && addModal) {
         openAddModal.addEventListener("click", function () {
             addModal.classList.add("active");
@@ -214,11 +241,13 @@ document.addEventListener("DOMContentLoaded", function () {
 
         closeAddModal.addEventListener("click", function () {
             addModal.classList.remove("active");
+            resetAddFoodModalForms();
         });
 
         addModal.addEventListener("click", function (event) {
             if (event.target === addModal) {
                 addModal.classList.remove("active");
+                resetAddFoodModalForms();
             }
         });
     }
@@ -230,16 +259,13 @@ document.addEventListener("DOMContentLoaded", function () {
         itemTypeHelpToggle.addEventListener("click", function () {
             itemTypeHelpText.classList.toggle("active");
         });
-    }    
-    
-    const closeBtn = document.getElementById("close-home-food-modal");
-    const modal = document.getElementById("home-food-modal");
-
-    if (closeBtn && modal) {
-        closeBtn.addEventListener("click", function() {
-            modal.style.display = "none";
-        });
     }
+
+    {% if create_form.errors %}
+        if (addModal) {
+            addModal.classList.add("active");
+        }
+    {% endif %}
 });
 </script>
 {% endblock %}

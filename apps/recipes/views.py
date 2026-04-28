@@ -1396,24 +1396,28 @@ def home_food_list_view(request):
                         "reading_kana": reading_kana,
                     }
                 )
-
-                exists = HomeFoodItem.objects.filter(
-                    user=request.user,
-                    food_item=food_item
-                ).exists()
-
-                if not exists:
-                    HomeFoodItem.objects.create(
+                
+                if not created:
+                    create_form.add_error(
+                        "ingredient_name",
+                        "この食材はすでに登録されています"
+                    )
+                else:
+                    exists = HomeFoodItem.objects.filter(
                         user=request.user,
                         food_item=food_item
-                    )
-                    messages.success(request, "新しい食材を追加し、おうち食材にも登録しました")
-                else:
-                    messages.info(request, "この食材はすでにおうち食材に登録されています")
+                    ).exists()
 
-                return redirect("recipes:home_food_list")
+                    if not exists:
+                        HomeFoodItem.objects.create(
+                            user=request.user,
+                            food_item=food_item
+                        )
+                        messages.success(request, "新しい食材を追加し、おうち食材にも登録しました")
+                    else:
+                        messages.info(request, "この食材はすでにおうち食材に登録されています")
 
-            messages.error(request, "新規食材の入力内容を確認してください")
+                    return redirect("recipes:home_food_list")
 
         else:
             form = HomeFoodItemForm()

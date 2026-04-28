@@ -958,6 +958,8 @@ body {
     left: 50%;
     width: calc(100% - 32px);
     max-width: 500px;
+    max-height: 80vh;
+    overflow-y: auto;
     background-color: #ffffff;
     border-radius: 10px;
     padding: 20px;
@@ -1687,7 +1689,7 @@ body {
     margin: 2px 0 4px;
     word-break: break-word;
     text-align: center;
-    font-size: 13px;
+    font-size: 14px;
 }
 
 .home-menu-image-box {
@@ -1701,7 +1703,7 @@ body {
     margin: 0 auto 6px;  
     color: #777777;
     background-color: #f8f8f8;
-    font-size: 11px;
+    font-size: 13px;
     overflow: hidden;
 }
 
@@ -2317,7 +2319,8 @@ body {
 
 .field-error {
     color: #d32f2f;
-    font-size: 13px;
+    font-size: 14px;
+    margin-top: 6px;
 }
 
 .field-error p {
@@ -3039,3 +3042,22 @@ body {
 .step-input-area textarea {
     font-size: 16px;
 }
+
+/* =========================
+   モーダル内フォームの入力欄を統一
+========================= */
+.modal-content input[type="text"],
+.modal-content input[type="search"],
+.modal-content input[type="email"],
+.modal-content input[type="password"],
+.modal-content select,
+.modal-content textarea {
+    width: 100%;
+    min-height: 48px;
+    padding: 8px 12px;
+    border: 1px solid #cccccc;
+    border-radius: 6px;
+    font-size: 16px;
+    box-sizing: border-box;
+}
+
