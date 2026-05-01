@@ -142,19 +142,29 @@
         // =========================
         const forms = document.querySelectorAll("form");
 
-        forms.forEach(form => {
-            form.addEventListener("submit", function () {
-                const buttons = form.querySelectorAll("button[type='submit'], input[type='submit']");
-                buttons.forEach(btn => {
-                    btn.disabled = true;
+        forms.forEach(function (form) {
+            let clickedSubmitButton = null;
+
+            const submitButtons = form.querySelectorAll("button[type='submit'], input[type='submit']");
+
+            submitButtons.forEach(function (button) {
+                button.addEventListener("click", function () {
+                    clickedSubmitButton = button;
                 });
             });
-        });
-        forms.forEach(form => {
+
             form.addEventListener("submit", function () {
-                const buttons = form.querySelectorAll("button[type='submit'], input[type='submit']");
-                buttons.forEach(btn => {
+                if (clickedSubmitButton && clickedSubmitButton.name) {
+                    const hiddenInput = document.createElement("input");
+                    hiddenInput.type = "hidden";
+                    hiddenInput.name = clickedSubmitButton.name;
+                    hiddenInput.value = clickedSubmitButton.value;
+                    form.appendChild(hiddenInput);
+                }
+
+                submitButtons.forEach(function (btn) {
                     btn.disabled = true;
+
                     if (btn.tagName === "BUTTON") {
                         btn.textContent = "送信中...";
                     } else {
