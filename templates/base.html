@@ -164,12 +164,6 @@
 
                 submitButtons.forEach(function (btn) {
                     btn.disabled = true;
-
-                    if (btn.tagName === "BUTTON") {
-                        btn.textContent = "送信中...";
-                    } else {
-                        btn.value = "送信中...";
-                    }
                 });
             });
         });
