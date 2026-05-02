@@ -324,7 +324,7 @@ body {
     width: 26px;
     height: 26px;
     object-fit: contain;
-    filter: invert(23%) sepia(85%) saturate(2000%) hue-rotate(350deg) brightness(80%) contrast(95%);
+    filter: invert(23%) sepia(85%) saturate(2500%) hue-rotate(350deg) brightness(85%) contrast(95%);
 }
 
 .icon-delete-button:hover {
@@ -1151,6 +1151,15 @@ body {
     font-weight: bold;
     color: #1976d2;
 }
+
+html {
+    background-color: #f3d6b3;
+}
+
+body {
+    background-color: #f7f7f7;
+}
+
 
 /* =========================
    ヘッダーのタイトル
