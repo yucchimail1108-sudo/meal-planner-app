@@ -324,7 +324,7 @@ body {
     width: 26px;
     height: 26px;
     object-fit: contain;
-    filter: invert(23%) sepia(85%) saturate(2500%) hue-rotate(350deg) brightness(85%) contrast(95%);
+    filter: invert(25%) sepia(75%) saturate(1800%) hue-rotate(345deg) brightness(80%) contrast(95%);
 }
 
 .icon-delete-button:hover {
