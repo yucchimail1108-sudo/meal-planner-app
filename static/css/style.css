@@ -2447,7 +2447,7 @@ body {
     margin: 0 0 20px;
     font-size: 30px;
     font-weight: bold;
-    color: #333333;
+    color: #3d55be;
     line-height: 1.4;
 }
 
@@ -2513,7 +2513,7 @@ body {
     margin: 0 0 18px;
     font-size: 24px;
     font-weight: bold;
-    color: #340186;
+    color: #3d55be;
 }
 
 .portfolio-links {
@@ -2531,10 +2531,10 @@ body {
     align-items: center;
     min-width: 128px;
     padding: 11px 18px;
-    border: 1px solid #8ca36a;
+    border: 1px solid #3d55be;
     border-radius: 999px;
     background-color: #ffffff;
-    color: #748352;
+    color: #3d55be;
     text-decoration: none;
     font-size: 14px;
     font-weight: bold;
