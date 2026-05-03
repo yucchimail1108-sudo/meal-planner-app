@@ -1164,15 +1164,13 @@ def shopping_list_view(request):
                         request,
                         f"買い物リストに追加しました：{shopping_item.food_item.ingredient_name}"
                     )
+                    return redirect("recipes:shopping_list")
                 else:
-                    messages.info(
-                        request,
+                    form.add_error(
+                        "food_item",
                         "すでに登録されている食材です"
                     )
 
-                return redirect("recipes:shopping_list")
-
-            messages.error(request, "手動追加フォームの入力内容を確認してください")
             shopping_items = ShoppingListItem.objects.filter(
                 user=request.user
             ).select_related("food_item").order_by(
@@ -1194,7 +1192,7 @@ def shopping_list_view(request):
 
         # 不明なPOST
         else:
-            messages.error(request, "不正な操作です")
+            messages.error(request, "処理に問題がありました。もう一度お試しください")
             return redirect("recipes:shopping_list")
  
 # 抽出処理（GETで日付が来た場合）
@@ -1364,15 +1362,12 @@ def home_food_list_view(request):
                         request,
                         f"{home_food_item.food_item.ingredient_name}をおうち食材に追加しました"
                     )
+                    return redirect("recipes:home_food_list")
                 else:
-                    messages.info(
-                        request,
+                    form.add_error(
+                        "food_item",
                         "この食材はすでにおうち食材に登録されています"
                     )
-
-                return redirect("recipes:home_food_list")
-
-            messages.error(request, "入力内容を確認してください")
 
         # 新規食材を作成して追加する処理
         elif action == "add_new_food":
@@ -1381,8 +1376,8 @@ def home_food_list_view(request):
 
             if create_form.is_valid():
                 ingredient_name = create_form.cleaned_data["ingredient_name"]
-                ingredient_name = ingredient_name.strip()  
-                ingredient_name = ingredient_name.replace("　", " ")  # 全角対策
+                ingredient_name = ingredient_name.strip()
+                ingredient_name = ingredient_name.replace("　", " ")
 
                 category = create_form.cleaned_data["category"]
                 item_type = create_form.cleaned_data["item_type"]
@@ -1396,27 +1391,18 @@ def home_food_list_view(request):
                         "reading_kana": reading_kana,
                     }
                 )
-                
+
                 if not created:
                     create_form.add_error(
                         "ingredient_name",
-                        "この食材はすでに登録されています"
+                        "この食材名はすでに登録されています"
                     )
                 else:
-                    exists = HomeFoodItem.objects.filter(
+                    HomeFoodItem.objects.create(
                         user=request.user,
                         food_item=food_item
-                    ).exists()
-
-                    if not exists:
-                        HomeFoodItem.objects.create(
-                            user=request.user,
-                            food_item=food_item
-                        )
-                        messages.success(request, "新しい食材を追加し、おうち食材にも登録しました")
-                    else:
-                        messages.info(request, "この食材はすでにおうち食材に登録されています")
-
+                    )
+                    messages.success(request, "新しい食材を追加し、おうち食材にも登録しました")
                     return redirect("recipes:home_food_list")
 
         else:

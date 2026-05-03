@@ -112,6 +112,15 @@
                         <input type="hidden" name="action" value="add_existing_food">
 
                         <h3 class="modal-subtitle">既存食材から追加</h3>
+
+                        {% if form.food_item.errors %}
+                            <div class="form-error-message">
+                                {% for error in form.food_item.errors %}
+                                    <p>{{ error }}</p>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+
                         <label>食材を検索</label>
                         {{ form.food_item }}
 
@@ -226,11 +235,21 @@ document.addEventListener("DOMContentLoaded", function () {
 
         selects.forEach(function (select) {
             select.selectedIndex = 0;
+            select.value = "";
+
+            const event = new Event("change", { bubbles: true });
+            select.dispatchEvent(event);
         });
 
         errors.forEach(function (error) {
             error.textContent = "";
             error.style.display = "none";
+        });
+
+        const choicesInnerItems = addModal.querySelectorAll(".choices__inner .choices__item");
+        choicesInnerItems.forEach(function (item) {
+            item.textContent = "検索";
+            item.setAttribute("data-value", "");
         });
     }
 
@@ -261,7 +280,7 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-    {% if create_form.errors %}
+    {% if create_form.errors or form.errors %}
         if (addModal) {
             addModal.classList.add("active");
         }
