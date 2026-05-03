@@ -20,7 +20,7 @@
                 <div class="form-field">
                     {{ form.ingredient_name }}
                     {% if form.ingredient_name.errors %}
-                        <div class="error-box">
+                        <div class="form-error-message">
                             {{ form.ingredient_name.errors }}
                         </div>
                     {% endif %}
@@ -32,7 +32,7 @@
                 <div class="form-field">
                     {{ form.category }}
                     {% if form.category.errors %}
-                        <div class="error-box">
+                        <div class="form-error-message">
                             {{ form.category.errors }}
                         </div>
                     {% endif %}
@@ -44,7 +44,7 @@
                 <div class="form-field">
                     {{ form.item_type }}
                     {% if form.item_type.errors %}
-                        <div class="error-box">
+                        <div class="form-error-message">
                             {{ form.item_type.errors }}
                         </div>
                     {% endif %}

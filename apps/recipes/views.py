@@ -1001,7 +1001,7 @@ def menu_cooked_view(request):
         return redirect("recipes:menu_calendar")
     
     if menu_day.is_cooked:
-        messages.error(request, "その日はすでに調理済みです")
+        messages.error(request, "その日はすでに調理済みのため登録できません")
         return redirect("recipes:menu_calendar")
 
 

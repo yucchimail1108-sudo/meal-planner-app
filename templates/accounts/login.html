@@ -6,7 +6,7 @@
         <h1 class="page-title auth-title">ログイン</h1>
 
         {% if form.non_field_errors %}
-            <div class="error-box">
+            <div class="form-error-message">
                 {% for error in form.non_field_errors %}
                     <p>{{ error }}</p>
                 {% endfor %}

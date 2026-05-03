@@ -680,6 +680,27 @@ body {
     background-color: #ffffff;
 }
 
+.message-list {
+    padding: 0;
+    margin: 0 0 16px;
+}
+
+.message-item {
+    margin-bottom: 8px;
+}
+
+.message-item.error {
+    color: #e53935;
+    background: none;
+    border: none;
+    padding: 0;
+}
+
+.message-item.error,
+.form-error-message {
+    font-weight: bold;
+}
+
 /* =========================
    鍋アイコンも押せる感じにする
 ========================= */
@@ -2513,7 +2534,7 @@ body {
     margin: 0 0 18px;
     font-size: 24px;
     font-weight: bold;
-    color: #3d55be;
+    color: #000000;
 }
 
 .portfolio-links {
