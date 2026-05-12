@@ -1449,6 +1449,7 @@ body {
     align-items: flex-start;
     gap: 16px;
     margin-bottom: 16px;
+    flex-wrap: wrap;
 }
 
 .form-group label {
@@ -1456,6 +1457,10 @@ body {
     min-width: 120px;
     font-weight: bold;
     padding-top: 8px;
+}
+
+.form-field-wrapper {
+    flex: 1;
 }
 
 .form-field {
@@ -3036,6 +3041,10 @@ body {
     margin: 6px 0 10px;
     padding: 0;
     list-style: none;
+    display: block;
+    width: 100%;
+    margin-top: 8px;
+    flex-basis: 100%;
 }
 
 /* =========================
