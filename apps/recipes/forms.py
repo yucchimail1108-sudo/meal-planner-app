@@ -57,12 +57,9 @@ class RecipeIngredientForm(forms.ModelForm):
         fields = ["food_item", "amount_text"]
         
         error_messages = {
-            "food_item": {
-                "required": "",
-            },
-            "amount_text": {
-                "required": "",
-            },
+            "__all__": {
+                "unique_together": "この食材はすでに登録されています",
+            }
         }
     
     def __init__(self, *args, **kwargs):

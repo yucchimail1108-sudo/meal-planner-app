@@ -165,6 +165,28 @@
                         {% endfor %}
                     </div>
 
+                    {% for ingredient_form in ingredient_formset %}
+                        {% for error in ingredient_form.non_field_errors %}
+                            <p class="form-error-message">{{ error }}</p>
+                        {% endfor %}
+
+                        {% for error in ingredient_form.food_item.errors %}
+                            {% if error %}
+                                <p class="form-error-message">
+                                    材料名を入力してください
+                                </p>
+                            {% endif %}
+                        {% endfor %}
+
+                        {% for error in ingredient_form.amount_text.errors %}
+                            {% if error %}
+                                <p class="form-error-message">
+                                    分量を入力してください
+                                </p>
+                            {% endif %}
+                        {% endfor %}
+                    {% endfor %}
+
                     <p id="ingredient-add-error" class="form-error-message" style="display: none;"></p>
                     <button type="button" class="select-button" id="add-ingredient-button">
                         ＋材料欄を追加
@@ -626,7 +648,21 @@ document.addEventListener("DOMContentLoaded", function () {
         const foodValue = foodSelect ? foodSelect.value.trim() : "";
         const amountValue = amountInput ? amountInput.value.trim() : "";
 
-        return foodValue !== "" && amountValue !== "";
+        // 両方空なら未入力扱い
+        if (foodValue === "" && amountValue === "") {
+            return true;
+        }
+
+        // 片方だけ入力はエラー
+        if (
+            (foodValue !== "" && amountValue === "") ||
+            (foodValue === "" && amountValue !== "")
+        ) {
+            return false;
+        }
+
+        // 両方入力済み
+        return true;
     }
 
     function initIngredientSelect(select) {
