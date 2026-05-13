@@ -2443,6 +2443,18 @@ body {
     border-color: #90caf9;
 }
 
+.password-rule-text {
+    margin: 4px 0 8px;
+    font-size: 13px;
+    color: #666;
+}
+
+.auth-help-text {
+    margin: 6px 0 10px;
+    font-size: 13px;
+    color: #8a5a2b;
+}
+
 /* =========================
    ポートフォリオ画面
 ========================= */

@@ -130,24 +130,32 @@ class PasswordChangeForm(forms.Form):
 
         return current_password
 
-    def clean_new_password1(self):
-        new_password1 = self.cleaned_data["new_password1"]
-
-        if len(new_password1) < 8:
-            raise forms.ValidationError("パスワードは8文字以上で入力してください")
-
-        if not re.search(r"[A-Za-z]", new_password1) or not re.search(r"\d", new_password1):
-            raise forms.ValidationError("パスワードは英字と数字を含めて入力してください")
-
-        return new_password1
-
     def clean(self):
         cleaned_data = super().clean()
+
         pw1 = cleaned_data.get("new_password1")
         pw2 = cleaned_data.get("new_password2")
 
+        if pw1:
+            errors = []
+
+            if len(pw1) < 8:
+                errors.append("8文字以上で入力してください")
+
+            if not re.search(r"[A-Za-z]", pw1) or not re.search(r"\d", pw1):
+                errors.append("英字と数字の両方を含めてください")
+
+            if errors:
+                self.add_error(
+                    "new_password1",
+                    "パスワードは" + "／".join(errors)
+                )
+
         if pw1 and pw2 and pw1 != pw2:
-            raise forms.ValidationError("入力されたパスワードが一致しません")
+            self.add_error(
+                "new_password2",
+                "入力されたパスワードが一致しません"
+            )
 
         return cleaned_data
     
