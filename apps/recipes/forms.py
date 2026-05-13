@@ -49,9 +49,21 @@ class RecipeForm(forms.ModelForm):
         
 # レシピ材料
 class RecipeIngredientForm(forms.ModelForm):
+    error_css_class = ""
+    required_css_class = ""
+    
     class Meta:
         model = RecipeIngredient
         fields = ["food_item", "amount_text"]
+        
+        error_messages = {
+            "food_item": {
+                "required": "",
+            },
+            "amount_text": {
+                "required": "",
+            },
+        }
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
