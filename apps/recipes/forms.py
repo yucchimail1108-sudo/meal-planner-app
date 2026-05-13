@@ -1,6 +1,7 @@
 from django import forms
 from django.forms import inlineformset_factory, BaseInlineFormSet
 from .models import Recipe, RecipeIngredient, RecipeStep, MenuDay, ShoppingListItem, HomeFoodItem, FoodItem
+from django.forms.models import BaseInlineFormSet
 
 # レシピ
 class RecipeForm(forms.ModelForm):
@@ -51,35 +52,38 @@ class RecipeForm(forms.ModelForm):
 class RecipeIngredientForm(forms.ModelForm):
     error_css_class = ""
     required_css_class = ""
-    
+
     class Meta:
         model = RecipeIngredient
         fields = ["food_item", "amount_text"]
-        
+
         error_messages = {
             "__all__": {
-                "unique_together": "この食材はすでに登録されています",
+                "unique_together": "同じ食材は登録できません",
             }
         }
-    
+
     def __init__(self, *args, **kwargs):
+        self.recipe = kwargs.pop("recipe", None)
         super().__init__(*args, **kwargs)
 
-        queryset = self.fields["food_item"].queryset
+        self.fields["amount_text"].widget.attrs["placeholder"] = "分量"
+        self.fields["food_item"].empty_label = "材料選択"
+        self.fields["food_item"].widget.attrs["class"] = "ingredient-select"
 
-        # 表示ラベルを書き換える
-        choices = []
-        for item in queryset:
-            label = item.ingredient_name
+        self.fields["food_item"].queryset = FoodItem.objects.order_by(
+            "reading_kana",
+            "ingredient_name"
+        )
 
-            # よみがながあれば追加
-            if item.reading_kana:
-                label = f"{item.ingredient_name}"
+        self.fields["food_item"].label_from_instance = (
+            lambda obj: (
+                f"{obj.ingredient_name}｜{obj.get_category_display()}｜{obj.reading_kana}"
+                if obj.reading_kana
+                else f"{obj.ingredient_name}｜{obj.get_category_display()}"
+            )
+        )
 
-            choices.append((item.id, label))
-
-        self.fields["food_item"].choices = choices
-        
     def clean_amount_text(self):
         amount_text = self.cleaned_data.get("amount_text", "")
 
@@ -94,24 +98,6 @@ class RecipeIngredientForm(forms.ModelForm):
         )
 
         return translated_text.strip()
-
-    def __init__(self, *args, **kwargs):
-        self.recipe = kwargs.pop("recipe", None)
-        super().__init__(*args, **kwargs)
-
-        self.fields["amount_text"].widget.attrs["placeholder"] = "分量"
-        self.fields["food_item"].empty_label = "材料選択"
-        self.fields["food_item"].widget.attrs["class"] = "ingredient-select"
-        
-        self.fields["food_item"].queryset = FoodItem.objects.order_by("reading_kana", "ingredient_name")
-
-        self.fields["food_item"].label_from_instance = (
-            lambda obj: (
-                f"{obj.ingredient_name}｜{obj.get_category_display()}｜{obj.reading_kana}"
-                if obj.reading_kana
-                else f"{obj.ingredient_name}｜{obj.get_category_display()}"
-            )
-        )
 
     def clean(self):
         cleaned_data = super().clean()
@@ -128,12 +114,16 @@ class RecipeIngredientForm(forms.ModelForm):
                 qs = qs.exclude(pk=self.instance.pk)
 
             if qs.exists():
-                raise forms.ValidationError("この食材はすでに登録されています。")
+                raise forms.ValidationError("この食材はすでに登録されています")
 
-        return cleaned_data   
+        return cleaned_data
     
 # 材料用のカスタムFormSet
 class BaseRecipeIngredientFormSet(BaseInlineFormSet):
+    
+    def get_unique_error_message(self, unique_check):
+        return "同じ食材は登録できません"
+    
     def clean(self):
         super().clean()
 
@@ -285,7 +275,7 @@ class FoodItemCreateForm(forms.ModelForm):
             raise forms.ValidationError("この食材名はすでに登録されています")
 
         return ingredient_name
-            
+          
 # レシピ編集画面の食材追加用        
 RecipeIngredientFormSet = inlineformset_factory(
     Recipe,
