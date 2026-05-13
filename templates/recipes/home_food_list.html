@@ -54,9 +54,9 @@
                                 <td>{{ item.food_item.ingredient_name }}</td>
                                 <td>{{ item.food_item.get_category_display }}</td>
                                 <td class="table-delete-cell">
-                                    <form method="post" action="{% url 'recipes:home_food_delete' item.id %}">
+                                    <form method="post" action="{% url 'recipes:home_food_delete' item.id %}" class="js-delete-form">
                                         {% csrf_token %}
-                                        <button type="submit" class="icon-delete-button" aria-label="削除">
+                                        <button type="button" class="icon-delete-button js-delete-button" aria-label="削除">
                                             <img src="{% static 'images/icons/delete-bin.png' %}" class="delete-icon-img" alt="削除">
                                         </button>
                                     </form>

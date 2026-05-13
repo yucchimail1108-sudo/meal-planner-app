@@ -3106,3 +3106,51 @@ body {
     box-sizing: border-box;
 }
 
+
+.confirm-modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.35);
+    z-index: 3000;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.confirm-modal-overlay.is-active {
+    display: flex;
+}
+
+.confirm-modal-box {
+    width: 100%;
+    max-width: 320px;
+    background-color: #ffffff;
+    border-radius: 14px;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+}
+
+.confirm-modal-message {
+    margin: 0 0 18px;
+    font-size: 15px;
+    color: #333333;
+}
+
+.confirm-modal-buttons {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+}
+
+.delete-confirm-button {
+    min-width: 96px;
+    padding: 10px 14px;
+    border: none;
+    border-radius: 8px;
+    background-color: #b94a48;
+    color: #ffffff;
+    font-weight: bold;
+    cursor: pointer;
+}
