@@ -87,10 +87,14 @@ class EmailChangeForm(forms.Form):
         required=True
     )
 
+    def __init__(self, user, *args, **kwargs):
+        self.user = user
+        super().__init__(*args, **kwargs)
+
     def clean_new_email(self):
         new_email = self.cleaned_data["new_email"]
 
-        if User.objects.filter(email=new_email).exists():
+        if User.objects.filter(email=new_email).exclude(pk=self.user.pk).exists():
             raise forms.ValidationError("このメールアドレスはすでに登録されています")
 
         return new_email

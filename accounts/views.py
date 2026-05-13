@@ -86,7 +86,7 @@ def nickname_change_view(request):
 @login_required
 def email_change_view(request):
     if request.method == "POST":
-        form = EmailChangeForm(request.POST)
+        form = EmailChangeForm(request.user, request.POST)
 
         if form.is_valid():
             new_email = form.cleaned_data["new_email"]
@@ -98,7 +98,7 @@ def email_change_view(request):
             messages.success(request, "メールアドレスを変更しました")
             return redirect("accounts:mypage")
     else:
-        form = EmailChangeForm()
+        form = EmailChangeForm(request.user)
 
     return render(
         request,
