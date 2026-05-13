@@ -97,7 +97,7 @@
                 <p class="detail-label">【作り方】</p>
                 <ol class="recipe-detail-list">
                     {% for step in recipe.steps.all %}
-                        <li>{{ step.instruction }}</li>
+                        <li>{{ step.instruction|linebreaksbr }}</li>
                     {% empty %}
                         <li class="detail-empty-text">作り方はまだ登録されていません</li>
                     {% endfor %}
@@ -107,7 +107,7 @@
             <div class="section-block">
                 <p class="detail-label">【メモ】</p>
                 {% if recipe.memo %}
-                    <p class="detail-text">{{ recipe.memo }}</p>
+                    <p class="detail-text">{{ recipe.memo|linebreaksbr }}</p>
                 {% else %}
                     <p class="detail-empty-text">メモは登録されていません</p>
                 {% endif %}
