@@ -35,16 +35,26 @@ body {
 .select-button,
 .edit-button,
 .delete-button,
-.list-delete-button {
+.list-delete-button,
+.delete-confirm-button {
     display: inline-block;
     margin: 4px 6px 4px 0;
     padding: 8px 12px;
+    min-width: 96px;
+    height: 42px;
     text-decoration: none;
     border: 1px solid #ccc;
     border-radius: 6px;
     cursor: pointer;
     font-size: 14px;
     background-color: #ffffff;
+}
+
+.delete-confirm-button {
+    border-color: #b94a48;
+    background-color: #b94a48;
+    color: #ffffff;
+    font-weight: bold;
 }
 
 /* =========================
@@ -3144,13 +3154,3 @@ body {
     justify-content: center;
 }
 
-.delete-confirm-button {
-    min-width: 96px;
-    padding: 10px 14px;
-    border: none;
-    border-radius: 8px;
-    background-color: #b94a48;
-    color: #ffffff;
-    font-weight: bold;
-    cursor: pointer;
-}

@@ -117,9 +117,9 @@
                                 </div>
 
                                 <div class="item-row-actions">
-                                    <form method="post" action="{% url 'recipes:shopping_list_delete' item.id %}">
+                                    <form method="post" action="{% url 'recipes:shopping_list_delete' item.id %}"class="js-delete-form">
                                         {% csrf_token %}
-                                        <button type="submit" class="icon-delete-button" aria-label="削除">
+                                        <button type="button" class="icon-delete-button js-delete-button" aria-label="削除">
                                             <img src="{% static 'images/icons/delete-bin.png' %}" class="delete-icon-img" alt="削除">
                                         </button>
                                     </form>
@@ -161,11 +161,11 @@
             </p>
 
             <div class="form-actions modal-actions">
-                <button type="submit" class="delete-button" form="delete-all-form">
-                    はい
-                </button>
                 <button type="button" class="back-button" id="close-delete-all-modal">
-                    いいえ
+                    キャンセル
+                </button>
+                <button type="submit" class="delete-confirm-button" form="delete-all-form">
+                    削除
                 </button>
             </div>
         </div>
