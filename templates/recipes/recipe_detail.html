@@ -19,6 +19,14 @@
         </button>
     </div>
 
+    <form
+        method="post"
+        action="{% url 'recipes:recipe_delete' recipe.id %}"
+        id="recipe-delete-form"
+    >
+        {% csrf_token %}
+    </form>
+
     <div class="content-card">
 
         <div class="image-url-area">
@@ -124,22 +132,7 @@
     </div>
 </div>
 
-<!-- レシピ削除確認モーダル -->
-<div id="recipe-delete-modal" class="modal-overlay">
-    <div class="modal-content recipe-delete-modal-content">
-        <p class="modal-message">
-            「{{ recipe.recipe_name }}」を削除しますか？
-        </p>
 
-        <form method="post" action="{% url 'recipes:recipe_delete' recipe.id %}">
-            {% csrf_token %}
-            <div class="form-actions modal-actions">
-                <button type="submit" class="delete-button">はい</button>
-                <button type="button" id="close-recipe-delete-modal" class="back-button">いいえ</button>
-            </div>
-        </form>
-    </div>
-</div>
 
 {% endblock %}
 
@@ -166,5 +159,24 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 });
+
+document.addEventListener("DOMContentLoaded", function () {
+    const openRecipeDeleteModal = document.getElementById("open-recipe-delete-modal");
+    const recipeDeleteForm = document.getElementById("recipe-delete-form");
+
+    if (openRecipeDeleteModal && recipeDeleteForm) {
+        openRecipeDeleteModal.addEventListener("click", function () {
+            openCommonConfirmModal({
+                message: "「{{ recipe.recipe_name }}」を削除しますか？",
+                okText: "削除",
+                okButtonClass: "delete-confirm-button",
+                onOk: function () {
+                    recipeDeleteForm.submit();
+                }
+            });
+        });
+    }
+});
+
 </script>
 {% endblock %}

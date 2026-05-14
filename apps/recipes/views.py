@@ -70,16 +70,25 @@ def recipe_list_view(request):
 def convert_amount_text(amount_text, scale):
     text = amount_text.strip()
     
-    # 全角数字を半角数字に変換
-    text = text.translate(str.maketrans("０１２３４５６７８９", "0123456789"))
+    # 全角英数字を半角英数字に変換
+    text = text.translate(
+    str.maketrans(
+        "０１２３４５６７８９ＡＢＣＤＥＦＧＨＩＪＫＬＭＮＯＰＱＲＳＴＵＶＷＸＹＺａｂｃｄｅｆｇｈｉｊｋｌｍｎｏｐｑｒｓｔｕｖｗｘｙｚ",
+        "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
+    )
+)
 
     # 全角スラッシュを半角スラッシュに変換
     text = text.replace("／", "/")
 
     def format_decimal(value):
+        value = value.quantize(Decimal("0.01"))
+        
         if value % 1 == 0:
             return str(int(value))
-        return str(value.normalize())
+        
+        text = str(value).rstrip("0").rstrip(".")
+        return text
 
     def format_mixed_fraction(value):
         integer_part = int(value)
