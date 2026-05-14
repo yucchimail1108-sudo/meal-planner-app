@@ -71,23 +71,6 @@
             {% csrf_token %}
         </form>
 
-        <div id="delete-all-modal" class="modal-overlay">
-            <div class="modal-content menu-delete-modal-content">
-                <p class="modal-message">
-                    おうち食材をすべて削除しますか？
-                </p>
-
-                <div class="form-actions modal-actions">
-                    <button type="button" class="back-button" id="close-delete-all-modal">
-                        キャンセル
-                    </button>
-                    <button type="submit" class="delete-confirm-button" form="delete-all-form">
-                        削除
-                    </button>
-                </div>
-            </div>
-        </div>
-
         {% else %}
             <div class="empty-box">
                 {% if selected_category %}
@@ -199,22 +182,18 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     const openDeleteAllModal = document.getElementById("open-delete-all-modal");
-    const closeDeleteAllModal = document.getElementById("close-delete-all-modal");
-    const deleteAllModal = document.getElementById("delete-all-modal");
+    const deleteAllForm = document.getElementById("delete-all-form");
 
-    if (openDeleteAllModal && closeDeleteAllModal && deleteAllModal) {
+    if (openDeleteAllModal && deleteAllForm) {
         openDeleteAllModal.addEventListener("click", function () {
-            deleteAllModal.classList.add("active");
-        });
-
-        closeDeleteAllModal.addEventListener("click", function () {
-            deleteAllModal.classList.remove("active");
-        });
-
-        deleteAllModal.addEventListener("click", function (event) {
-            if (event.target === deleteAllModal) {
-                deleteAllModal.classList.remove("active");
-            }
+            openCommonConfirmModal({
+                message: "おうち食材をすべて削除しますか？",
+                okText: "削除",
+                okButtonClass: "delete-confirm-button",
+                onOk: function () {
+                    deleteAllForm.submit();
+                }
+            });
         });
     }
 

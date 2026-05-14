@@ -40,8 +40,6 @@ body {
     display: inline-block;
     margin: 4px 6px 4px 0;
     padding: 8px 12px;
-    min-width: 96px;
-    height: 42px;
     text-decoration: none;
     border: 1px solid #ccc;
     border-radius: 6px;
@@ -50,11 +48,23 @@ body {
     background-color: #ffffff;
 }
 
+.confirm-modal-buttons .back-button,
+.confirm-modal-buttons .delete-confirm-button,
+.modal-actions .back-button,
+.modal-actions .delete-confirm-button {
+    min-width: 96px;
+    height: 42px;
+}
+
 .delete-confirm-button {
     border-color: #b94a48;
     background-color: #b94a48;
     color: #ffffff;
     font-weight: bold;
+}
+
+.confirm-modal-message {
+    white-space: pre-line;
 }
 
 /* =========================

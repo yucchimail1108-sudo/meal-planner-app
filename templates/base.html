@@ -176,14 +176,16 @@
 
     <div id="deleteConfirmModal" class="confirm-modal-overlay">
         <div class="confirm-modal-box">
-            <p class="confirm-modal-message">削除しますか？</p>
+            <p id="confirmModalMessage" class="confirm-modal-message">
+                削除しますか？
+            </p>
 
             <div class="confirm-modal-buttons">
                 <button type="button" id="deleteCancelButton" class="back-button">
                     キャンセル
                 </button>
 
-                <button type="button" id="deleteOkButton" class="delete-confirm-button">
+                <button type="button" id="confirmOkButton" class="delete-confirm-button">
                     削除
                 </button>
             </div>
@@ -195,27 +197,65 @@
         const modal = document.getElementById("deleteConfirmModal");
         const deleteButtons = document.querySelectorAll(".js-delete-button");
         const cancelButton = document.getElementById("deleteCancelButton");
-        const okButton = document.getElementById("deleteOkButton");
+        const okButton = document.getElementById("confirmOkButton");
+        const message = document.getElementById("confirmModalMessage");
 
         let targetForm = null;
+        let confirmCallback = null;
 
         deleteButtons.forEach(function (button) {
             button.addEventListener("click", function () {
                 targetForm = button.closest(".js-delete-form");
+                confirmCallback = null;
+                cancelCallback = null;
+
+                message.textContent = "削除しますか？";
+                okButton.textContent = "削除";
+                okButton.className = "delete-confirm-button";
+
                 modal.classList.add("is-active");
             });
         });
 
         cancelButton.addEventListener("click", function () {
             modal.classList.remove("is-active");
+
+            if (cancelCallback) {
+                cancelCallback();
+                cancelCallback = null;
+            }
+
             targetForm = null;
+            confirmCallback = null;
         });
 
         okButton.addEventListener("click", function () {
+            modal.classList.remove("is-active");
+
+            if (confirmCallback) {
+                confirmCallback();
+                confirmCallback = null;
+                return;
+            }
+
             if (targetForm) {
                 targetForm.submit();
+                targetForm = null;
             }
         });
+
+        window.openCommonConfirmModal = function (options) {
+            targetForm = null;
+
+            message.textContent = options.message || "実行しますか？";
+            okButton.textContent = options.okText || "OK";
+            okButton.className = options.okButtonClass || "delete-confirm-button";
+
+            confirmCallback = options.onOk || null;
+            cancelCallback = options.onCancel || null;
+
+            modal.classList.add("is-active");
+        };
     });
     </script>
 

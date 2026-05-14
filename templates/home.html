@@ -611,11 +611,19 @@ document.addEventListener("DOMContentLoaded", function () {
             const hasRecipe = form.dataset.hasRecipe === "true";
 
             if ((eatOut?.checked || deli?.checked) && hasRecipe) {
-                const confirmed = confirm("選択済みの献立は削除されます。よろしいですか？");
+                e.preventDefault();
 
-                if (!confirmed) {
-                    e.preventDefault();
-                }
+                openCommonConfirmModal({
+                    message: "選択済みの献立は削除されます\n変更しますか？",
+                    okText: "変更",
+                    okButtonClass: "save-button",
+                    onCancel: function () {
+                        saveButton.disabled = false;
+                    },
+                    onOk: function () {
+                        form.submit();
+                    }
+                });
             }
         });
     }

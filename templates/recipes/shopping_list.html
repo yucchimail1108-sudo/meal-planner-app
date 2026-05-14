@@ -153,23 +153,6 @@
     <form method="post" id="delete-all-form" action="{% url 'recipes:shopping_list_delete_all' %}">
         {% csrf_token %}
     </form>
-
-    <div id="delete-all-modal" class="modal-overlay">
-        <div class="modal-content menu-delete-modal-content">
-            <p class="modal-message">
-                買うものをすべて削除しますか？
-            </p>
-
-            <div class="form-actions modal-actions">
-                <button type="button" class="back-button" id="close-delete-all-modal">
-                    キャンセル
-                </button>
-                <button type="submit" class="delete-confirm-button" form="delete-all-form">
-                    削除
-                </button>
-            </div>
-        </div>
-    </div>
 </div>
 
 <script>
@@ -246,8 +229,6 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     const openDeleteAllButton = document.getElementById("open-delete-all-modal");
-    const closeDeleteAllButton = document.getElementById("close-delete-all-modal");
-    const deleteAllModal = document.getElementById("delete-all-modal");
     const selectAllCheckbox = document.getElementById("select-all-shopping-items");
     const shoppingItemCheckboxes = document.querySelectorAll('input[name="checked_items"]');
 
@@ -269,19 +250,18 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
     
-    if (openDeleteAllButton && closeDeleteAllButton && deleteAllModal) {
+    const deleteAllForm = document.getElementById("delete-all-form");
+
+    if (openDeleteAllButton && deleteAllForm) {
         openDeleteAllButton.addEventListener("click", function () {
-            deleteAllModal.classList.add("active");
-        });
-
-        closeDeleteAllButton.addEventListener("click", function () {
-            deleteAllModal.classList.remove("active");
-        });
-
-        deleteAllModal.addEventListener("click", function (event) {
-            if (event.target === deleteAllModal) {
-                deleteAllModal.classList.remove("active");
-            }
+            openCommonConfirmModal({
+                message: "買うものをすべて削除しますか？",
+                okText: "削除",
+                okButtonClass: "delete-confirm-button",
+                onOk: function () {
+                    deleteAllForm.submit();
+                }
+            });
         });
     }
 
