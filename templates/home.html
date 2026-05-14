@@ -94,7 +94,7 @@
 
                     {% if staple_slot %}
                         {% if menu_day and not menu_day.eat_out and not menu_day.deli and not menu_day.is_cooked %}
-                            {% if staple_slot.recipe %}
+                            {% if staple_slot.recipe or temp_staple_recipe %}
                                 <div class="home-search-button">
                                     <button type="submit" name="delete_slot_id" value="{{ staple_slot.id }}" class="delete-button">
                                         削除
@@ -171,7 +171,7 @@
 
                     {% if main_slot %}
                         {% if menu_day and not menu_day.eat_out and not menu_day.deli and not menu_day.is_cooked %}
-                            {% if main_slot.recipe %}
+                            {% if main_slot.recipe or temp_main_recipe %}
                                 <div class="home-search-button">
                                     <button type="submit" name="delete_slot_id" value="{{ main_slot.id }}" class="delete-button">
                                         削除
@@ -248,7 +248,7 @@
 
                     {% if side_slot %}
                         {% if menu_day and not menu_day.eat_out and not menu_day.deli and not menu_day.is_cooked %}
-                            {% if side_slot.recipe %}
+                            {% if side_slot.recipe or temp_side_recipe %}
                                 <div class="home-search-button">
                                     <button type="submit" name="delete_slot_id" value="{{ side_slot.id }}" class="delete-button">
                                         削除
@@ -325,7 +325,7 @@
 
                     {% if soup_slot %}
                         {% if menu_day and not menu_day.eat_out and not menu_day.deli and not menu_day.is_cooked %}
-                            {% if soup_slot.recipe %}
+                            {% if soup_slot.recipe or temp_soup_recipe %}
                                 <div class="home-search-button">
                                     <button type="submit" name="delete_slot_id" value="{{ soup_slot.id }}" class="delete-button">
                                         削除
@@ -432,13 +432,16 @@ document.addEventListener("DOMContentLoaded", function () {
     const closeButton = document.getElementById("close-slot-search-modal");
     const modalBody = modal.querySelector(".slot-search-modal-body");
     const modalTitle = document.getElementById("slot-search-modal-title");
+    const saveButton = document.getElementById("save-button");
+    const form = document.getElementById("home-menu-form");
 
     let currentModalUrl = "";
+    let currentSlotId = "";
 
     function bindRecipeSelectEvents() {
         const items = modalBody.querySelectorAll(".recipe-select-item");
         const hiddenInput = modalBody.querySelector("#selected-recipe-id");
-        const postForm = modalBody.querySelector('#recipe-select-form');
+        const postForm = modalBody.querySelector("#recipe-select-form");
 
         if (!items.length || !hiddenInput || !postForm) {
             return;
@@ -452,6 +455,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 item.classList.add("selected");
                 hiddenInput.value = item.dataset.recipeId;
+
+                if (saveButton) {
+                    saveButton.disabled = false;
+                }
 
                 submitRecipeSelectForm(postForm);
             });
@@ -475,6 +482,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 window.location.href = response.url;
                 return null;
             }
+
             return response.text();
         })
         .then(function(html) {
@@ -493,7 +501,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 modalBody.innerHTML = "<p>保存に失敗しました</p>";
             }
         })
-        .catch(function() {
+        .catch(function(error) {
+            console.error("レシピ選択エラー:", error);
             modalBody.innerHTML = "<p>保存時にエラーが発生しました</p>";
         });
     }
@@ -553,6 +562,8 @@ document.addEventListener("DOMContentLoaded", function () {
         button.addEventListener("click", function(e) {
             e.preventDefault();
 
+            currentSlotId = button.dataset.slotId;
+
             const url = this.getAttribute("href");
             const mealLabel = this.dataset.mealLabel;
 
@@ -573,36 +584,21 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
-    // ===== 保存ボタン制御 =====
-    const saveButton = document.getElementById("save-button");
-
     if (saveButton) {
-        // チェックボックス
         const checkboxes = document.querySelectorAll("input[type='checkbox']");
+
         checkboxes.forEach(function(cb) {
             cb.addEventListener("change", function () {
                 saveButton.disabled = false;
             });
         });
 
-        // 削除ボタン
-        const deleteButtons = document.querySelectorAll("button[name='delete_slot_id']");
-        deleteButtons.forEach(function(btn) {
-            btn.addEventListener("click", function () {
-                saveButton.disabled = false;
-            });
-        });
-
-        // レシピ選択
         document.addEventListener("click", function (e) {
-            if (e.target.classList.contains("recipe-select-item")) {
+            if (e.target.name === "delete_slot_id") {
                 saveButton.disabled = false;
             }
         });
     }
-
-   // ===== 外食・惣菜チェック時の確認 =====
-    const form = document.getElementById("home-menu-form");
 
     if (form) {
         form.addEventListener("submit", function (e) {
@@ -618,7 +614,9 @@ document.addEventListener("DOMContentLoaded", function () {
                     okText: "変更",
                     okButtonClass: "save-button",
                     onCancel: function () {
-                        saveButton.disabled = false;
+                        if (saveButton) {
+                            saveButton.disabled = false;
+                        }
                     },
                     onOk: function () {
                         form.submit();
