@@ -1413,7 +1413,7 @@ body {
 
 .recipe-form-image-preview {
     display: block;
-    object-fit: cover;
+    object-fit: contain;
     background-color: #ffffff;
 }
 

@@ -379,3 +379,19 @@ class HomeFoodItem(models.Model):
     # 管理画面などで1件の表示名をわかりやすくするための文字列
     def __str__(self):
         return f"{self.user} - {self.food_item.ingredient_name}"
+    
+    
+# 一時アップロード画像
+class TemporaryRecipeImage(models.Model):
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE
+    )
+
+    image = models.ImageField(
+        upload_to="temp_recipe_images/"
+    )
+
+    created_at = models.DateTimeField(
+        auto_now_add=True
+    )

@@ -21,7 +21,16 @@
                 <label for="{{ form.image.id_for_label }}">写真</label>
                 <div class="form-field">
                     <div class="recipe-form-image-block">
-                        {% if recipe and recipe.image %}
+                        {% if temp_image %}
+                            <img
+                                src="{{ temp_image.image.url }}"
+                                alt="選択中の画像"
+                                class="recipe-form-image-preview"
+                                id="image-preview"
+                            >
+                            <div class="recipe-form-no-image" id="no-image-text" style="display: none;">NO IMAGE</div>
+
+                        {% elif recipe and recipe.image %}
                             <img
                                 src="{{ recipe.image.url }}"
                                 alt="{{ recipe.recipe_name }}"
@@ -29,6 +38,7 @@
                                 id="image-preview"
                             >
                             <div class="recipe-form-no-image" id="no-image-text" style="display: none;">NO IMAGE</div>
+
                         {% else %}
                             <img
                                 src=""
@@ -53,6 +63,15 @@
                             accept="image/*"
                             class="hidden-file-input"
                         >
+
+                        <input
+                            type="hidden"
+                            name="temp_image_id"
+                            id="temp-image-id"
+                            value="{{ temp_image_id|default:'' }}"
+                        >
+
+                        <div id="temp-image-upload-status" class="auth-help-text"></div>
                     </div>
                 </div>
             </div>
@@ -446,6 +465,14 @@ document.addEventListener("DOMContentLoaded", function () {
     const imagePreview = document.getElementById("image-preview");
     const noImageText = document.getElementById("no-image-text");
     const memoTextarea = document.querySelector(".memo-textarea");
+
+    if (imagePreview.src && imagePreview.src !== window.location.href) {
+        imagePreview.style.display = "block";
+
+        if (noImageText) {
+            noImageText.style.display = "none";
+        }
+    }
 
     function openFoodItemModal() {
         if (!foodItemModal) return;
@@ -926,16 +953,6 @@ document.addEventListener("DOMContentLoaded", function () {
                 noImageText.style.display = "flex";
                 return;
             }
-
-            const reader = new FileReader();
-
-            reader.onload = function (e) {
-                imagePreview.src = e.target.result;
-                imagePreview.style.display = "block";
-                noImageText.style.display = "none";
-            };
-
-            reader.readAsDataURL(file);
         });
     }
 
@@ -964,6 +981,61 @@ document.addEventListener("click", function (e) {
     row.style.display = "none";
 });
 
+document.addEventListener("DOMContentLoaded", function () {
+    const imageInput = document.querySelector("input[type='file'][name='image']");
+    const tempImageIdInput = document.getElementById("temp-image-id");
+    const uploadStatus = document.getElementById("temp-image-upload-status");
+    const imagePreview = document.getElementById("image-preview");
+    const noImageText = document.getElementById("no-image-text");
+
+    if (!imageInput || !tempImageIdInput || !uploadStatus || !imagePreview || !noImageText) {
+        return;
+    }
+
+    imageInput.addEventListener("change", function () {
+        const file = imageInput.files[0];
+
+        if (!file) {
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append("image", file);
+
+        uploadStatus.textContent = "画像を保存中です";
+
+        fetch("{% url 'recipes:temporary_recipe_image_upload' %}", {
+            method: "POST",
+            body: formData,
+            headers: {
+                "X-CSRFToken": "{{ csrf_token }}"
+            }
+        })
+        .then(function (response) {
+            return response.json();
+        })
+        .then(function (data) {
+            if (!data.success) {
+                uploadStatus.textContent = "画像の保存に失敗しました";
+                return;
+            }
+
+            tempImageIdInput.value = data.temp_image_id;
+
+            console.log("temp_image_id設定:", data.temp_image_id);
+            console.log("hidden現在値:", tempImageIdInput.value);
+
+            imagePreview.src = data.image_url;
+            imagePreview.style.display = "block";
+            noImageText.style.display = "none";
+
+            uploadStatus.textContent = "画像を選択済みです";
+        })
+        .catch(function () {
+            uploadStatus.textContent = "画像の保存中にエラーが発生しました";
+        });
+    });
+});
 </script>
 
 {% endblock %}

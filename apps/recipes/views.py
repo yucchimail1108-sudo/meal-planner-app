@@ -7,7 +7,7 @@ from django.urls import reverse
 from django.shortcuts import render, get_object_or_404,redirect
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
-from .models import Recipe, RecipeIngredient, RecipeStep, Favorite, MenuDay, MenuSlot, ShoppingListItem, HomeFoodItem, FoodItem
+from .models import Recipe, RecipeIngredient, RecipeStep, Favorite, MenuDay, MenuSlot, ShoppingListItem, HomeFoodItem, FoodItem, TemporaryRecipeImage
 from .forms import RecipeForm, RecipeIngredientForm, RecipeStepForm, MenuDayForm, ShoppingListItemForm, ShoppingListExtractForm, HomeFoodItemForm, FoodItemCreateForm, RecipeIngredientFormSet, RecipeStepFormSet
 from django.core.paginator import Paginator
 from django.db.models import Q
@@ -255,6 +255,36 @@ def recipe_create_view(request):
             request.POST,
             prefix="steps"
         )
+        
+        temp_image = None
+        temp_image_id = request.POST.get("temp_image_id")
+
+        if temp_image_id:
+            temp_image = TemporaryRecipeImage.objects.filter(
+                id=temp_image_id,
+                user=request.user
+            ).first()
+            
+        if not temp_image and request.FILES.get("image"):
+            temp_image = TemporaryRecipeImage.objects.create(
+                user=request.user,
+                image=request.FILES["image"]
+            )
+            temp_image_id = temp_image.idtemp_image = None
+            temp_image_id = request.POST.get("temp_image_id")
+
+            if temp_image_id:
+                temp_image = TemporaryRecipeImage.objects.filter(
+                    id=temp_image_id,
+                    user=request.user
+                ).first()
+
+            if not temp_image and request.FILES.get("image"):
+                temp_image = TemporaryRecipeImage.objects.create(
+                    user=request.user,
+                    image=request.FILES["image"]
+                )
+                temp_image_id = temp_image.id
 
         if form.is_valid() and ingredient_formset.is_valid() and step_formset.is_valid():
             if not has_valid_ingredient_input(ingredient_formset):
@@ -262,6 +292,19 @@ def recipe_create_view(request):
             else:
                 recipe = form.save(commit=False)
                 recipe.user = request.user
+
+                temp_image_id = request.POST.get("temp_image_id")
+
+                if temp_image_id:
+                    try:
+                        temp_image = TemporaryRecipeImage.objects.get(
+                            id=temp_image_id,
+                            user=request.user
+                        )
+                        recipe.image = temp_image.image
+                    except TemporaryRecipeImage.DoesNotExist:
+                        pass
+
                 recipe.save()
 
                 ingredient_formset.instance = recipe
@@ -275,8 +318,14 @@ def recipe_create_view(request):
                     step.step_no = index
                     step.save()
 
+                if temp_image_id:
+                    TemporaryRecipeImage.objects.filter(
+                        id=temp_image_id,
+                        user=request.user
+                    ).delete()
+
                 messages.success(request, "レシピを登録しました")
-                
+
                 return redirect(
                     "recipes:recipe_detail",
                     recipe_id=recipe.id
@@ -285,6 +334,8 @@ def recipe_create_view(request):
         form = RecipeForm()
         ingredient_formset = RecipeIngredientFormSet(prefix="ingredients")
         step_formset = RecipeStepFormSet(prefix="steps")
+        temp_image = None
+        temp_image_id = ""
 
     return render(
         request,
@@ -293,9 +344,40 @@ def recipe_create_view(request):
             "form": form,
             "ingredient_formset": ingredient_formset,
             "step_formset": step_formset,
+            "temp_image": temp_image,
+            "temp_image_id": temp_image_id,
         }
     )
     
+#レシピ画像の仮保存 
+@login_required
+def temporary_recipe_image_upload_view(request):
+    if request.method != "POST":
+        return JsonResponse(
+            {"success": False, "error": "不正なリクエストです"},
+            status=405
+        )
+
+    image = request.FILES.get("image")
+
+    if not image:
+        return JsonResponse(
+            {"success": False, "error": "画像が選択されていません"},
+            status=400
+        )
+
+    temp_image = TemporaryRecipeImage.objects.create(
+        user=request.user,
+        image=image
+    )
+
+    return JsonResponse({
+        "success": True,
+        "temp_image_id": temp_image.id,
+        "image_url": temp_image.image.url,
+    })
+    
+
 # レシピ編集画面
 @login_required
 def recipe_update_view(request, recipe_id):
@@ -318,11 +400,32 @@ def recipe_update_view(request, recipe_id):
             prefix="steps"
         )
 
+        temp_image = None
+        temp_image_id = request.POST.get("temp_image_id")
+
+        if temp_image_id:
+            temp_image = TemporaryRecipeImage.objects.filter(
+                id=temp_image_id,
+                user=request.user
+            ).first()
+
+        if not temp_image and request.FILES.get("image"):
+            temp_image = TemporaryRecipeImage.objects.create(
+                user=request.user,
+                image=request.FILES["image"]
+            )
+            temp_image_id = temp_image.id
+
         if form.is_valid() and ingredient_formset.is_valid() and step_formset.is_valid():
             if not has_valid_ingredient_input(ingredient_formset):
                 messages.error(request, "材料を1件以上入力してください")
             else:
-                form.save()
+                recipe = form.save(commit=False)
+
+                if temp_image:
+                    recipe.image = temp_image.image
+
+                recipe.save()
                 ingredient_formset.save()
 
                 for step_form in step_formset.deleted_forms:
@@ -352,6 +455,12 @@ def recipe_update_view(request, recipe_id):
 
                     step_number += 1
 
+                if temp_image_id:
+                    TemporaryRecipeImage.objects.filter(
+                        id=temp_image_id,
+                        user=request.user
+                    ).delete()
+
                 messages.success(request, "レシピを更新しました")
 
                 return redirect(
@@ -369,6 +478,8 @@ def recipe_update_view(request, recipe_id):
             instance=recipe,
             prefix="steps"
         )
+        temp_image = None
+        temp_image_id = ""
 
     return render(
         request,
@@ -378,6 +489,8 @@ def recipe_update_view(request, recipe_id):
             "recipe": recipe,
             "ingredient_formset": ingredient_formset,
             "step_formset": step_formset,
+            "temp_image": temp_image,
+            "temp_image_id": temp_image_id,
         }
     )
     

@@ -31,4 +31,5 @@ urlpatterns = [
     path("home-foods/delete-all/", views.home_food_delete_all_view, name="home_food_delete_all"),
     path("home-foods/<int:item_id>/delete/", views.home_food_delete_view, name="home_food_delete"),
     path("food-items/create/", views.food_item_create_view, name="food_item_create"),
+    path("recipes/temp-image-upload/",views.temporary_recipe_image_upload_view,name="temporary_recipe_image_upload"),
 ]
