@@ -152,8 +152,13 @@
         <form method="post" action="{% url 'recipes:menu_delete' plan_date=target_date|date:'Y-m-d' %}">
             {% csrf_token %}
             <div class="form-actions modal-actions">
-                <button type="submit" class="delete-button">はい</button>
-                <button type="button" id="close-menu-delete-modal" class="back-button">いいえ</button>
+                <button type="button" class="back-button" id="close-menu-delete-modal">
+                    キャンセル
+                </button>
+
+                <button type="submit" class="delete-confirm-button" form="menu-delete-form">
+                    削除
+                </button>
             </div>
         </form>
     </div>
