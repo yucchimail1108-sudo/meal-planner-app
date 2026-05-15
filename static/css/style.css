@@ -385,12 +385,6 @@ body {
     }
 }
 
-#add-food-modal .choices__inner {
-    min-height: 40px;
-    padding: 6px 10px;
-    box-sizing: border-box;
-}
-
 #add-food-modal .choices__input {
     font-size: 14px;
     line-height: 1.5;
@@ -1259,6 +1253,26 @@ body {
 }
 
 /* =========================
+   レシピ追加ボタン
+========================= */
+.recipe-add-button {
+    display: inline-block;
+    height: 36px;
+    line-height: 36px;
+    padding: 0 14px;
+    background-color: #007BFF;
+    color: #ffffff;
+    text-decoration: none;
+    border-radius: 4px;
+    white-space: nowrap;
+}
+
+.recipe-add-button:hover {
+    background-color: #0069d9;
+    text-decoration: none;
+}
+
+/* =========================
    レシピ詳細画面
 ========================= */
 .recipe-detail-page {
@@ -1551,6 +1565,41 @@ body {
 }
 
 /* =========================
+   Choices.js 共通デザイン
+========================= */
+.choices {
+    width: 100%;
+    margin: 0;
+    font-size: 14px;
+}
+
+.choices__inner {
+    min-height: 40px;
+    padding: 6px 34px 6px 10px;
+    border: 1px solid #cccccc;
+    border-radius: 6px;
+    background-color: #ffffff;
+    box-sizing: border-box;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.choices__list--single {
+    padding: 0;
+}
+
+.choices__placeholder {
+    color: #999999;
+    opacity: 1;
+}
+
+.choices[data-type*="select-one"]::after {
+    right: 11px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+/* =========================
    材料欄
 ========================= */
 .ingredient-row {
@@ -1590,22 +1639,6 @@ body {
 .ingredient-col input {
     min-height: 40px;
     padding: 8px 10px;
-    line-height: 1.5;
-}
-
-/* Choices 全体 */
-.ingredient-food .choices {
-    width: 100%;
-    margin: 0;
-    font-size: 14px;
-}
-
-/* 閉じた状態の枠 */
-.ingredient-food .choices__inner {
-    min-height: 40px;
-    padding: 6px 34px 6px 10px;
-    box-sizing: border-box;
-    font-size: 14px;
     line-height: 1.5;
 }
 
@@ -2076,13 +2109,6 @@ body {
 .home-food-card .choices {
     width: 100%;
     margin: 0;
-}
-
-.home-food-card .choices__inner {
-    min-height: 38px;
-    width: 100%;
-    box-sizing: border-box;
-    font-size: 14px;
 }
 
 .home-food-card .choices__list--single {
