@@ -359,6 +359,26 @@ def temporary_recipe_image_upload_view(request):
         )
 
     image = request.FILES.get("image")
+    
+    allowed_types = ["image/jpeg", "image/png"]
+
+    if image.content_type not in allowed_types:
+        return JsonResponse(
+            {
+                "success": False,
+                "error": "JPEGまたはPNG画像を選択してください"
+            },
+            status=400
+        )
+
+    if image.size > 5 * 1024 * 1024:
+        return JsonResponse(
+            {
+                "success": False,
+                "error": "画像サイズは5MB以下にしてください"
+            },
+            status=400
+        )
 
     if not image:
         return JsonResponse(

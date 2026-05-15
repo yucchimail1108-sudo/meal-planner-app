@@ -2408,7 +2408,7 @@ body {
 
 .form-help-text {
     margin: 6px 0 0;
-    color: #666666;
+    color: #8a5a2b;
     font-size: 13px;
     line-height: 1.5;
 }
@@ -2466,7 +2466,7 @@ body {
 .password-rule-text {
     margin: 4px 0 8px;
     font-size: 13px;
-    color: #666;
+    color: #8a5a2b;
 }
 
 .auth-help-text {
