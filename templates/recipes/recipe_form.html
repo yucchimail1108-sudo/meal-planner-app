@@ -1013,8 +1013,13 @@ document.addEventListener("DOMContentLoaded", function () {
                 "X-CSRFToken": "{{ csrf_token }}"
             }
         })
-        .then(function (response) {
-            return response.json();
+        .then(function(response) {
+            return response.json().then(function(data) {
+                if (!response.ok) {
+                    throw new Error(data.error || "アップロード失敗");
+                }
+                return data;
+            });
         })
         .then(function (data) {
             if (!data.success) {
@@ -1033,8 +1038,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
             uploadStatus.textContent = "画像を選択済みです";
         })
-        .catch(function () {
-            uploadStatus.textContent = "画像の保存中にエラーが発生しました";
+        .catch(function (error) {
+            console.error(error);
+            uploadStatus.textContent = "画像アップロードに失敗しました";
         });
     });
 });

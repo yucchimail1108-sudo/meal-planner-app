@@ -19,7 +19,7 @@ from .services import (
     validate_menu_day,
     has_visible_menu,
 )
-from PIL import Image
+from PIL import Image, ImageOps
 from django.core.files.base import ContentFile
 from io import BytesIO
 
@@ -355,6 +355,7 @@ def recipe_create_view(request):
 
 def resize_recipe_image(image_file):
     image = Image.open(image_file)
+    image = ImageOps.exif_transpose(image)
 
     if image.mode in ("RGBA", "P"):
         image = image.convert("RGB")
