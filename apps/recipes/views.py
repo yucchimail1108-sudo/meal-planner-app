@@ -19,6 +19,10 @@ from .services import (
     validate_menu_day,
     has_visible_menu,
 )
+from PIL import Image
+from django.core.files.base import ContentFile
+from io import BytesIO
+
 
 # レシピ一覧画面
 @login_required
@@ -348,7 +352,24 @@ def recipe_create_view(request):
             "temp_image_id": temp_image_id,
         }
     )
-    
+
+def resize_recipe_image(image_file):
+    image = Image.open(image_file)
+
+    if image.mode in ("RGBA", "P"):
+        image = image.convert("RGB")
+
+    image.thumbnail((1200, 1200))
+
+    output = BytesIO()
+    image.save(output, format="JPEG", quality=85, optimize=True)
+    output.seek(0)
+
+    original_name = image_file.name.rsplit(".", 1)[0]
+    new_name = f"{original_name}.jpg"
+
+    return ContentFile(output.read(), name=new_name)
+
 #レシピ画像の仮保存 
 @login_required
 def temporary_recipe_image_upload_view(request):
@@ -371,11 +392,11 @@ def temporary_recipe_image_upload_view(request):
             status=400
         )
 
-    if image.size > 5 * 1024 * 1024:
+    if image.size > 30 * 1024 * 1024:
         return JsonResponse(
             {
                 "success": False,
-                "error": "画像サイズは5MB以下にしてください"
+                "error": "画像サイズが大きすぎます"
             },
             status=400
         )
@@ -386,9 +407,11 @@ def temporary_recipe_image_upload_view(request):
             status=400
         )
 
+    resized_image = resize_recipe_image(image)
+
     temp_image = TemporaryRecipeImage.objects.create(
         user=request.user,
-        image=image
+        image=resized_image
     )
 
     return JsonResponse({
