@@ -11,7 +11,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-b6rmdn9yp%epux#+xmb11l6li5x(k=k$k!fne--88cuf4rsish'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG =False
 
 ALLOWED_HOSTS = [
     "yucchiapp.pythonanywhere.com",
