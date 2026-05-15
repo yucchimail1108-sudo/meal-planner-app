@@ -36,7 +36,7 @@
         <div class="modal-content">
             <div class="page-header">
                 <h2 class="section-title">買うものを追加</h2>
-                <button type="button" class="modal-close-button" id="close-manual-add-modal">×</button>
+                <button type="button" class="modal-close-button" id="close-manual-add-modal">✖</button>
             </div>
 
             <form method="post" class="form-block" action="{% url 'recipes:shopping_list' %}">
@@ -44,12 +44,23 @@
                 <input type="hidden" name="action" value="manual_add">
                     <div class="modal-search-block">
                         <label for="food-item-search">食材検索</label>
-                        <input
-                            type="text"
-                            id="food-item-search"
-                            class="modal-search-input"
-                            placeholder="食材名で検索"
-                        >
+
+                        <div class="input-clear-wrap">
+                            <input
+                                type="text"
+                                id="food-item-search"
+                                class="modal-search-input"
+                                placeholder="食材名で検索"
+                            >
+
+                            <button
+                                type="button"
+                                class="input-clear-button"
+                                aria-label="入力文字を削除"
+                            >
+                                ✕
+                            </button>
+                        </div>
                         <p id="food-item-search-empty" class="modal-search-empty" style="display: none;">
                             該当する食材がありません
                         </p>
@@ -68,7 +79,7 @@
                         {{ form.food_item }}
                     </div>
 
-                <div class="form-actions">
+                <div class="form-actions button-center modal-submit-full">
                     <button type="submit" class="save-button">追加</button>
                 </div>
             </form>
@@ -296,5 +307,28 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     {% endif %}
 });
+
+document.addEventListener("click", function (e) {
+    if (!e.target.classList.contains("input-clear-button")) {
+        return;
+    }
+
+    const wrapper = e.target.closest(".input-clear-wrap");
+
+    if (!wrapper) {
+        return;
+    }
+
+    const input = wrapper.querySelector("input");
+
+    if (input) {
+        input.value = "";
+        input.focus();
+
+        input.dispatchEvent(new Event("input", { bubbles: true }));
+        input.dispatchEvent(new Event("change", { bubbles: true }));
+    }
+});
 </script>
+
 {% endblock %}

@@ -86,7 +86,7 @@
 
                     <div class="page-header">
                         <h2 class="section-title">食材を追加</h2>
-                        <button type="button" class="modal-close-button" id="close-add-modal">×</button>
+                        <button type="button" class="modal-close-button" id="close-add-modal">✖</button>
                     </div>
 
                     <!-- 既存食材 -->
@@ -129,12 +129,34 @@
                         <label for="{{ create_form.ingredient_name.id_for_label }}">
                             食材名<span class="required-mark">＊必須</span>
                         </label>
-                        {{ create_form.ingredient_name }}
+
+                        <div class="input-clear-wrap">
+                            {{ create_form.ingredient_name }}
+
+                            <button
+                                type="button"
+                                class="input-clear-button"
+                                aria-label="入力文字を削除"
+                            >
+                                ✕
+                            </button>
+                        </div>
 
                         <label for="{{ create_form.reading_kana.id_for_label }}">
                             よみがな
                         </label>
-                        {{ create_form.reading_kana }}
+
+                        <div class="input-clear-wrap">
+                            {{ create_form.reading_kana }}
+
+                            <button
+                                type="button"
+                                class="input-clear-button"
+                                aria-label="入力文字を削除"
+                            >
+                                ✕
+                            </button>
+                        </div>
 
                         <label for="{{ create_form.category.id_for_label }}">
                             カテゴリ<span class="required-mark">＊必須</span>
@@ -264,6 +286,28 @@ document.addEventListener("DOMContentLoaded", function () {
             addModal.classList.add("active");
         }
     {% endif %}
+});
+
+document.addEventListener("click", function (e) {
+    if (!e.target.classList.contains("input-clear-button")) {
+        return;
+    }
+
+    const wrapper = e.target.closest(".input-clear-wrap");
+
+    if (!wrapper) {
+        return;
+    }
+
+    const input = wrapper.querySelector("input");
+
+    if (input) {
+        input.value = "";
+        input.focus();
+
+        input.dispatchEvent(new Event("input", { bubbles: true }));
+        input.dispatchEvent(new Event("change", { bubbles: true }));
+    }
 });
 </script>
 {% endblock %}

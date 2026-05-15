@@ -89,8 +89,16 @@
                 </label>
 
                 <div class="form-field-wrapper">
-                    <div class="form-field">
+                    <div class="form-field input-clear-wrap">
                         {{ form.recipe_name }}
+
+                        <button
+                            type="button"
+                            class="input-clear-button"
+                            aria-label="入力文字を削除"
+                        >
+                            ✖
+                        </button>
                     </div>
 
                     {% if form.recipe_name.errors %}
@@ -315,7 +323,7 @@
                 </div>
             </div>
 
-            <div class="form-actions">
+            <div class="form-actions button-center modal-submit-full">
                 {% if recipe %}
                     <button type="submit" class="save-button">保存</button>
                 {% else %}
@@ -330,8 +338,17 @@
 
 <div class="modal-overlay" id="food-item-modal">
     <div class="modal-content">
-        <div class="page-header">
+        <div class="page-header modal-header-with-close">
             <h2 class="page-title">新規食材登録</h2>
+
+            <button
+                type="button"
+                class="modal-close-button"
+                id="close-food-item-modal"
+                aria-label="閉じる"
+            >
+                ✕
+            </button>
         </div>
 
         <div class="form-block">
@@ -339,25 +356,41 @@
 
             <div class="form-group form-group-vertical">
                 <label for="modal-ingredient-name">食材名<span class="required-mark">＊必須</span></label>
-                <div class="form-field">
+                <div class="form-field input-clear-wrap">
                     <input
                         type="text"
                         id="modal-ingredient-name"
                         name="ingredient_name"
                         placeholder="食材名を入力"
                     >
+
+                    <button
+                        type="button"
+                        class="input-clear-button"
+                        aria-label="入力文字を削除"
+                    >
+                        ✕
+                    </button>
                 </div>
             </div>
 
             <div class="form-group form-group-vertical">
                 <label for="modal-reading-kana">よみがな</label>
-                <div class="form-field">
+                <div class="form-field input-clear-wrap">
                     <input
                         type="text"
                         id="modal-reading-kana"
                         name="reading_kana"
                         placeholder="よみがなを入力"
                     >
+
+                    <button
+                        type="button"
+                        class="input-clear-button"
+                        aria-label="入力文字を削除"
+                    >
+                        ✕
+                    </button>
                 </div>
             </div>
 
@@ -400,9 +433,8 @@
 
             <p id="food-item-modal-error" class="form-error-message" style="display: none;"></p>
 
-            <div class="form-actions">
+            <div class="form-actions button-center modal-submit-full">
                 <button type="button" class="save-button" id="save-food-item-button">追加</button>
-                <button type="button" class="back-button" id="close-food-item-modal">閉じる</button>
             </div>
         </div>
     </div>
@@ -467,6 +499,20 @@ document.addEventListener("DOMContentLoaded", function () {
     const imagePreview = document.getElementById("image-preview");
     const noImageText = document.getElementById("no-image-text");
     const memoTextarea = document.querySelector(".memo-textarea");
+
+    const clearButtons = document.querySelectorAll(".input-clear-button");
+
+    clearButtons.forEach(function (button) {
+        button.addEventListener("click", function () {
+            const wrapper = button.closest(".input-clear-wrap");
+            const input = wrapper.querySelector("input");
+
+            if (input) {
+                input.value = "";
+                input.focus();
+            }
+        });
+    });
 
     if (imagePreview.src && imagePreview.src !== window.location.href) {
         imagePreview.style.display = "block";
@@ -677,9 +723,9 @@ document.addEventListener("DOMContentLoaded", function () {
         const foodValue = foodSelect ? foodSelect.value.trim() : "";
         const amountValue = amountInput ? amountInput.value.trim() : "";
 
-        // 両方空なら未入力扱い
+        // 両方空なら追加禁止
         if (foodValue === "" && amountValue === "") {
-            return true;
+            return false;
         }
 
         // 片方だけ入力はエラー
