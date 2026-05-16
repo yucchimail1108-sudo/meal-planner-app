@@ -261,8 +261,14 @@ class FoodItemCreateForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
+        self.fields["category"].choices = [
+            ("", "選択してください"),
+            *self.fields["category"].choices,
+        ]
+        self.fields["category"].required = True
+
         self.fields["item_type"].choices = [
-            ("", "---------"),
+            ("", "選択してください"),
             *self.fields["item_type"].choices,
         ]
         self.fields["item_type"].required = True
