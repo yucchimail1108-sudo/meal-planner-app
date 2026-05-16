@@ -12,8 +12,8 @@
         
 
         <form method="get" class="search-form home-food-filter-form">
-            <select name="category">
-                <option value="">すべて</option>
+            <select name="category" id="home-food-category-filter">
+                <option value="">カテゴリすべて</option>
                 <option value="1" {% if selected_category == "1" %}selected{% endif %}>青果</option>
                 <option value="2" {% if selected_category == "2" %}selected{% endif %}>魚/肉</option>
                 <option value="3" {% if selected_category == "3" %}selected{% endif %}>常温</option>
@@ -23,7 +23,6 @@
                 <option value="7" {% if selected_category == "7" %}selected{% endif %}>その他</option>
             </select>
 
-            <button type="submit" class="save-button">絞り込む</button>
             <a href="{% url 'recipes:home_food_list' %}" class="back-button">リセット</a>
 
             <div class="home-food-bottom-actions">
@@ -202,6 +201,14 @@ document.addEventListener("DOMContentLoaded", function () {
             noChoicesText: "選択できる食材がありません",
         });
     });
+
+    const homeFoodCategoryFilter = document.getElementById("home-food-category-filter");
+
+    if (homeFoodCategoryFilter) {
+        homeFoodCategoryFilter.addEventListener("change", function () {
+            homeFoodCategoryFilter.form.submit();
+        });
+    }
 
     const openDeleteAllModal = document.getElementById("open-delete-all-modal");
     const deleteAllForm = document.getElementById("delete-all-form");

@@ -182,7 +182,7 @@ class ShoppingListItemForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
 
         self.fields["food_item"].queryset = FoodItem.objects.order_by("reading_kana", "ingredient_name")
-        self.fields["food_item"].empty_label = "食材を選択"
+        self.fields["food_item"].empty_label = "食材を検索・選択"
         self.fields["food_item"].label_from_instance = (
             lambda obj: (
                 f"{obj.ingredient_name}｜{obj.get_category_display()}｜{obj.reading_kana}"
@@ -226,10 +226,10 @@ class HomeFoodItemForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self.fields["food_item"].empty_label = "検索"
+        self.fields["food_item"].empty_label = "食材を検索・選択"
         self.fields["food_item"].queryset = FoodItem.objects.order_by("reading_kana", "ingredient_name")
         self.fields["food_item"].widget.attrs["class"] = "home-food-select"
-        self.fields["food_item"].widget.attrs["data-placeholder"] = "検索"
+        self.fields["food_item"].widget.attrs["data-placeholder"] = "食材を検索・選択"
 
         self.fields["food_item"].label_from_instance = (
             lambda obj: (

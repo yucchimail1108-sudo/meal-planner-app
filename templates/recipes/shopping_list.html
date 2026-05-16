@@ -42,29 +42,6 @@
             <form method="post" class="form-block" action="{% url 'recipes:shopping_list' %}">
                 {% csrf_token %}
                 <input type="hidden" name="action" value="manual_add">
-                    <div class="modal-search-block">
-                        <label for="food-item-search">食材を検索</label>
-
-                        <div class="input-clear-wrap">
-                            <input
-                                type="text"
-                                id="food-item-search"
-                                class="modal-search-input"
-                                placeholder="検索"
-                            >
-
-                            <button
-                                type="button"
-                                class="input-clear-button"
-                                aria-label="入力文字を削除"
-                            >
-                                ✕
-                            </button>
-                        </div>
-                        <p id="food-item-search-empty" class="modal-search-empty" style="display: none;">
-                            該当する食材がありません
-                        </p>
-                    </div>
 
                     {% if form.food_item.errors %}
                         <div class="form-error-message">
@@ -75,7 +52,7 @@
                     {% endif %}
 
                     <div class="modal-form-row">
-                        <label for="{{ form.food_item.id_for_label }}">食材名</label>
+                        <label for="{{ form.food_item.id_for_label }}">食材を検索</label>
                         {{ form.food_item }}
                     </div>
 
@@ -172,6 +149,21 @@ document.addEventListener("DOMContentLoaded", function () {
     const openButton = document.getElementById("open-manual-add-modal");
     const closeButton = document.getElementById("close-manual-add-modal");
     const modal = document.getElementById("manual-add-modal");
+    const manualFoodSelect = document.getElementById("id_food_item");
+
+    let manualFoodChoices = null;
+
+    if (manualFoodSelect) {
+        manualFoodChoices = new Choices(manualFoodSelect, {
+            searchEnabled: true,
+            searchFloor: 1,
+            searchResultLimit: -1,
+            itemSelectText: "",
+            shouldSort: false,
+            noResultsText: "該当する食材がありません",
+            noChoicesText: "選択できる食材がありません",
+        });
+    }
 
     if (!openButton || !closeButton || !modal) {
         console.log("modal elements not found");
@@ -193,51 +185,6 @@ document.addEventListener("DOMContentLoaded", function () {
         resetManualAddModal();
     }
     });
-    // ===== 食材検索 =====
-    const searchInput = document.getElementById("food-item-search");
-    const select = document.getElementById("id_food_item");
-    const emptyMessage = document.getElementById("food-item-search-empty");
-
-    if (searchInput && select && emptyMessage) {
-        const options = Array.from(select.options);
-
-        searchInput.addEventListener("input", function () {
-            const keyword = this.value.toLowerCase();
-            let visibleCount = 0;
-            let firstMatchedOption = null;
-
-            options.forEach(option => {
-            const parts = option.text.toLowerCase().split("｜");
-            const ingredientName = parts[0] || "";
-            const readingKana = parts[2] || "";
-
-            if (
-                ingredientName.includes(keyword) ||
-                readingKana.includes(keyword)
-            ) {
-                option.style.display = "";
-                visibleCount += 1;
-
-                if (!firstMatchedOption && option.value) {
-                    firstMatchedOption = option;
-                }
-            } else {
-                option.style.display = "none";
-            }
-        });
-
-            if (visibleCount === 0) {
-                emptyMessage.style.display = "block";
-                select.value = "";
-            } else {
-                emptyMessage.style.display = "none";
-
-                if (firstMatchedOption) {
-                    select.value = firstMatchedOption.value;
-                }
-            }
-        });
-    }
 
     const openDeleteAllButton = document.getElementById("open-delete-all-modal");
     const selectAllCheckbox = document.getElementById("select-all-shopping-items");
@@ -294,6 +241,11 @@ document.addEventListener("DOMContentLoaded", function () {
             const event = new Event("change", { bubbles: true });
             select.dispatchEvent(event);
         });
+
+        if (manualFoodChoices) {
+            manualFoodChoices.removeActiveItems();
+            manualFoodChoices.setChoiceByValue("");
+        }
 
         errors.forEach(function (error) {
             error.textContent = "";

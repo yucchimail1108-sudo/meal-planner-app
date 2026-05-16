@@ -138,7 +138,17 @@ body {
     color: #ffffff;
 }
 
-
+/* =========================
+   食材欄追加・＋新規食材ボタン（青）
+========================= */
+.ingredient-action-button {
+    height: 40px;
+    padding: 0 16px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+}
 
 /* ====================================
    ホバー時（マウス乗せた時）少し濃くする
@@ -1024,7 +1034,7 @@ body {
     width: calc(100% - 32px);
     max-width: 500px;
     max-height: 80vh;
-    overflow-y: auto;
+    overflow-y: visible;
     background-color: #ffffff;
     border-radius: 10px;
     padding: 20px;
@@ -1468,6 +1478,8 @@ body {
     color: #666666;
     font-size: 13px;
 }
+
+
 
 /* =========================
    画像アップロード
@@ -2328,6 +2340,10 @@ body {
     box-sizing: border-box;
 }
 
+#home-food-category-filter {
+    min-width: 160px;
+}
+
 #open-delete-all-modal {
     margin-left: auto;
 }
@@ -2464,6 +2480,22 @@ body {
 #manual-add-modal .modal-submit-full .save-button,
 #add-food-modal .modal-submit-full .save-button {
     width: 100%;
+}
+
+#manual-add-modal .modal-content {
+    max-height: 85vh;
+    overflow-y: visible;
+}
+
+#manual-add-modal .choices {
+    overflow: visible;
+}
+
+#manual-add-modal .choices__list--dropdown,
+#manual-add-modal .choices__list[aria-expanded] {
+    max-height: 260px;
+    overflow-y: auto;
+    z-index: 9999;
 }
 
 /* =========================
@@ -3023,7 +3055,7 @@ body {
    レシピ画面の新規追加ボタン
 ========================= */
 .add-food-button {
-    background-color: #1976d2;
+    background-color: #2196f3;
     color: #ffffff;
     border: none;
 }
