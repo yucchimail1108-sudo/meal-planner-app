@@ -2424,6 +2424,45 @@ body {
 }
 
 /* =========================
+   おうち食材 追加モーダルのはみ出し対策
+========================= */
+#add-food-modal {
+    align-items: flex-start;
+    padding-top: 24px;
+    padding-bottom: 96px;
+}
+
+#add-food-modal .modal-content {
+    max-height: calc(100vh - 180px);
+    overflow-y: auto;
+}
+
+/* =========================
+   おうち食材 追加モーダル 横はみ出し対策
+========================= */
+#add-food-modal .modal-content {
+    width: calc(100% - 32px);
+    max-width: 520px;
+    box-sizing: border-box;
+    overflow-x: hidden;
+}
+
+#add-food-modal input,
+#add-food-modal select,
+#add-food-modal textarea,
+#add-food-modal .choices,
+#add-food-modal .choices__inner {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+#add-food-modal .input-clear-wrap {
+    width: 100%;
+    max-width: 100%;
+}
+
+/* =========================
    買い物リスト手動追加モーダル内検索
 ========================= */
 .modal-search-block {
