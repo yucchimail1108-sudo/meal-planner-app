@@ -35,13 +35,21 @@ def recipe_list_view(request):
     selected_category = request.GET.get("category", "")
     search_query = request.GET.get("q", "").strip()
 
+    count_recipes = base_recipes
+
+    if search_query:
+        count_recipes = count_recipes.filter(
+            Q(recipe_name__icontains=search_query) |
+            Q(ingredients__food_item__ingredient_name__icontains=search_query)
+        ).distinct()
+
     category_counts = {
-        "all": base_recipes.count(),
-        "staple": base_recipes.filter(menu_category=1).count(),
-        "main": base_recipes.filter(menu_category=2).count(),
-        "side": base_recipes.filter(menu_category=3).count(),
-        "soup": base_recipes.filter(menu_category=4).count(),
-        "favorite": Favorite.objects.filter(user=request.user).count(),
+        "all": count_recipes.count(),
+        "staple": count_recipes.filter(menu_category=1).count(),
+        "main": count_recipes.filter(menu_category=2).count(),
+        "side": count_recipes.filter(menu_category=3).count(),
+        "soup": count_recipes.filter(menu_category=4).count(),
+        "favorite": count_recipes.filter(favorite_set__user=request.user).count(),
     }
 
     if search_query:
